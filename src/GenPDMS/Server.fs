@@ -64,7 +64,7 @@ module Server =
                         // Just to avoid an error in chrome
                         path "/favicon.ico" >=> OK ""
                         // Little server alive check
-                        path "/hello" >=> OK "GenUnitApp"
+                        path "/hello" >=> OK "GenPDMS"
                         // Start with the index file
                         path "/" >=> Files.browseFileHome "index.html"
                         // Get all other files
@@ -79,7 +79,7 @@ module Server =
             ]
 
 
-    /// Start the GenUnitApp with home `home` and
+    /// Start the GenPDMS with home `home` and
     /// port `port`.
     let start home port =
 

@@ -15,7 +15,7 @@ open GenPDMS.Utils.Path
 let iif x1 x2 = if x1 |> String.IsNullOrEmpty |> not then x1 else x2
 
 
-/// Main entry point of the GenUnitApp
+/// Main entry point of the GenPDMS
 /// takes as argument the port on which
 /// the app will listen. If no port is provided
 /// the default will be 3000.

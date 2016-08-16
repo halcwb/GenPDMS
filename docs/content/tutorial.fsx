@@ -1,3 +1,3 @@
 ﻿(*** hide ***)
-#I "../../src/Informedica.GenPDMS/Scripts"
+#I "../../src/GenPDMS/Scripts"
 #load "load-project-release.fsx"

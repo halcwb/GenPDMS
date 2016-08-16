@@ -6,7 +6,7 @@
 open System
 open System.IO
 
-open GenUnitApp
+open GenPDMS
 
 let start () = 
     Environment.CurrentDirectory <- __SOURCE_DIRECTORY__

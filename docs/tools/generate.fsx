@@ -20,7 +20,7 @@ let summary = Settings.summary
 let author  = Settings.gitOwner
 
 
-let referenceBinaries = [ "GenUnitApp.exe" ]
+let referenceBinaries = [ "GenPDMS.exe" ]
 // Web site location for the generated documentation
 let website = "/" + gitName
 
@@ -57,7 +57,7 @@ let root = "file://" + (__SOURCE_DIRECTORY__ @@ "../output")
 #endif
 
 // Paths with template/source/output locations
-let bin        = __SOURCE_DIRECTORY__ @@ "../../bin/GenUnitApp"
+let bin        = __SOURCE_DIRECTORY__ @@ "../../bin/GenPDMS"
 let content    = __SOURCE_DIRECTORY__ @@ "../content"
 let output     = __SOURCE_DIRECTORY__ @@ "../output"
 let files      = __SOURCE_DIRECTORY__ @@ "../files"

@@ -3,13 +3,32 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "GenPDMS", "src\GenPDMS\GenPDMS.fsproj", "{8A98519F-B218-4EF1-BCA6-3CEFCC0D12E2}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "GenPDMS", "src\GenPDMS\GenPDMS.fsproj", "{9550937D-3FE4-4CDC-99C5-3806C96157FB}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "GenPDMS.Tests", "tests\GenPDMS.Tests\GenPDMS.Tests.fsproj", "{2BA76B3B-BB7E-43CE-B3DB-A86380A85740}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "GenPDMS.Tests", "tests\GenPDMS.Tests\GenPDMS.Tests.fsproj", "{75C46A72-1748-417B-806C-8137CBB57CC8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{94A519B9-F2F5-47AF-BB5E-0F990B451EC0}"
 	ProjectSection(SolutionItems) = preProject
 		paket.dependencies = paket.dependencies
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{5F501905-4748-4269-9FCC-9F864BD35B12}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "content", "content", "{BD44DF1F-06B9-4AFF-9A16-BBD4BCAE1687}"
+	ProjectSection(SolutionItems) = preProject
+		docs\content\index.fsx = docs\content\index.fsx
+		docs\content\tutorial.fsx = docs\content\tutorial.fsx
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{64ECAC50-8224-455F-B6D5-A1A63F5A8FB5}"
+	ProjectSection(SolutionItems) = preProject
+		docs\tools\generate.fsx = docs\tools\generate.fsx
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{E31EF42A-FCDF-4E13-BFD9-F682263DCC0F}"
+	ProjectSection(SolutionItems) = preProject
+		scripts\buildClient.fsx = scripts\buildClient.fsx
+		scripts\settings.fsx = scripts\settings.fsx
 	EndProjectSection
 EndProject
 Global
@@ -18,16 +37,20 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8A98519F-B218-4EF1-BCA6-3CEFCC0D12E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8A98519F-B218-4EF1-BCA6-3CEFCC0D12E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8A98519F-B218-4EF1-BCA6-3CEFCC0D12E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8A98519F-B218-4EF1-BCA6-3CEFCC0D12E2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2BA76B3B-BB7E-43CE-B3DB-A86380A85740}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2BA76B3B-BB7E-43CE-B3DB-A86380A85740}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2BA76B3B-BB7E-43CE-B3DB-A86380A85740}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2BA76B3B-BB7E-43CE-B3DB-A86380A85740}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9550937D-3FE4-4CDC-99C5-3806C96157FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9550937D-3FE4-4CDC-99C5-3806C96157FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9550937D-3FE4-4CDC-99C5-3806C96157FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9550937D-3FE4-4CDC-99C5-3806C96157FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75C46A72-1748-417B-806C-8137CBB57CC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75C46A72-1748-417B-806C-8137CBB57CC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75C46A72-1748-417B-806C-8137CBB57CC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75C46A72-1748-417B-806C-8137CBB57CC8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BD44DF1F-06B9-4AFF-9A16-BBD4BCAE1687} = {5F501905-4748-4269-9FCC-9F864BD35B12}
+		{64ECAC50-8224-455F-B6D5-A1A63F5A8FB5} = {5F501905-4748-4269-9FCC-9F864BD35B12}
 	EndGlobalSection
 EndGlobal

@@ -55,7 +55,7 @@ Target "CopyClient" (fun _ ->
     let app = 
         dir
         |> combineWith "bin"
-        |> combineWith "GenUnitApp"
+        |> combineWith "GenPDMS"
     let client = 
         app
         |> combineWith "client"
