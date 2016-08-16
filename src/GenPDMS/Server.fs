@@ -92,3 +92,5 @@ module Server =
 
         printfn "Starting server on: %s with home: %s" port home
         startWebServer (getConfig home port) (app RequestMapping.map)
+
+    

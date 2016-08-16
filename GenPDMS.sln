@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{f2a71f9b-5d33-465a-a702-920d77279786}") = "GenPDMS", "src\GenPDMS\GenPDMS.fsproj", "{9550937D-3FE4-4CDC-99C5-3806C96157FB}"
 EndProject
+Project("{f2a71f9b-5d33-465a-a702-920d77279786}") = "GenPDMS.Tests", "tests\GenPDMS.Tests\GenPDMS.Tests.fsproj", "{0E1E64C5-13CC-48BB-8831-7098A9242E6E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -13,5 +15,9 @@ Global
 		{9550937D-3FE4-4CDC-99C5-3806C96157FB}.Debug|x86.Build.0 = Debug|Any CPU
 		{9550937D-3FE4-4CDC-99C5-3806C96157FB}.Release|x86.ActiveCfg = Release|Any CPU
 		{9550937D-3FE4-4CDC-99C5-3806C96157FB}.Release|x86.Build.0 = Release|Any CPU
+		{0E1E64C5-13CC-48BB-8831-7098A9242E6E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0E1E64C5-13CC-48BB-8831-7098A9242E6E}.Debug|x86.Build.0 = Debug|Any CPU
+		{0E1E64C5-13CC-48BB-8831-7098A9242E6E}.Release|x86.ActiveCfg = Release|Any CPU
+		{0E1E64C5-13CC-48BB-8831-7098A9242E6E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
