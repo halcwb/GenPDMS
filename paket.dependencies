@@ -26,7 +26,7 @@ github halcwb/YoLo YoLo.fs
 // group test
 
 nuget FsUnit
-nuget NUnit
+nuget NUnit <= 3.4.0
 nuget NUnit.Runners
 nuget Unquote
 nuget FsCheck
