@@ -1,0 +1,21 @@
+language: csharp
+
+sudo: false
+
+env:
+  - PAKET.VERSION="3.1.9"
+
+os:
+  - linux
+#  - osx
+
+before_script:
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+
+install:
+  - ./scripts/node_install.sh 6.2.2
+
+script:
+  - . ~/.nvm/nvm.sh # manually source nvm
+  - ./build.sh ClientTests

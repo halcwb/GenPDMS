@@ -1,0 +1,72 @@
+REDIRECTS: ON
+NUGET
+  remote: https://www.nuget.org/api/v2
+    FAKE (4.37.2)
+    FsCheck (2.6)
+      FSharp.Core (>= 3.1.2.5)
+    FSharp.Compiler.Service (2.0.0.6)
+    FSharp.Core (4.0.0.1)
+    FSharp.Formatting (2.14.4)
+      FSharp.Compiler.Service (2.0.0.6)
+      FSharpVSPowerTools.Core (>= 2.3 < 2.4)
+    FSharpVSPowerTools.Core (2.3)
+      FSharp.Compiler.Service (>= 2.0.0.3)
+    FSPowerPack.Community (3.0)
+      FSPowerPack.Linq.Community
+      FSPowerPack.Metadata.Community
+      FSPowerPack.Parallel.Seq.Community
+    FSPowerPack.Core.Community (3.0)
+    FSPowerPack.Linq.Community (3.0)
+      FSPowerPack.Core.Community
+    FSPowerPack.Metadata.Community (3.0)
+      FSPowerPack.Core.Community
+    FSPowerPack.Parallel.Seq.Community (3.0)
+      FSPowerPack.Core.Community
+    FsUnit (2.3.1)
+      FSharp.Core (>= 3.1.2.5)
+      NUnit (3.4.1)
+    Fuchu (1.0.3)
+      FSharp.Core (>= 3.1.2.1)
+    Informedica.GenUtils.Lib (0.4.2-beta)
+      FSPowerPack.Community
+    Microsoft.Bcl (1.1.10) - framework: net10, net11, net20, net30, net35, net40, net40-full
+      Microsoft.Bcl.Build (>= 1.0.14)
+    Microsoft.Bcl.Build (1.0.21) - import_targets: false, framework: net10, net11, net20, net30, net35, net40, net40-full
+    Microsoft.Net.Http (2.2.29) - framework: net10, net11, net20, net30, net35, net40, net40-full
+      Microsoft.Bcl (>= 1.1.10)
+      Microsoft.Bcl.Build (>= 1.0.14)
+    Newtonsoft.Json (8.0.3)
+    NUnit (3.4.1)
+    NUnit.ConsoleRunner (3.4.1)
+    NUnit.Extension.NUnitProjectLoader (3.4.1)
+    NUnit.Extension.NUnitV2Driver (3.4.1)
+    NUnit.Extension.NUnitV2ResultWriter (3.4.1)
+    NUnit.Extension.TeamCityEventListener (1.0.1)
+    NUnit.Extension.VSProjectLoader (3.4.1)
+    NUnit.Runners (3.4.1)
+      NUnit.ConsoleRunner (>= 3.4.1)
+      NUnit.Extension.NUnitProjectLoader (>= 3.4.1)
+      NUnit.Extension.NUnitV2Driver (>= 3.4.1)
+      NUnit.Extension.NUnitV2ResultWriter (>= 3.4.1)
+      NUnit.Extension.TeamCityEventListener (>= 1.0.1)
+      NUnit.Extension.VSProjectLoader (>= 3.4.1)
+    Octokit (0.21.1)
+      Microsoft.Net.Http  - framework: net10, net11, net20, net30, net35, net40, net40-full
+    SourceLink.Fake (1.1)
+    Suave (1.1.3)
+      FSharp.Core (>= 3.1.2.5)
+    Suave.Testing (1.1.3)
+      FSharp.Core (>= 3.1.2.5)
+      Fuchu (>= 1.0.2)
+      Suave (>= 1.1.3)
+    Unquote (3.1.2)
+GITHUB
+  remote: fsharp/FAKE
+    modules/Octokit/Octokit.fsx (7faaaf53e4a8fbe04a4d2b4c1bfc5d09bd82eed6)
+      Octokit (>= 0.20)
+  remote: halcwb/GenBuild
+    scripts/appveyor.fsx (aed42e1638bbbfbec57e1df989944f1a50df4064)
+    scripts/targets.fsx (aed42e1638bbbfbec57e1df989944f1a50df4064)
+    scripts/travis.fsx (aed42e1638bbbfbec57e1df989944f1a50df4064)
+  remote: halcwb/YoLo
+    YoLo.fs (f8ec082b579f448f91ac8caedab16ae8e0ba383c)

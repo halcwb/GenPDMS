@@ -1,0 +1,10 @@
+{
+  "name": "GenPDMS",
+  "description": "",
+  "website": "https://halcwb.github.io/GenPDMS",
+  "repository": "https://github.com/halcwb/GenPDMS",
+  "logo": "https://halcwb.github.io/GenPDMS/img/logo.png",
+  "env": {
+    "BUILDPACK_URL": "https://github.com/halcwb/mono-script-buildpack.git"
+  }
+}

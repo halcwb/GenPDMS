@@ -1,0 +1,115 @@
+# Ignore all files using an opt-inn approach
+*
+
+# Add .gitignore and .gitattributes
+!.gitignore
+!.gitattributes
+
+# Add license
+!LICENSE.txt
+
+# Add todo list
+!ToDo.txt
+
+# Add md files
+!*.md
+
+# Add fsx files
+!*.fsx
+
+# Add command and batch files
+!*.cmd
+!*.sh
+
+#Add client
+!*.json
+!*.json
+!*.js
+!*.html
+
+# ignore release and publish nuget commands
+release.cmd
+release.sh
+publishnuget.cmd
+
+# Add proc and app.json file
+!Procfile
+!Procfile.local
+!Procfile.bash
+!app.json
+
+# Add .deployment for Azure
+!.deployment
+
+# Add paket bootstrapper
+!/.paket/
+!/.paket/paket.bootstrapper.exe
+
+# Add dependencies file
+!paket.dependencies
+!paket.lock
+!paket.references
+!paket.template
+
+# Add yml files to ci on appveyor and travis
+!appveyor.yml
+!.travis.yml
+
+# Add solution file
+!*.sln
+
+# Add fsharp project files
+!*.fsproj
+
+# Add configurarion files
+!*.config
+
+# Add fsharp source files
+!*.fs
+
+# Add script files
+!/scripts/
+
+# Add deploy files
+!/deploy
+
+# Add source files
+!/src/
+!/src/GenPDMS/
+!/src/GenPDMS/Scripts/
+
+# Add client source files
+!/client/
+!/client/build/
+!/client/build/scripts/
+!/client/build/config/
+!/client/build/util/
+!/client/spikes/
+!/client/src/
+!/client/src/data/
+!/client/src/controllers/
+!/client/src/models/
+!/client/src/lib/
+!/client/src/lib/ajax/
+!/client/src/lib/util/
+!/client/src/views/
+!/client/tests/
+!/client/tests/lib/
+!/client/tests/browser/
+!/client/tests/smoke/
+
+# Add test files
+!/tests/
+
+# Ignore generated documentation files
+/docs/content/**/*.md
+
+# Add documentation
+!/docs/
+!/docs/content/
+!/docs/tools/
+!/docs/tools/templates/
+!/docs/tools/templates/*.cshtml
+!/docs/files/
+!/docs/files/img/
+!/docs/files/img/*.png

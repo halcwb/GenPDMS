@@ -1,0 +1,20 @@
+environment:
+  PAKET.VERSION: "3.1.9"
+  matrix:
+    # node.js
+    - nodejs_version: "6.2.2"
+
+shallow_clone: true
+
+# Install scripts. (runs after repo cloning)
+install:
+  # Get the latest version of $env:nodejs_version
+  - ps: Install-Product node $env:nodejs_version x64
+  - ps: node --version
+  - ps: npm install -g npm
+  - ps: npm --version
+
+build_script:
+  - build.cmd ClientTests
+
+test: off

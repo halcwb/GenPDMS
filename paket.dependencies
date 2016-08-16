@@ -1,0 +1,32 @@
+redirects: on
+source https://nuget.org/api/v2
+
+// group build
+
+nuget FSharp.Formatting
+nuget Fake
+nuget SourceLink.Fake
+nuget Newtonsoft.Json ~> 8.0.2
+
+github fsharp/FAKE modules/Octokit/Octokit.fsx
+
+github halcwb/GenBuild /scripts/targets.fsx
+github halcwb/GenBuild /scripts/travis.fsx
+github halcwb/GenBuild /scripts/appveyor.fsx
+
+// group project
+
+nuget FSPowerPack.Community
+nuget Suave
+nuget Suave.Testing
+nuget Informedica.GenUtils.Lib
+
+github halcwb/YoLo YoLo.fs
+
+// group test
+
+nuget FsUnit
+nuget NUnit
+nuget NUnit.Runners
+nuget Unquote
+nuget FsCheck
