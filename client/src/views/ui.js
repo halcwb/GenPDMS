@@ -37,7 +37,26 @@
             id: 'ui',
             rows: [
                 header.view(app),
-                { template: 'Welcome to the Generic Patient Data Management System' },
+                {cols: [
+                    {
+                        view: 'datatable',
+                        resizeColumn: true,
+                        select: 'row',
+                        columns: [
+                            { id: 'no', header: 'HospNo', sort: 'string' },
+                            { id: 'name', header: 'Name', fillspace: true, sort: 'string' }
+                        ],
+                        data: [
+                            { id: '1', no: '1', name: 'John Cedar' },
+                            { id: '2', no: '2', name: 'Frederick Maple' },
+                            { id: '3', no: '3', name: 'Christine Damian' },
+                            { id: '4', no: '4', name: 'Eric Underwood' }
+                        ]
+                    },
+                    { view: 'resizer' },
+                    { template: 'details'}
+
+                ]},
                 status.view(app)
             ]
         });

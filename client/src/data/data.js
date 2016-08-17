@@ -20,6 +20,19 @@
                     resp: { succ: true, result: {}  }
                 }
             ]
+        },
+        'patients': {
+            reqResp: [
+                {
+                    req: {},
+                    resp: { succ: true, result: { patients: [
+                        { name: 'John Cedar' },
+                        { name: 'Frederick Maple' },
+                        { name: 'Christine Damian' },
+                        { name: 'Eric Underwood' }
+                    ]}  }
+                }
+            ]
         }
     };
 
