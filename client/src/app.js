@@ -107,6 +107,7 @@
 
         require('./controllers/app.js').init(app);
         require('./controllers/tooltip.js').init(app);
+        require('./controllers/navigation.js').init(app);
 
 
         // **** Show welcome message ****
