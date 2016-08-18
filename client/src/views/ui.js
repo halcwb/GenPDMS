@@ -41,7 +41,7 @@
             id: 'ui',
             rows: [
                 header.view(app),
-                { cols: [
+                { id: 'body', cols: [
                     navigation.view(app),
                     { view: 'resizer' },
                     patientDetails.view(app)

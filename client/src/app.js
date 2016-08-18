@@ -83,6 +83,10 @@
      */
     app.request = require('./lib/ajax/request.js');
 
+    app.blockly = require('create-blockly');
+    app.blockly.blocks = require('create-blockly/Blocks');
+    app.blockly.translations = require('create-blockly/Msg/en');
+
 
     webix.ready(function () {
 
@@ -108,6 +112,7 @@
         require('./controllers/app.js').init(app);
         require('./controllers/tooltip.js').init(app);
         require('./controllers/navigation.js').init(app);
+        require('./controllers/ruleEditor.js').init(app);
 
 
         // **** Show welcome message ****

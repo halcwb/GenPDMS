@@ -10,9 +10,65 @@
     exports.id = function () { return id; };
 
     exports.view = function (app) {
-       var view  = {
+       var labelWidth = 100,
+           view  = {
            id: id,
-           template: 'Protocol Details'
+           rows: [
+               {
+                   view: 'form',
+                   elements: [
+                       { rows: [
+                           { template: 'Protocol Details', type: 'section' },
+                           {
+                               view: "text",
+                               label: 'Id',
+                               placeholder: 'Id',
+                               name: 'id',
+                               labelAlign: 'right',
+                               labelWidth: labelWidth
+                           },
+                           {
+                               view: "text",
+                               label: 'Name',
+                               placeholder: 'Protocol Name',
+                               name: 'name',
+                               labelAlign: 'right',
+                               labelWidth: labelWidth
+                           },
+                           { template: '', height: 20 },
+                           {
+                               cols: [
+                                   { template: '' },
+                                   { view: 'button', value: 'New', width: 75},
+                                   { view: 'button', value: 'Edit', type: 'form', width: 75},
+                                   { view: 'button', value: 'Save', width: 75 }
+                               ]
+                           }
+                       ]}
+                   ]
+               },
+               {
+                   view: 'datatable',
+                   id: 'list_protocol_orders',
+                   resizeColumn: true,
+                   select: 'row',
+                   columns: [
+                       { id: 'id', header: 'Id', width: 40 },
+                       { id: 'indication', header: 'Indication', width: 200 },
+                       { id: 'contra', header: 'Contra Indication', width: 200 },
+                       { id: 'order', header: 'Order', fillspace: true }
+                   ],
+                   data: []
+               },
+               {
+                   view: 'toolbar',
+                   height: 40,
+                   cols: [
+                       { template: '' },
+                       { view: 'button', value: 'Add', width: 75 }
+                   ]
+               }
+           ]
        };
 
        return view;
