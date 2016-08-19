@@ -18,17 +18,24 @@
 <!-- This is the toolbox that defines which blocks are visible. -->
 <!-- http://code.google.com/p/blockly/wiki/Toolbox -->
 <xml id="rule_editor_toolbox" style="display:none">
-    <category name="Control">
-        <block type="controls_if"></block>
-        <block type="controls_whileUntil"></block>
-    </category>
-    <category name="Logic">
-        <block type="logic_boolean"></block>
+    <category name="Rule">
         <block type="logic_operation"></block>
     </category>
-    <category name="Text">
+    <category name="Logic">
+        <block type="logic_compare"></block>
+        <block type="logic_negate"></block>
+        <block type="text_isEmpty"></block>
+    </category>
+    <category name="Values">
+        <block type="logic_boolean"></block>
+        <block type="math_number"></block>
         <block type="text"></block>
-        <block type="text_print"></block>
+    </category>
+    <category name="Variables">
+        <block type="variables_get"></block>
+    </category>
+    <category name="Lists">
+        <block type="lists_indexOf"></block>
     </category>
 </xml>
 </body>

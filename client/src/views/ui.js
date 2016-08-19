@@ -25,10 +25,9 @@
             status = require('./templates/bottomBar.js'),
             navigation = require('./components/navigation.js'),
             patientDetails = require('./components/patientDetails.js'),
-            debug = app.debug('views:ui'),
+            patientBody = require('./components/patientBody.js'),
 
-            labelWidth = 100;
-
+            debug = app.debug('views:ui');
 
         debug('init');
 
@@ -41,11 +40,7 @@
             id: 'ui',
             rows: [
                 header.view(app),
-                { id: 'body', cols: [
-                    navigation.view(app),
-                    { view: 'resizer' },
-                    patientDetails.view(app)
-                ]},
+                patientBody.view(app),
                 status.view(app)
             ]
         });

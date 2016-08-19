@@ -2,6 +2,8 @@
  * components/protocolDetails
  */
 
+/*global webix, $$ */
+
 (function () {
     "use strict";
 
@@ -65,6 +67,7 @@
                    height: 40,
                    cols: [
                        { template: '' },
+                       { view: 'button', id: 'protocol.details.ruleEditor', value: 'Rule Editor', width: 100 },
                        { view: 'button', value: 'Add', width: 75 }
                    ]
                }
@@ -72,6 +75,26 @@
        };
 
        return view;
+    };
+
+    exports.init = function (app) {
+
+        if (!$$('rule_editor_menu')) {
+            webix.ui({
+                view: 'contextmenu',
+                id: 'rule_editor_menu',
+                data: [
+                    'Create Indication'
+                ]
+            }).attachTo($$('protocol_details'));
+        }
+
+        $$('protocol.details.ruleEditor').attachEvent('onItemClick', function () {
+            app.bus.view.publish('protocol.ruleEditor', {
+
+            });
+        });
+
     };
 
 

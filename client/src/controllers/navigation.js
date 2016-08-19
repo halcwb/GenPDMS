@@ -18,6 +18,7 @@
 
             if (data.id === 'tabview_protocols' && $$(patientDetails.id())) {
                 webix.ui(protocolDetails.view(app), $$(patientDetails.id()));
+                protocolDetails.init(app);
             } else if (data.id === 'tabview_patients' && $$(protocolDetails.id())) {
                 debug('patient details', patientDetails);
                 webix.ui(patientDetails.view(app), $$(protocolDetails.id()));
