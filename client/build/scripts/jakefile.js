@@ -144,6 +144,7 @@
     task("buildClient", [ paths.distDir, "bundleClientJs" ], function() {
         debug("Copying client code: .");
         shell.cp("-R", paths.webixDir, paths.distDir);
+        shell.cp("-R", paths.blocklyDir, paths.distDir);
         shell.cp(paths.srcDir + "/*.html", paths.distDir);
     });
 

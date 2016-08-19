@@ -7,7 +7,6 @@
     "node": "6.2.2"
   },
   "dependencies": {
-    "create-blockly": "0.0.2",
     "debug": "^2.2.0",
     "postal": "^2.0.4",
     "underscore": "^1.8.3",

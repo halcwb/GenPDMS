@@ -10,6 +10,7 @@
         distDir: "generated/dist",
         docsDir: "docs",
         webixDir: "node_modules/webix",
+        blocklyDir: "./../paket-files/google/blockly",
         spikeDir: "spike",
         srcDir: "src",
         libDir: "src/lib",

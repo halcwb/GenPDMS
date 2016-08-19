@@ -83,9 +83,6 @@
      */
     app.request = require('./lib/ajax/request.js');
 
-    app.blockly = require('create-blockly');
-    app.blockly.blocks = require('create-blockly/Blocks');
-    app.blockly.translations = require('create-blockly/Msg/en');
 
 
     webix.ready(function () {

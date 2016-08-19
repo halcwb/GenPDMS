@@ -23,6 +23,27 @@ nuget Informedica.GenUtils.Lib
 
 github halcwb/YoLo YoLo.fs
 
+// client
+github google/blockly blockly_compressed.js
+github google/blockly blocks_compressed.js
+github google/blockly msg/js/en.js
+github google/blockly media/1x1.gif
+github google/blockly media/accessible.css
+github google/blockly media/click.mp3
+github google/blockly media/click.ogg
+github google/blockly media/click.wav
+github google/blockly media/delete.mp3
+github google/blockly media/delete.ogg
+github google/blockly media/delete.wav
+github google/blockly media/handclosed.cur
+github google/blockly media/handdelete.cur
+github google/blockly media/handopen.cur
+github google/blockly media/quote0.png
+github google/blockly media/quote1.png
+github google/blockly media/sprites.png
+github google/blockly media/sprites.svg
+
+
 // group test
 
 nuget FsUnit
