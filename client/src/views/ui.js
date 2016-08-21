@@ -7,6 +7,8 @@
 (function () {
     "use strict";
 
+    var id = 'ui';
+
 
     /**
      * Initialize ui with app.
@@ -37,7 +39,7 @@
         webix.ui.fullScreen();
 
         webix.ui({
-            id: 'ui',
+            id: id,
             rows: [
                 header.view(app),
                 patientBody.view(app),

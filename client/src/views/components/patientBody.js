@@ -21,7 +21,7 @@
 
     exports.init = function (app) {
         navigation.init(app);
-//        patientDetails.init(app);
+        patientDetails.init(app);
     };
 
 })();
