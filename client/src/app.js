@@ -101,7 +101,7 @@
 
         // **** Initialize Loading Mask ****
 
-        require('./views/windows/loadingMask').view(app);
+        require('./views/windows/loadingMask').init(app);
 
 
         // **** Initialize Controllers ****
@@ -118,7 +118,6 @@
         app.bus.view.publish('ui.init');
 
         webix.hasRun = true;
-
 
     });
 

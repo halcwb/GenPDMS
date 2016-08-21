@@ -7,6 +7,8 @@
 (function () {
     "use strict";
 
+
+
     /**
      * Initializes the view
      * Uses the webix $$ to get the view

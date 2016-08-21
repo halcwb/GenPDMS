@@ -7,25 +7,30 @@
 (function () {
     "use strict";
 
-    var doWait = function (p) {
-        if (p)
-            webix.ui({
-                id: "waitwindow",
-                view: "window",
+    var id = 'windows.loadingMask',
+        doWait = function (loading) {
+            if (loading) {
+                webix.ui({
+                    id: id,
+                    view: "window",
 
-                width: 100,
-                height: 100,
-                modal: true,
-                position: "center",
-                head: false,
-                borderless: true,
-                body: {
-                    template: "<p align='center'><i class='fa fa-spin fa-spinner fa-4x'></i></p>",
-                    css: "wait"
-                }
-            }).show();
-        else { $$('waitwindow').hide(); $$('waitwindow').destructor(); }
-    };
+                    width: 100,
+                    height: 100,
+                    modal: true,
+                    position: "center",
+                    head: false,
+                    borderless: true,
+                    body: {
+                        template: "<p align='center'><i class='fa fa-spin fa-spinner fa-4x'></i></p>",
+                        css: "wait"
+                    }
+                }).show();
+            }
+            else {
+                $$(id).hide();
+                $$(id).destructor();
+            }
+        };
 
 
     /**
@@ -34,17 +39,18 @@
      * @param app {app} uses app functionality
      * @returns {view} a loading mask view
      */
-    exports.view = function (app) {
+    exports.init = function (app) {
+        app.debug('client:' + id)('init');
 
         // Subscribe to loading event
-        app.bus.controller.subscribe("loading", function (data, envelope) {
-            app.debug('client:views:loadingMask')('loading', envelope.topic, envelope.timeStamp);
+        app.bus.view.subscribe(id + '.loading', function (data, envelope) {
+            app.debug(id, envelope);
             doWait(data.loading);
         });
 
         // Make app loading shortcut
         app.loading = function (loading) {
-            app.bus.controller.publish('loading', {
+            app.bus.view.publish(id + '.loading', {
                 loading: loading
             });
         };

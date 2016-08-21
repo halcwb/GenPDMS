@@ -7,6 +7,9 @@
 (function () {
     "use strict";
 
+    var id = 'ui';
+
+    exports.id = function () { return id; };
 
     /**
      * Initialize ui with app.
@@ -37,7 +40,7 @@
         webix.ui.fullScreen();
 
         webix.ui({
-            id: 'ui',
+            id: id,
             rows: [
                 header.view(app),
                 patientBody.view(app),
@@ -59,6 +62,7 @@
         menu.init(app);
         status.init(app);
         navigation.init(app);
+        patientDetails.init(app);
 
         // **** Views Initialized ****
 
