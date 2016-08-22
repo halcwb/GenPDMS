@@ -8,7 +8,7 @@
 (function () {
     "use strict";
 
-    exports.view = function (app) {
+    exports.getView = function (app) {
         var view = {
             id: 'rule_editor_component',
             rows: [{

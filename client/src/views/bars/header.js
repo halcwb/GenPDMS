@@ -7,26 +7,37 @@
 (function () {
     "use strict";
 
-    var id = 'header';
+    var id = 'bars.header',
+        iconId = id + '.icon';
 
-    exports.view = function (app) {
+    exports.getId = function () { return id; };
 
-        return {
+    exports.getView = function (app) {
+        var view = {
             id: id,
             view: 'toolbar',
             elements: [
                 {
                     view: 'icon',
-                    icon: 'bars',
-                    click: function () {
-                        app.bus.view.publish('header.menu.click', {});
-                    }
+                    id: iconId,
+                    icon: 'bars'
                 },
                 { view: 'label', label: 'GenPDMS' }
             ]
         };
 
+        app.debug('client:' + id + ':view')(view);
+        return view;
     };
 
+    exports.init = function (app) {
+        var debug = app.debug('client' + id + ':init');
+
+        debug('init');
+
+        $$(iconId).attachEvent('onItemClick', function () {
+            app.bus.view.publish('show.sideMenu', {});
+        });
+    };
 
 })();

@@ -1,6 +1,3 @@
-/*global webix, _, $$, console, app, debug */
-
-
 /**
  * @file The entry point the application, creates the app
  * @requires util
@@ -8,8 +5,6 @@
  * @requires lib/util/reload
  * @requires lib/util/msgBus
  * @requires lib/ajax/request
- * @requires views/ui
- * @requires views/windows/loadingMask
  */
 
 /**
@@ -20,6 +15,8 @@
 *
 * @namespace app
 */
+
+/*global webix, _, $$, console, app, debug */
 
 (function () {
     "use strict";
@@ -51,10 +48,7 @@
      * @memberof app
      * @property util {util} - Utility library
      */
-    app.util  = require("util");
-
-
-    app.util.numberParser = require('./lib/util/numberParser.js');
+    app.util  = require("./lib/util/util.js");
 
 
     /**
@@ -93,15 +87,12 @@
         require("./lib/util/reload.js").init(app);
 
 
-        // **** Initialize UI ****
+        // **** Initialize Views ****
 
         require('./views/ui.js').init(app);
         require('./views/windows/tooltip.js').init(app);
-
-
-        // **** Initialize Loading Mask ****
-
-        require('./views/windows/loadingMask').view(app);
+        require('./views/windows/loadingMask.js').init(app);
+        require('./views/windows/alert.js').init(app);
 
 
         // **** Initialize Controllers ****
@@ -112,13 +103,9 @@
         require('./controllers/ruleEditor.js').init(app);
 
 
-        // **** Show welcome message ****
-
-        app.debug('client:app')("Starting the app!, ok");
-        app.bus.view.publish('ui.init');
+        app.debug('client:app')("Starting the app!");
 
         webix.hasRun = true;
-
 
     });
 

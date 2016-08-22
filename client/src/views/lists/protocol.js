@@ -1,5 +1,5 @@
 /**
- * views/lists/patient
+ * @module views/lists/protocol
  */
 
 /*global webix, $$ */
@@ -7,28 +7,27 @@
 (function () {
     "use strict";
 
-    var id = 'lists.patient',
-        view = {
+    var id = 'lists.protocol',
+        view =  {
             view: 'datatable',
             id: id,
             resizeColumn: true,
             select: 'row',
             columns: [
-                { id: 'no', header: 'HospNo', sort: 'string' },
+                { id: 'id', header: 'Id', sort: 'string' },
                 { id: 'name', header: 'Name', fillspace: true, sort: 'string' }
             ],
             data: [
-                { id: '1', no: '1', name: 'John Cedar' },
-                { id: '2', no: '2', name: 'Frederick Maple' },
-                { id: '3', no: '3', name: 'Christine Damian' },
-                { id: '4', no: '4', name: 'Eric Underwood' }
+                { id: '1', name: 'Pain' },
+                { id: '2', name: 'Blood Pressure' }
             ]
         };
 
     exports.getId = function () { return id; };
 
     exports.getView = function (app) {
-        app.debug('client:' + id)(view);
+        app.debug('client:' + id + ':view')(view);
+
         return view;
     };
 
@@ -40,7 +39,9 @@
                 'Remove'
             ]
         }).attachTo($$(id));
-    };
 
+
+        app.debug('client:' + id + ':init')('init');
+    };
 
 })();

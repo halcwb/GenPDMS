@@ -1,5 +1,5 @@
 /**
- * @module views/templates/bottomBar
+ * @module views/templates/statusBar
  */
 
 /*global webix, $$ */
@@ -7,24 +7,25 @@
 (function () {
     "use strict";
 
-    var id = 'bottom_bar_template';
+    var id = 'statusBar',
+        view = {
+            template: 'status: #status# | message: #message#',
+            id: id,
+            height: 30,
+            data: { status: '', message: '' }
+        };
+
+    exports.getId = function () { return id; };
 
     /**
      * Create the view
      * @param app {app} provides the app functionality
      * @returns {view} Returns the view
      */
-    exports.view = function (app) {
+    exports.getView = function (app) {
         //noinspection JSUnresolvedFunction
-        var debug = app.debug('client:views:templates:bottomBar'),
-            view = {
-                template: 'status: #status# | message: #message#',
-                id: id,
-                height: 30,
-                data: { status: '', message: '' }
-            };
+        app.debug('client:' + id)(view);
 
-        debug('view');
         //noinspection JSValidateTypes
         return view;
     };
@@ -36,20 +37,22 @@
      */
     exports.init = function (app) {
         //noinspection JSUnresolvedFunction
-        var debug = app.debug('client:views:templates:bottomBar');
-        var view = $$('bottom_bar_template');
+        var view = $$(id),
+            debug = app.debug('client:' + id);
 
         debug('init');
 
         webix.event(view.$view, 'click', function () {
-            app.bus.view.publish('bottomBar.click', {
+            app.bus.view.publish('status_bar_message', {
                 text: $$(id).getValues().message
             });
         });
 
-        app.bus.controller.subscribe('*.status', function (data) {
-            var bar = $$(id),
+        app.bus.controller.subscribe('set.status', function (data, envelope) {
+            var bar  = $$(id),
                 vals = bar.getValues();
+
+            debug(envelope);
 
             vals.status = data.status;
             bar.setValues(vals);

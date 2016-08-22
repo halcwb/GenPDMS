@@ -9,6 +9,7 @@
 
     var id = 'ui';
 
+    exports.getId = function () { return id; };
 
     /**
      * Initialize ui with app.
@@ -23,13 +24,10 @@
     exports.init = function (app) {
 
         var header = require('./bars/header.js'),
-            menu = require('./menus/sideMenu.js'),
-            status = require('./templates/bottomBar.js'),
-            navigation = require('./components/navigation.js'),
-            patientDetails = require('./components/patientDetails.js'),
-            patientBody = require('./components/patientBody.js'),
+            status = require('./templates/statusBar.js'),
+            body = require('./components/patientBody.js'),
 
-            debug = app.debug('views:ui');
+            debug = app.debug('client:' + id + ':init');
 
         debug('init');
 
@@ -41,30 +39,23 @@
         webix.ui({
             id: id,
             rows: [
-                header.view(app),
-                patientBody.view(app),
-                status.view(app)
+                header.getView(app),
+                body.getView(app),
+                status.getView(app)
             ]
         });
 
-        webix.ui({
-            view: 'contextmenu',
-            id: 'patient_list_menu',
-            data: [
-                'Add',
-                'Remove'
-            ]
-        }).attachTo($$('list_patient'));
-
         // **** Initialize Views ****
 
-        menu.init(app);
+        header.init(app);
+        body.init(app);
         status.init(app);
-        navigation.init(app);
+
+        require('./menus/sideMenu.js').init(app);
 
         // **** Views Initialized ****
 
-        app.bus.view.publish('ui.init');
+        app.bus.view.publish('ui_ready', {});
 
     };
 

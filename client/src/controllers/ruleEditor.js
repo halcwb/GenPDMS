@@ -15,7 +15,7 @@
         app.bus.view.subscribe('protocol.ruleEditor', function (data, envelope) {
             debug(envelope);
 
-            webix.ui(ruleEditor.view(app), $$('patient_body'));
+            webix.ui(ruleEditor.getView(app), $$('patient_body'));
             ruleEditor.init(app);
             $$('rule_editor').getNode().id = 'rule_editor';
 
@@ -35,7 +35,7 @@
         app.bus.view.subscribe('ruleEditor.back', function (data, envelope) {
             debug(envelope);
 
-            webix.ui(patientBody.view(app), $$('rule_editor_component'));
+            webix.ui(patientBody.getView(app), $$('rule_editor_component'));
             var el = document.getElementsByClassName('blocklyToolboxDiv')[0];
             el.parentNode.removeChild(el);
             patientBody.init(app);

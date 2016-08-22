@@ -9,9 +9,9 @@
 
     var id = 'protocol_details';
 
-    exports.id = function () { return id; };
+    exports.getId = function () { return id; };
 
-    exports.view = function (app) {
+    exports.getView = function (app) {
        var labelWidth = 100,
            view  = {
            id: id,

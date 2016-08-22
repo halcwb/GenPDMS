@@ -29,13 +29,13 @@
             });
         });
 
-        app.bus.view.subscribe('sidemenu.itemclick', function (data, envelope) {
+        app.bus.view.subscribe('side_menu_item', function (data, envelope) {
             var status,
                 handle = {
                     'server': function () {
                         app.settings.demo = !app.settings.demo;
                         status = app.settings.demo ? 'demo' : 'online';
-                        app.bus.controller.publish('app.status', { status: status });
+                        app.bus.controller.publish('set.status', { status: status });
                     },
                     'debug': function (data) {
                         var enabled = data.trg.innerText.split(': ')[1];
@@ -54,16 +54,11 @@
             handle[data.id](data, envelope);
         });
 
-        app.bus.view.subscribe('header.menu.click', function (data, envelope) {
+        app.bus.view.subscribe('show.sideMenu', function (data, envelope) {
             debug(envelope);
 
-            if ($$('menu').config.hidden) {
-                $$('menu').show();
-            } else $$('menu').hide();
-
+            app.bus.controller.publish('show.sideMenu', {});
         });
-
-        app.bus.controller.publish('app.status', { status: 'online' });
 
     };
 

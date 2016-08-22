@@ -9,11 +9,11 @@
         patientDetails = require('./patientDetails.js');
 
 
-    exports.view = function (app) {
+    exports.getView = function (app) {
        var view = { id: 'patient_body', cols: [
-           navigation.view(app),
+           navigation.getView(app),
            { view: 'resizer' },
-           patientDetails.view(app)
+           patientDetails.getView(app)
        ]};
 
        return view;
