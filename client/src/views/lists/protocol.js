@@ -7,7 +7,7 @@
 (function () {
     "use strict";
 
-    var id = 'lists.protocol',
+    var id = 'protocolList',
         view =  {
             view: 'datatable',
             id: id,

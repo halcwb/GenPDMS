@@ -7,19 +7,21 @@
 (function () {
     "use strict";
 
-    exports.init = function (app) {
-        var patientBody = require('./../views/components/patientBody.js'),
-            ruleEditor = require('./../views/components/ruleEditor.js'),
-            debug = app.debug('client:controllers:rule');
+    var patientBody = require('./../views/components/patientBody.js'),
+        ruleEditorBody = require('./../views/components/ruleEditorBody.js'),
+        ruleEditorNode = 'rule_editor';
 
-        app.bus.view.subscribe('protocol.ruleEditor', function (data, envelope) {
+    exports.init = function (app) {
+        var debug = app.debug('client:controllers:rule');
+
+        app.bus.view.subscribe('protocolDetails.ruleEditorButton.click', function (data, envelope) {
             debug(envelope);
 
-            webix.ui(ruleEditor.getView(app), $$('patient_body'));
-            ruleEditor.init(app);
-            $$('rule_editor').getNode().id = 'rule_editor';
+            webix.ui(ruleEditorBody.getView(app), $$(patientBody.getId()));
+            ruleEditorBody.init(app);
+            $$('ruleEditor').getNode().id = ruleEditorNode;
 
-            var workspace = Blockly.inject('rule_editor', {
+            var workspace = Blockly.inject(ruleEditorNode, {
                 toolbox: document.getElementById('rule_editor_toolbox')
             });
 
@@ -32,10 +34,10 @@
 
         });
 
-        app.bus.view.subscribe('ruleEditor.back', function (data, envelope) {
+        app.bus.view.subscribe('ruleEditorBody.backButton.click', function (data, envelope) {
             debug(envelope);
 
-            webix.ui(patientBody.getView(app), $$('rule_editor_component'));
+            webix.ui(patientBody.getView(app), $$(ruleEditorBody.getId()));
             var el = document.getElementsByClassName('blocklyToolboxDiv')[0];
             el.parentNode.removeChild(el);
             patientBody.init(app);

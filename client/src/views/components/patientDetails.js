@@ -6,7 +6,7 @@
     "use strict";
 
     var form = require('./../forms/patient.js'),
-        id = 'patient_details';
+        id = 'patientDetails';
 
     exports.getId = function () { return id; };
 

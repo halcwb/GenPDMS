@@ -7,7 +7,7 @@
 (function () {
     "use strict";
 
-    var id = 'views.forms.patient';
+    var id = 'patientForm';
 
     var labelWidth = 100;
 

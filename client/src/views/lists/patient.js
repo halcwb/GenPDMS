@@ -7,7 +7,7 @@
 (function () {
     "use strict";
 
-    var id = 'lists.patient',
+    var id = 'patientList',
         view = {
             view: 'datatable',
             id: id,

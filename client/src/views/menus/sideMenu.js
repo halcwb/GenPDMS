@@ -20,7 +20,7 @@
             width: 200,
             position: 'left',
             state: function(state) {
-                var headerHeight = $$('bars.header').$height;
+                var headerHeight = $$('header').$height;
                 state.top = headerHeight;
                 state.height -= headerHeight;
             },

@@ -7,7 +7,7 @@
 (function () {
     "use strict";
 
-    var id = 'bars.header',
+    var id = 'header',
         iconId = id + '.icon';
 
     exports.getId = function () { return id; };
