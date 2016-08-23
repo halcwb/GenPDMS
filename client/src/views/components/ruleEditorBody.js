@@ -3,7 +3,7 @@
  */
 
 
-/*global $$ */
+/*global webix, $$ */
 
 (function () {
     "use strict";
@@ -35,18 +35,32 @@
     };
 
     exports.init = function (app) {
-        var debug = app.debug('client:views:components:ruleEditor');
+        var backBtnEvt = id + '.' + backButtonId,
+            addBtnEvt  = id + '.' + addButtonId,
+            debug = app.debug('client:views:components:ruleEditor');
 
         $$(backButtonId).attachEvent('onItemClick', function () {
-            var evt = backButtonId + '.click';
+            var evt = backBtnEvt + '.click';
             debug(evt);
             app.bus.view.publish(evt, {});
         });
 
         $$(addButtonId).attachEvent('onItemClick', function () {
-            var evt = addButtonId + '.click';
+            var evt = addBtnEvt + '.click';
             debug(evt);
             app.bus.view.publish(evt, {});
+        });
+
+        webix.event($$(addButtonId).getInputNode(), 'mouseenter', function (e) {
+            var evt = backBtnEvt + '.mouseenter';
+            debug(evt);
+            app.bus.view.publish(evt, { e: e });
+        });
+
+        webix.event($$(addButtonId).getInputNode(), 'mouseleave', function (e) {
+            var evt = backBtnEvt + '.mouseleave';
+            debug(evt);
+            app.bus.view.publish(evt, { e: e });
         });
     };
 

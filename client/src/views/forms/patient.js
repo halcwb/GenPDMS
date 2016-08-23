@@ -2,7 +2,7 @@
  * views/forms/patient
  */
 
-/*global $$, _ */
+/*global webix, $$, _ */
 
 (function () {
     "use strict";
@@ -74,12 +74,27 @@
 
 
         _.forEach($$(id).getNode().querySelectorAll('[class="webix_view webix_control webix_el_button"]'), function (el) {
-            var id = el.getAttribute('view_id');
+            var btnId  = el.getAttribute('view_id'),
+                btnEvt = btnId;
 
-            $$(id).attachEvent('onItemClick', function () {
-                debug('onItemClick', id);
-                app.bus.view.publish(id, {});
+            $$(btnId).attachEvent('onItemClick', function () {
+                var evt = btnEvt + '.click';
+                debug('onItemClick', btnId);
+                app.bus.view.publish(evt, { btn: $$(btnId) });
             });
+
+            webix.event($$(btnId).getInputNode(), 'mouseenter', function (e) {
+                var evt = btnEvt + '.mouseenter';
+                debug(evt);
+                app.bus.view.publish(evt, { e: e });
+            });
+
+            webix.event($$(btnId).getInputNode(), 'mouseleave', function (e) {
+                var evt = btnEvt + '.mouseleave';
+                debug(evt);
+                app.bus.view.publish(evt, { e: e });
+            });
+
         });
     };
 

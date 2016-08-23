@@ -18,8 +18,7 @@
         webix.ui({
             id: id,
             view: 'tooltip',
-            template: '#text#',
-            height: 100
+            template: '#text#'
         });
     };
 
