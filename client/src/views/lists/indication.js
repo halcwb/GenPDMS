@@ -2,7 +2,7 @@
  * @module views/lists/indication
  */
 
-/*global webix, $$ */
+/*global webix, $$, _ */
 
 (function () {
     "use strict";
@@ -40,6 +40,7 @@
                 },
                 {
                     view: 'toolbar',
+                    id: id + '.toolbar',
                     height: 40,
                     cols: [
                         { template: '' },
@@ -59,10 +60,28 @@
     exports.init = function (app) {
         var debug = app.debug('client:' + id + ':init');
 
-        $$(addButtonId).attachEvent('onItemClick', function () {
-            app.bus.view.publish(addButtonId + '.click', {
-                btn: $$(addButtonId)
+        _.forEach($$(id + '.toolbar').getNode().querySelectorAll('[class="webix_view webix_control webix_el_button"]'), function (el) {
+            var btnId = el.getAttribute('view_id'),
+                btnEvt = btnId;
+
+            $$(btnId).attachEvent('onItemClick', function () {
+                var evt = btnEvt + '.click';
+                debug('onItemClick', btnId);
+                app.bus.view.publish(evt, {btn: $$(btnId)});
             });
+
+            webix.event($$(btnId).getInputNode(), 'mouseenter', function (e) {
+                var evt = btnEvt + '.mouseenter';
+                debug(evt);
+                app.bus.view.publish(evt, {e: e});
+            });
+
+            webix.event($$(btnId).getInputNode(), 'mouseleave', function (e) {
+                var evt = btnEvt + '.mouseleave';
+                debug(evt);
+                app.bus.view.publish(evt, {e: e});
+            });
+
         });
 
         debug('init');
