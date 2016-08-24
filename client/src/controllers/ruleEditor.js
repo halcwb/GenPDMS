@@ -14,7 +14,7 @@
     exports.init = function (app) {
         var debug = app.debug('client:controllers:rule');
 
-        app.bus.view.subscribe('protocolDetails.ruleEditorButton.click', function (data, envelope) {
+        app.bus.view.subscribe('protocolOrderList.ruleEditor', function (data, envelope) {
             debug(envelope);
 
             webix.ui(ruleEditorBody.getView(app), $$(patientBody.getId()));
@@ -34,7 +34,7 @@
 
         });
 
-        app.bus.view.subscribe('ruleEditorBody.backButton.click', function (data, envelope) {
+        app.bus.view.subscribe('ruleEditor.back', function (data, envelope) {
             debug(envelope);
 
             webix.ui(patientBody.getView(app), $$(ruleEditorBody.getId()));

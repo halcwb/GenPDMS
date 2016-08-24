@@ -2,7 +2,7 @@
  * views/components/navigation
  */
 
-/*global $$ */
+/*global webix, $$, _ */
 
 (function () {
     "use strict";
@@ -37,7 +37,8 @@
     };
 
     exports.init = function (app) {
-        var tabs = {};
+        var debug = app.debug('client:' + id + ':init'),
+            tabs = {};
 
         tabs['tab.' + patientList.getId()] = 'patients';
         tabs['tab.' + protocolList.getId()] = 'protocols';
@@ -46,12 +47,22 @@
         protocolList.init(app);
 
         $$(id).getTabbar().attachEvent('onBeforeTabClick', function (tabId) {
-            app.bus.view.publish(id + '.tabclick', {
+            var evt = id + '.tabclick';
+
+            debug('publish', evt, tabs[tabId]);
+
+            app.bus.view.publish(evt, {
                 tab: tabs[tabId]
             });
         });
 
-        app.debug('client:' + id + ':init')('init');
+        app.util.publishTabEnter({
+            tabs: ['tab.patientList', 'tab.protocolList'],
+            app: app,
+            debug: debug
+        });
+
+        debug('init');
     };
 
 })();

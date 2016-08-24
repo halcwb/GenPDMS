@@ -2,7 +2,7 @@
  * views/components/details
  */
 
-/*global webix, $$ */
+/*global webix, $$, _ */
 
 (function () {
     "use strict";
@@ -59,6 +59,12 @@
             app.bus.view.publish(id + '.tabclick', {
                 tab: tabs[tabId]
             });
+        });
+
+        app.util.publishTabEnter({
+            tabs: _.keys(tabs),
+            app: app,
+            debug: debug
         });
 
         debug('init');
