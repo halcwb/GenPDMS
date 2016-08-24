@@ -2,13 +2,14 @@
  * @module views/lists/order
  */
 
-/*global webix, $$ */
+/*global webix, $$, _ */
 
 (function () {
     "use strict";
 
     var id = 'orderList',
-        reviewButtonId = id + '.reviewButton',
+        orderListToolbarId = id + '.toolbar',
+        reviewTip = 'Add or remove treatment according to patient signs and available protocols',
         view = {
             rows: [
                 {
@@ -33,10 +34,11 @@
                 },
                 {
                     view: 'toolbar',
+                    id: orderListToolbarId,
                     height: 40,
                     cols: [
                         { template: '' },
-                        { view: 'button', id: reviewButtonId, value: 'Review', width: 75 }
+                        { view: 'button', id: id + '.review', value: 'Review', tooltip: reviewTip, width: 75 }
                     ]
                 }
             ]
@@ -52,10 +54,10 @@
     exports.init = function (app) {
         var debug = app.debug('client:' + id + ':init');
 
-        $$(reviewButtonId).attachEvent('onItemClick', function () {
-            app.bus.view.publish(reviewButtonId + '.click', {
-                btn: $$(reviewButtonId)
-            });
+        app.util.publishButton({
+            id: orderListToolbarId,
+            app: app,
+            debug: debug
         });
 
         debug('init');

@@ -53,9 +53,28 @@
                 {
                     cols: [
                         { template: '' },
-                        { view: 'button', id: id + '.new', value: 'New', width: 75},
-                        { view: 'button', id: id + '.edit', value: 'Edit', type: 'form', width: 75},
-                        { view: 'button', id: id + '.save', value: 'Save', width: 75 }
+                        {
+                            view: 'button',
+                            id: id + '.new',
+                            value: 'New',
+                            tooltip: 'Add a new patient',
+                            width: 75
+                        },
+                        {
+                            view: 'button',
+                            id: id + '.edit',
+                            value: 'Edit',
+                            type: 'form',
+                            tooltip: 'Start editing patient details',
+                            width: 75
+                        },
+                        {
+                            view: 'button',
+                            id: id + '.save',
+                            value: 'Save',
+                            tooltip: 'Save patient details',
+                            width: 75
+                        }
                     ]
                 }
             ]}
@@ -72,30 +91,13 @@
     exports.init = function (app) {
         var debug = app.debug('client:' + id);
 
-
-        _.forEach($$(id).getNode().querySelectorAll('[class="webix_view webix_control webix_el_button"]'), function (el) {
-            var btnId  = el.getAttribute('view_id'),
-                btnEvt = btnId;
-
-            $$(btnId).attachEvent('onItemClick', function () {
-                var evt = btnEvt + '.click';
-                debug('onItemClick', btnId);
-                app.bus.view.publish(evt, { btn: $$(btnId) });
-            });
-
-            webix.event($$(btnId).getInputNode(), 'mouseenter', function (e) {
-                var evt = btnEvt + '.mouseenter';
-                debug(evt);
-                app.bus.view.publish(evt, { e: e });
-            });
-
-            webix.event($$(btnId).getInputNode(), 'mouseleave', function (e) {
-                var evt = btnEvt + '.mouseleave';
-                debug(evt);
-                app.bus.view.publish(evt, { e: e });
-            });
-
+        app.util.publishButton({
+            id: id,
+            app: app,
+            debug: debug
         });
+
+        debug('init');
     };
 
 })();

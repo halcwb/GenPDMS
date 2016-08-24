@@ -2,13 +2,14 @@
  * components/protocolDetails
  */
 
-/*global webix, $$ */
+/*global webix, $$, _ */
 
 (function () {
     "use strict";
 
     var id = 'protocolDetails',
-        protocolListId = 'protocolOrderList',
+        protocolOrderListId = 'protocolOrderList',
+        protocolOrderListToolbarId = protocolOrderListId + 'toolbar',
         labelWidth = 100,
         view  = {
             id: id,
@@ -38,9 +39,25 @@
                             {
                                 cols: [
                                     { template: '' },
-                                    { view: 'button', value: 'New', width: 75},
-                                    { view: 'button', value: 'Edit', type: 'form', width: 75},
-                                    { view: 'button', value: 'Save', width: 75 }
+                                    {
+                                        view: 'button',
+                                        id: id + '.new',
+                                        value: 'New',
+                                        width: 75
+                                    },
+                                    {
+                                        view: 'button',
+                                        id: id + '.edit',
+                                        value: 'Edit',
+                                        type: 'form',
+                                        width: 75
+                                    },
+                                    {
+                                        view: 'button',
+                                        id: id + '.save',
+                                        value: 'Save',
+                                        width: 75
+                                    }
                                 ]
                             }
                         ]}
@@ -48,7 +65,7 @@
                 },
                 {
                     view: 'datatable',
-                    id: protocolListId,
+                    id: protocolOrderListId,
                     resizeColumn: true,
                     select: 'row',
                     columns: [
@@ -61,11 +78,22 @@
                 },
                 {
                     view: 'toolbar',
+                    id: protocolOrderListToolbarId,
                     height: 40,
                     cols: [
                         { template: '' },
-                        { view: 'button', id: id +  '.ruleEditorButton', value: 'Rule Editor', width: 100 },
-                        { view: 'button', value: 'Add', width: 75 }
+                        {
+                            view: 'button',
+                            id: protocolOrderListId + '.ruleEditor',
+                            value: 'Rule Editor',
+                            width: 100
+                        },
+                        {
+                            view: 'button',
+                            id: protocolOrderListId + '.add',
+                            value: 'Add',
+                            width: 75
+                        }
                     ]
                 }
             ]
@@ -81,8 +109,7 @@
     };
 
     exports.init = function (app) {
-        var debug = app.debug('client:' + id + ':init'),
-            ruleEditorBtn = id + '.ruleEditorButton';
+        var debug = app.debug('client:' + id + ':init');
 
         if (!$$(id)) {
             webix.ui({
@@ -90,14 +117,15 @@
                 data: [
                     'Create Indication'
                 ]
-            }).attachTo($$(protocolListId));
+            }).attachTo($$(protocolOrderListId));
         }
 
-        $$(ruleEditorBtn).attachEvent('onItemClick', function () {
-            var evt = ruleEditorBtn + '.click';
-            debug(evt);
-            app.bus.view.publish(evt, {});
+        app.util.publishButton({
+            id: id,
+            app: app,
+            debug: debug
         });
+
 
         debug('init');
     };

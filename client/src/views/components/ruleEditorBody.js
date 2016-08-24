@@ -3,14 +3,13 @@
  */
 
 
-/*global webix, $$ */
+/*global webix, $$, _ */
 
 (function () {
     "use strict";
 
     var id = 'ruleEditorBody',
-        backButtonId = id + '.backButton',
-        addButtonId  = id + '.addButton',
+        toolbarId = id + '.toolbar',
         view = {
             id: id,
             rows: [{
@@ -18,11 +17,23 @@
                 template: ''
             },{
                 view: 'toolbar',
+                id: toolbarId,
                 height: 40,
                 cols: [
                     { template: '' },
-                    { view: 'button', id: backButtonId, value: 'Back',     width: 75 },
-                    { view: 'button', id: addButtonId,  value: 'Add Rule', width: 75 }
+                    {
+                        view: 'button',
+                        id: 'ruleEditor.back',
+                        value: 'Back',
+                        tooltip: 'back to the main window',
+                        width: 75
+                    },
+                    {
+                        view: 'button',
+                        id: 'ruleEditor.addRule',
+                        value: 'Add Rule',
+                        width: 75
+                    }
                 ]
             }]
         };
@@ -35,33 +46,15 @@
     };
 
     exports.init = function (app) {
-        var backBtnEvt = id + '.' + backButtonId,
-            addBtnEvt  = id + '.' + addButtonId,
-            debug = app.debug('client:views:components:ruleEditor');
+        var debug = app.debug('client:views:components:ruleEditor');
 
-        $$(backButtonId).attachEvent('onItemClick', function () {
-            var evt = backBtnEvt + '.click';
-            debug(evt);
-            app.bus.view.publish(evt, {});
+        app.util.publishButton({
+            id: toolbarId,
+            app: app,
+            debug: debug
         });
 
-        $$(addButtonId).attachEvent('onItemClick', function () {
-            var evt = addBtnEvt + '.click';
-            debug(evt);
-            app.bus.view.publish(evt, {});
-        });
-
-        webix.event($$(addButtonId).getInputNode(), 'mouseenter', function (e) {
-            var evt = backBtnEvt + '.mouseenter';
-            debug(evt);
-            app.bus.view.publish(evt, { e: e });
-        });
-
-        webix.event($$(addButtonId).getInputNode(), 'mouseleave', function (e) {
-            var evt = backBtnEvt + '.mouseleave';
-            debug(evt);
-            app.bus.view.publish(evt, { e: e });
-        });
+        debug('init');
     };
 
 })();

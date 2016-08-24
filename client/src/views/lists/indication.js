@@ -8,7 +8,8 @@
     "use strict";
 
     var id = 'indicationList',
-        addButtonId = id + '.addButton',
+        toolbarId = id + '.toolbar',
+        addTip = 'Add an indication',
         view = {
             rows: [
                 {
@@ -40,11 +41,11 @@
                 },
                 {
                     view: 'toolbar',
-                    id: id + '.toolbar',
+                    id: toolbarId,
                     height: 40,
                     cols: [
                         { template: '' },
-                        { view: 'button', id: addButtonId, value: 'Add', width: 75 }
+                        { view: 'button', id: id + '.add', value: 'Add', tooltip: addTip, width: 75 }
                     ]
                 }
             ]
@@ -60,28 +61,10 @@
     exports.init = function (app) {
         var debug = app.debug('client:' + id + ':init');
 
-        _.forEach($$(id + '.toolbar').getNode().querySelectorAll('[class="webix_view webix_control webix_el_button"]'), function (el) {
-            var btnId = el.getAttribute('view_id'),
-                btnEvt = btnId;
-
-            $$(btnId).attachEvent('onItemClick', function () {
-                var evt = btnEvt + '.click';
-                debug('onItemClick', btnId);
-                app.bus.view.publish(evt, {btn: $$(btnId)});
-            });
-
-            webix.event($$(btnId).getInputNode(), 'mouseenter', function (e) {
-                var evt = btnEvt + '.mouseenter';
-                debug(evt);
-                app.bus.view.publish(evt, {e: e});
-            });
-
-            webix.event($$(btnId).getInputNode(), 'mouseleave', function (e) {
-                var evt = btnEvt + '.mouseleave';
-                debug(evt);
-                app.bus.view.publish(evt, {e: e});
-            });
-
+        app.util.publishButton({
+            id: toolbarId,
+            app: app,
+            debug: debug
         });
 
         debug('init');

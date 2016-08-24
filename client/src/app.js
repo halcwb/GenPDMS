@@ -90,7 +90,6 @@
         // **** Initialize Views ****
 
         require('./views/ui.js').init(app);
-        require('./views/windows/tooltip.js').init(app);
         require('./views/windows/loadingMask.js').init(app);
         require('./views/windows/alert.js').init(app);
 
@@ -98,7 +97,6 @@
         // **** Initialize Controllers ****
 
         require('./controllers/app.js').init(app);
-        require('./controllers/tooltip.js').init(app);
         require('./controllers/navigation.js').init(app);
         require('./controllers/ruleEditor.js').init(app);
 

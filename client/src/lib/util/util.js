@@ -9,6 +9,7 @@
     var util = require('util');
 
     util.numberParser = require('./numberParser.js');
+    util.publishButton = require('./publishButton.js');
 
     /**
      * Util functions

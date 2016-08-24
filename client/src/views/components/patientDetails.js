@@ -53,6 +53,7 @@
 
         form.init(app);
         indications.init(app);
+        orders.init(app);
 
         $$(tabViewId).getTabbar().attachEvent('onBeforeTabClick', function (tabId) {
             app.bus.view.publish(id + '.tabclick', {

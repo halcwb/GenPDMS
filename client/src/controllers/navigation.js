@@ -23,6 +23,7 @@
             } else if (data.tab === 'patients' && $$(protocolDetails.getId())) {
                 debug('patient details', patientDetails);
                 webix.ui(patientDetails.getView(app), $$(protocolDetails.getId()));
+                patientDetails.init(app);
             }
 
         });
