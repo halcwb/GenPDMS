@@ -12,7 +12,7 @@
         'tab.patientList.mouseenter': 'Available patients </br>Select a patient to edit or treat',
         'tab.protocolList.mouseenter': 'Available protocols </br>Select a protocol to edit',
         'tab.indicationList.mouseenter': 'List of patient indications </br>When a patient has an indication this triggers a protocol',
-        'tab.orderList.mouseenter': 'Running ordes </br>Orders and indications are evaluated according to protocols'
+        'tab.treatmentList.mouseenter': 'Running ordes </br>Orders and indications are evaluated according to protocols'
     };
 
     exports.init = function (app) {

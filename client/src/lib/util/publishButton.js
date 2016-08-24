@@ -13,6 +13,7 @@
      * @param args
      */
     module.exports = function (args) {
+        if (!$$(args.id)) throw 'Cannot find: ' + args.id;
 
         _.forEach($$(args.id).getNode().querySelectorAll('[class="webix_view webix_control webix_el_button"]'), function (el) {
             var btnId = el.getAttribute('view_id');

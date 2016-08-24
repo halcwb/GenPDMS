@@ -9,7 +9,7 @@
 
     var form = require('./../forms/patient.js'),
         indications = require('./../lists/indication.js'),
-        orders = require('./../lists/order.js'),
+        treatment = require('./../lists/treatment.js'),
         id = 'patientDetails',
         tabViewId = id + 'tabs';
 
@@ -33,8 +33,8 @@
                     {
                         header: 'Treatment',
                         body: {
-                            id: 'tab.' + orders.getId(),
-                            rows: [orders.getView(app)]
+                            id: 'tab.' + treatment.getId(),
+                            rows: [treatment.getView(app)]
                         }
                     }
                 ]
@@ -49,11 +49,11 @@
             tabs = {};
 
         tabs['tab.' + indications.getId()] = 'indications';
-        tabs['tab.' + orders.getId()] = 'orders';
+        tabs['tab.' + treatment.getId()] = 'treatment';
 
         form.init(app);
         indications.init(app);
-        orders.init(app);
+        treatment.init(app);
 
         $$(tabViewId).getTabbar().attachEvent('onBeforeTabClick', function (tabId) {
             app.bus.view.publish(id + '.tabclick', {

@@ -1,5 +1,5 @@
 /**
- * @module views/lists/order
+ * @module views/lists/treatment
  */
 
 /*global webix, $$, _ */
@@ -7,8 +7,8 @@
 (function () {
     "use strict";
 
-    var id = 'orderList',
-        orderListToolbarId = id + '.toolbar',
+    var id = 'treatmentList',
+        treatmentToolbarId = id + '.toolbar',
         reviewTip = 'Add or remove treatment according to patient signs and available protocols',
         view = {
             rows: [
@@ -34,7 +34,7 @@
                 },
                 {
                     view: 'toolbar',
-                    id: orderListToolbarId,
+                    id: treatmentToolbarId,
                     height: 40,
                     cols: [
                         { template: '' },
@@ -55,7 +55,7 @@
         var debug = app.debug('client:' + id + ':init');
 
         app.util.publishButton({
-            id: orderListToolbarId,
+            id: treatmentToolbarId,
             app: app,
             debug: debug
         });

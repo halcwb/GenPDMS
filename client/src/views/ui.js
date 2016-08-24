@@ -25,7 +25,7 @@
 
         var header = require('./bars/header.js'),
             status = require('./templates/statusBar.js'),
-            body = require('./components/patientBody.js'),
+            body   = require('./components/patientBody.js'),
 
             debug = app.debug('client:' + id + ':init');
 
@@ -55,7 +55,7 @@
 
         // **** Views Initialized ****
 
-        app.bus.view.publish('ui_ready', {});
+        app.bus.view.publish('ui.ready', {});
 
     };
 
