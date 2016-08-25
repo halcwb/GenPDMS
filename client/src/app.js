@@ -101,7 +101,9 @@
         require('./controllers/navigation.js').init(app);
         require('./controllers/ruleEditor.js').init(app);
         require('./controllers/tooltip.js').init(app);
-
+        require('./controllers/patient.js').init(app);
+        require('./controllers/treatment.js').init(app);
+        require('./controllers/indication.js').init(app);
 
         app.debug('client:app')("Starting the app!");
 

@@ -36,6 +36,7 @@
                             {
                                 view: 'button',
                                 id: id + '.new',
+                                tooltip: 'Enter a new protocol',
                                 value: 'New',
                                 width: 75
                             },
@@ -43,6 +44,7 @@
                                 view: 'button',
                                 id: id + '.edit',
                                 value: 'Edit',
+                                tooltip: 'Change exisiting protocol',
                                 type: 'form',
                                 width: 75
                             },
@@ -50,6 +52,7 @@
                                 view: 'button',
                                 id: id + '.save',
                                 value: 'Save',
+                                tooltip: 'Save protocol',
                                 width: 75
                             }
                         ]

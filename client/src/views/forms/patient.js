@@ -22,22 +22,25 @@
                     label: 'Id',
                     placeholder: 'Hospital Number',
                     name: 'no',
+                    readonly: true,
                     labelAlign: 'right',
                     labelWidth: labelWidth
                 },
                 {
                     view: "text",
                     label: 'Last Name',
-                    placeholder: 'First Name',
+                    placeholder: 'Last Name',
                     name: 'fname',
+                    readonly: true,
                     labelAlign: 'right',
                     labelWidth: labelWidth
                 },
                 {
                     view: "text",
                     label: 'First Name',
-                    placeholder: 'Last Name',
+                    placeholder: 'First Name',
                     name: 'lname',
+                    readonly: true,
                     labelAlign: 'right',
                     labelWidth: labelWidth
                 },
@@ -46,6 +49,8 @@
                     label: 'Birth date',
                     placeholder: 'Patient Birth Date',
                     name: 'dob',
+                    readonly: true,
+                    format: '%d-%M-%Y',
                     labelAlign: 'right',
                     labelWidth: labelWidth
                 },

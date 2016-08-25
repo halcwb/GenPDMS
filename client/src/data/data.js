@@ -26,10 +26,10 @@
                 {
                     req: {},
                     resp: { succ: true, result: { patients: [
-                        { name: 'John Cedar' },
-                        { name: 'Frederick Maple' },
-                        { name: 'Christine Damian' },
-                        { name: 'Eric Underwood' }
+                        { name: 'John Cedar', dob: '3/11/1967' },
+                        { name: 'Frederick Maple', dob: '3/11/1967'  },
+                        { name: 'Christine Damian', dob: '3/11/1967'  },
+                        { name: 'Eric Underwood', dob: '3/11/1967'  }
                     ]}  }
                 }
             ]

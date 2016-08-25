@@ -38,18 +38,21 @@
                             view: 'button',
                             id: id + '.ruleEditor',
                             value: 'Rule Editor',
+                            tooltip: 'Open the rule editor',
                             width: 100
                         },
                         {
                             view: 'button',
                             id: id + '.add',
                             value: 'Add',
+                            tooltip: 'Add a new protocol item',
                             width: 75
                         }
                     ]
                 }
             ]
         };
+
         app.debug('client:' + id + ':getView')(view);
         return view;
     };

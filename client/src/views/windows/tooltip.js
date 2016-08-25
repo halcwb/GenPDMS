@@ -23,7 +23,7 @@
         }).attachEvent('onAfterRender', function () {
             // webix does not set width and height to tooltip
             tip = $$(id).getNode();
-            style = tip.getAttribute('style') + " max-width: 200px; height: 200px;";
+            style = tip.getAttribute('style') + " max-width: 200px; height: 100px;";
             tip.setAttribute('style', style);
         });
 

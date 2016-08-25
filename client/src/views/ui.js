@@ -2,7 +2,7 @@
  * @module views/ui
  */
 
-/*global $$, webix */
+/*global $$, webix, _ */
 
 (function () {
     "use strict";

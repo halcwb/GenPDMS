@@ -2,12 +2,15 @@
  * views/components/patientBody
  */
 
+/*global _ */
+
 (function () {
     "use strict";
 
     var id = 'patientBody',
         navigation = require('./navigation.js'),
-        patientDetails = require('./patientDetails.js');
+        patientDetails = require('./patientDetails.js'),
+        goldenRatio = (1 + Math.sqrt(5))/2;
 
     exports.getId = function () { return id; };
 
@@ -15,7 +18,7 @@
         var view = {
                 id: id,
                 cols: [
-                    navigation.getView(app),
+                    _.extend(navigation.getView(app), { gravity: 1/goldenRatio }),
                     { view: 'resizer' },
                     patientDetails.getView(app)
                 ]

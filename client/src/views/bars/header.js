@@ -2,7 +2,7 @@
  * @module views/bars/header
  */
 
-/*global $$ */
+/*global webix, $$ */
 
 (function () {
     "use strict";
@@ -38,6 +38,15 @@
         $$(iconId).attachEvent('onItemClick', function () {
             app.bus.view.publish('show.sideMenu', {});
         });
+
+        webix.event($$(iconId).getNode(), 'mouseenter', function (e) {
+            app.bus.view.publish(iconId + '.mouseenter', { e: e });
+        });
+
+        webix.event($$(iconId).getNode(), 'mouseleave', function (e) {
+            app.bus.view.publish(iconId + '.mouseleave', { e: e });
+        });
+
     };
 
 })();

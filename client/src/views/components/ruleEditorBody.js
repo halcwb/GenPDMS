@@ -32,6 +32,7 @@
                         view: 'button',
                         id: 'ruleEditor.addRule',
                         value: 'Add Rule',
+                        tooltip: 'Add the rule to the rule list',
                         width: 75
                     }
                 ]

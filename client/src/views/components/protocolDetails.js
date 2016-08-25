@@ -17,7 +17,7 @@
         var view  = {
             id: id,
             rows: [
-                protocolForm.getView(app),
+                _.extend(protocolForm.getView(app), { type: 'space' }),
                 protocolOrders.getView(app),
             ]
         };

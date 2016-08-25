@@ -17,8 +17,8 @@
 
     exports.getView = function (app) {
         var view = { id: id, rows: [
-            form.getView(app),
-            { view: 'resizer' },
+            _.extend(form.getView(app), {type: 'space' }),
+//            { view: 'resizer' },
             {
                 view: 'tabview',
                 id: tabViewId,
