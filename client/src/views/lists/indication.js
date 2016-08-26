@@ -20,23 +20,15 @@
                     editable: true,
                     columns: [
                         {
-                            id: 'sign',
-                            header: 'Signs',
+                            id: 'indication',
+                            header: 'Indication',
                             fillspace: true,
                             sort: 'string'
-                        },
-                        {
-                            id: 'value',
-                            header: 'Value'
-                        },
-                        {
-                            id: 'unit',
-                            header: 'Unit'
                         }
                     ],
                     data: [
-                        { id: '1', sign: 'Pain Score', value: '3', unit: '' },
-                        { id: '2', sign: 'Mean Blood Pressure', value:  '80', unit: 'mmHg' }
+                        { id: '1', indication: 'Pain' },
+                        { id: '2', indication: 'Low Blood Pressure' }
                     ]
                 },
                 {
