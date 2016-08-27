@@ -28,6 +28,8 @@
                 args.app.bus.view.publish(btnId, { btn: $$(btnId) });
             });
         });
+
+
     };
 
 })();

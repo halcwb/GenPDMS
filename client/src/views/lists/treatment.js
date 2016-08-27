@@ -38,8 +38,8 @@
                     height: 40,
                     cols: [
                         { template: '' },
-                        { view: 'button', id: id + '.edit', value: 'Edit', tooltip: 'Edit orders', width: 75, disabled: true },
-                        { view: 'button', id: id + '.review', value: 'Review', tooltip: reviewTip, width: 75, disabled: true }
+                        { view: 'button', id: id + '.edit', value: 'Edit', tooltip: 'Edit orders', width: 75 },
+                        { view: 'button', id: id + '.review', value: 'Review', tooltip: reviewTip, width: 75 }
                     ]
                 }
             ]

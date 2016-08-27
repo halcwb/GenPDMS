@@ -31,7 +31,7 @@
             treatmentBody.init(app);
         });
 
-        app.bus.view.subscribe('treatmentDetailList.back', function (data, envelope) {
+        app.bus.view.subscribe('treatmentBody.back', function (data, envelope) {
             debug(envelope);
 
             webix.ui(patientBody.getView(app), $$(treatmentBody.getId()));
