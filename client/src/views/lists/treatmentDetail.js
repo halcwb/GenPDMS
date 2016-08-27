@@ -13,6 +13,16 @@
         view = {
             rows: [
                 {
+                    template: 'Patient: #name# Birth date: #dob# Weight: #weight# ',
+                    id: id + '.header',
+                    height: 40,
+                    data: {
+                        name: 'Test Patient',
+                        dob: '12-Mar-1956',
+                        weight: '70 kg'
+                    }
+                },
+                {
                     view: 'treetable',
                     id: id,
                     resizeColumn: true,

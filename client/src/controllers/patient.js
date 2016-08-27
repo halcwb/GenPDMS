@@ -35,7 +35,9 @@
             });
 
             formReadOnly($$('patientForm'), true);
-
+            _.forEach($$('treatmentList.toolbar').getChildViews(), function (el) {
+                el.enable();
+            });
         });
 
         app.bus.view.subscribe('patientForm.new', function (data, envelope) {
