@@ -14,8 +14,12 @@
     exports.getView = function (app) {
         var view = {
             id: id,
+            multi: true,
+            view: 'accordion',
             rows: [
-                treatmentDetails.getView(app)
+                _extend(treatmentDetails.getView(app), {
+                    header: 'Treatment'
+                })
             ]
         };
 

@@ -78,6 +78,10 @@
     app.request = require('./lib/ajax/request.js');
 
 
+    webix.i18n.parseFormat = '%d-%M-%y';
+    webix.i18n.dateFormat  = '%d-%M-%y';
+    webix.i18n.setLocale();
+
 
     webix.ready(function () {
 

@@ -2,7 +2,7 @@
  * @module views/lists/treatmentDetail
  */
 
-/*global console */
+/*global console, webix, $$ */
 
 (function () {
 
@@ -22,8 +22,24 @@
                         {
                             id: 'no',
                             header: 'Id',
-                            width: 30,
+                            width: 40,
                             sort: 'string'
+                        },
+                        {
+                            id: 'start',
+                            header: 'Start',
+                            width: 100,
+                            editor: 'date',
+                            format: function (value) { return webix.i18n.dateFormatStr(value); },
+                            sort: 'date'
+                        },
+                        {
+                            id: 'stop',
+                            header: 'Stop',
+                            width: 100,
+                            editor: 'date',
+                            format: function (value) { return webix.i18n.dateFormatStr(value); },
+                            sort: 'date'
                         },
                         {
                             id: 'orderable',
@@ -31,7 +47,6 @@
                             fillspace: true,
                             sort: 'string',
                             template: function (obj, common) {
-                                console.log(obj, common);
                                 if (obj.$level === 1) return common.treetable(obj, common) + obj.value;
                                 return obj.orderable;
                             }
@@ -40,43 +55,44 @@
                             id: 'freq',
                             header: 'Frequency',
                             width: 100,
+                            editor: 'combo',
                             sort: 'string'
                         },
                         {
                             id: 'qty',
                             header: 'Quantity',
                             width: 75,
-                            sort: 'string'
+                            editor: 'text'
                         },
                         {
                             id: 'qtyUnit',
                             header: 'Unit',
-                            width: 100,
-                            sort: 'string'
+                            editor: 'combo',
+                            width: 125
                         },
                         {
                             id: 'rate',
                             header: 'Rate',
                             width: 75,
-                            sort: 'string'
+                            editor: 'text'
                         },
                         {
                             id: 'rateUnit',
                             header: 'Unit',
-                            width: 100,
-                            sort: 'string'
+                            width: 125,
+                            editor: 'combo'
                         },
                         {
                             id: 'dose',
                             header: 'Dose',
                             width: 75,
-                            sort: 'string'
+                            editor: 'text'
                         },
                         {
                             id: 'doseUnit',
                             header: 'Unit',
-                            width: 100,
-                            sort: 'string'
+                            width: 125,
+                            editor: 'combo'
                         }
                     ],
                     scheme: {
@@ -84,9 +100,18 @@
                     },
                     data: [
                         { id: '1', no: '1', indication: 'Pain', orderable: 'paracetamol 500 mg tabl', freq: '3 x dd', qty: 500, qtyUnit: 'mg', dose: 60, doseUnit: 'mg/kg/day' },
-                        { id: '2', no: '2', indication: 'Pain', orderable: 'morfine 200 mg/50 ml', rate: 2.5, rateUnit: 'ml/hour', dose: 5, doseUnit: 'mcg/kg/hour' },
-                        { id: '3', no: '3', indication: 'Low Blood Pressure', orderable: 'dopamine' }
-                    ]
+                        { id: '2', no: '2', indication: 'Pain', orderable: 'morfine 20 mg/50 ml', rate: 2.5, rateUnit: 'ml/hour', dose: 5, doseUnit: 'mcg/kg/hour' },
+                        { id: '3', no: '3', indication: 'Low Blood Pressure', orderable: 'dopamine', rate: 3, rateUnit: 'ml/hour', dose: 5, doseUnit: 'mcg/kg/minute' }
+                    ],
+                    on: {
+                        'onBeforeEditStart': function (item) {
+                            var me = this;
+                            if (item.row.indexOf('$') !== -1) {
+                                me.unselectAll();
+                                return false;
+                            }
+                        }
+                    }
                 },
                 {
                     view: 'toolbar',
