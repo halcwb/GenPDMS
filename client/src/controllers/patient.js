@@ -21,7 +21,6 @@
             debug(envelope.topic, envelope.data);
 
             formReadOnly(data.btn.getFormView(), false);
-
         });
 
         app.bus.view.subscribe('patientList.onItemClick', function (data, envelope) {

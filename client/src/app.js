@@ -90,15 +90,6 @@
 
         require("./lib/util/reload.js").init(app);
 
-
-        // **** Initialize Views ****
-
-        require('./views/ui.js').init(app);
-        require('./views/windows/loadingMask.js').init(app);
-        require('./views/windows/alert.js').init(app);
-        require('./views/windows/tooltip.js').init(app);
-
-
         // **** Initialize Controllers ****
 
         require('./controllers/app.js').init(app);
@@ -108,6 +99,13 @@
         require('./controllers/patient.js').init(app);
         require('./controllers/treatment.js').init(app);
         require('./controllers/indication.js').init(app);
+
+        // **** Initialize Views ****
+
+        require('./views/ui.js').init(app);
+        require('./views/windows/loadingMask.js').init(app);
+        require('./views/windows/alert.js').init(app);
+        require('./views/windows/tooltip.js').init(app);
 
         app.debug('client:app')("Starting the app!");
 
