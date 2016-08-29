@@ -2,7 +2,7 @@
  * @module controllers/indication
  */
 
-/*global webix, $$ */
+/*global webix, $$, _ */
 
 (function () {
     "use strict";
@@ -19,6 +19,28 @@
             debug(envelope.topic, data);
 
             webix.message(msg);
+        });
+
+        app.bus.view.subscribe("patientList.onItemClick", function (data, envelope) {
+            var post = _.partial(app.request.post, app.settings.demo),
+
+                succ = function (resp) {
+                    debug(resp);
+                    app.bus.controller.publish("patient.indications", {
+                        indications: resp.result.indications
+                    });
+                },
+
+                fail = function (err) {
+                    debug(err);
+                };
+
+            debug(envelope.topic, data);
+
+            app.loading(true);
+            post(succ, fail, "indications", { id: data.item.id });
+            app.loading(false);
+
         });
 
         debug('init');

@@ -26,11 +26,7 @@
                             sort: 'string'
                         }
                     ],
-                    data: [
-                        { id: '1', order: 'Dopamin' },
-                        { id: '2', order: 'Paracetamol' },
-                        { id: '3', order: 'Morfine' }
-                    ]
+                    data: []
                 },
                 {
                     view: 'toolbar',
@@ -59,6 +55,12 @@
             id: treatmentToolbarId,
             app: app,
             debug: debug
+        });
+
+        app.bus.controller.subscribe("patient.treatment", function (data, envelope) {
+            debug(envelope.topic, data);
+
+            $$(id).data.importData(data.treatment);
         });
 
         debug('init');

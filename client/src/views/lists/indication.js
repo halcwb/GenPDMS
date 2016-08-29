@@ -26,10 +26,7 @@
                             sort: 'string'
                         }
                     ],
-                    data: [
-                        { id: '1', indication: 'Pain' },
-                        { id: '2', indication: 'Low Blood Pressure' }
-                    ]
+                    data: []
                 },
                 {
                     view: 'toolbar',
@@ -57,6 +54,12 @@
             id: toolbarId,
             app: app,
             debug: debug
+        });
+
+        app.bus.controller.subscribe("patient.indications", function (data, envelope) {
+            debug(envelope.topic, data);
+
+            $$(id).data.importData(data.indications);
         });
 
         debug('init');

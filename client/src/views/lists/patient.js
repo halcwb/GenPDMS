@@ -2,7 +2,7 @@
  * views/lists/patient
  */
 
-/*global webix, $$ */
+/*global webix, $$, _ */
 
 (function () {
     "use strict";
@@ -17,12 +17,7 @@
                 { id: 'no', header: 'HospNo', sort: 'string' },
                 { id: 'name', header: 'Name', fillspace: true, sort: 'string' }
             ],
-            data: [
-                { id: '1', no: '1', name: 'John Cedar', dob: new Date('3/11/1967') },
-                { id: '2', no: '2', name: 'Frederick Maple', dob: new Date('12/03/1986') },
-                { id: '3', no: '3', name: 'Christine Damian', dob: new Date('5/07/1992') },
-                { id: '4', no: '4', name: 'Eric Underwood', dob: new Date('9/30/1975') }
-            ]
+            data: []
         };
 
     exports.getId = function () { return id; };
@@ -50,6 +45,17 @@
             debug(evt, data);
             app.bus.view.publish(evt, data);
         });
+
+        app.bus.controller.subscribe("patient.patients", function (data, envelope) {
+            debug(envelope.topic, data);
+
+            $$(id).clearAll();
+            $$(id).data.importData(_.each(data.pats, function (pat) {
+                pat.name = pat.lname + " " + pat.fname;
+            }));
+        });
+
+        app.bus.view.publish(id + ".init", {});
 
         debug('init');
     };

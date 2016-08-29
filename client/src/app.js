@@ -34,7 +34,7 @@
      * @type {{demo: boolean}}
      */
     app.settings = {
-        demo: false
+        demo: true
     };
 
     /**
@@ -90,6 +90,9 @@
 
         require("./lib/util/reload.js").init(app);
 
+
+        require('./views/windows/loadingMask.js').init(app);
+
         // **** Initialize Controllers ****
 
         require('./controllers/app.js').init(app);
@@ -103,7 +106,6 @@
         // **** Initialize Views ****
 
         require('./views/ui.js').init(app);
-        require('./views/windows/loadingMask.js').init(app);
         require('./views/windows/alert.js').init(app);
         require('./views/windows/tooltip.js').init(app);
 

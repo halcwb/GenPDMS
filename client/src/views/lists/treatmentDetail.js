@@ -2,7 +2,7 @@
  * @module views/lists/treatmentDetail
  */
 
-/*global console, webix, $$ */
+/*global console, webix, $$, _ */
 
 (function () {
 
@@ -47,6 +47,12 @@
                         if (obj.$level === 1) return common.treetable(obj, common) + obj.value;
                         return obj.orderable;
                     }
+                },
+                {
+                    id: 'route',
+                    header: 'Route',
+                    editor: 'combo',
+                    width: 125
                 },
                 {
                     id: 'freq',
@@ -95,11 +101,7 @@
             scheme: {
                 $group: 'indication'
             },
-            data: [
-                { id: '1', no: '1', indication: 'Pain', orderable: 'paracetamol 500 mg tabl', freq: '3 x dd', qty: 500, qtyUnit: 'mg', dose: 60, doseUnit: 'mg/kg/day' },
-                { id: '2', no: '2', indication: 'Pain', orderable: 'morfine 20 mg/50 ml', rate: 2.5, rateUnit: 'ml/hour', dose: 5, doseUnit: 'mcg/kg/hour' },
-                { id: '3', no: '3', indication: 'Low Blood Pressure', orderable: 'dopamine', rate: 3, rateUnit: 'ml/hour', dose: 5, doseUnit: 'mcg/kg/minute' }
-            ],
+            data: [],
             on: {
                 'onBeforeEditStart': function (item) {
                     var me = this;
@@ -120,6 +122,17 @@
 
     exports.init = function (app) {
         var debug = app.debug('client:' + id + ':init');
+
+        app.bus.controller.subscribe("treatment.edit", function (data, envelope) {
+            var treatment = _.each(data.treatment, function (ord) {
+                ord.no = ord.id;
+            });
+
+            debug(envelope.topic, treatment);
+
+            $$(id).clearAll();
+            $$(id).parse(treatment);
+        });
 
         debug('init');
     };

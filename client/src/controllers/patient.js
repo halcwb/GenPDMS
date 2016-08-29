@@ -24,14 +24,14 @@
         });
 
         app.bus.view.subscribe('patientList.onItemClick', function (data, envelope) {
-            debug(envelope.topic, data);
+            var pat = data.item;
 
-            $$('patientForm').setValues({
-                no: data.item.no,
-                fname: data.item.name.split(' ')[0],
-                lname: data.item.name.split(' ')[1],
-                dob: data.item.dob
-            });
+            debug(envelope.topic, data);
+/*
+            pat.fname = pat.name.split(' ')[0];
+            pat.fname = pat.name.split(' ')[1];
+*/
+            $$('patientForm').setValues(pat);
 
             formReadOnly($$('patientForm'), true);
             _.forEach($$('treatmentList.toolbar').getChildViews(), function (el) {
@@ -56,6 +56,28 @@
             webix.message(msg);
 
             formReadOnly(data.btn.getFormView(), true);
+        });
+
+        app.bus.view.subscribe("patientList.init", function (data, envelope) {
+            debug(envelope, data);
+
+            var post = _.partial(app.request.post, app.settings.demo),
+
+                succ = function (resp) {
+                    debug(resp);
+                    app.bus.controller.publish("patient.patients", {
+                        pats: resp.result.patients
+                    });
+                },
+
+                fail = function (err) {
+                    debug(err);
+                };
+
+            app.loading(true);
+            post(succ, fail, "patients", {});
+            app.loading(false);
+
         });
 
         debug('init');

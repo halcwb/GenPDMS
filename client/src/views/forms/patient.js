@@ -45,14 +45,47 @@
                     labelWidth: labelWidth
                 },
                 {
-                    view: "datepicker",
-                    label: "Birth date",
-                    placeholder: "Patient Birth Date",
-                    name: "dob",
-                    readonly: true,
-                    format: "%d-%M-%Y",
-                    labelAlign: "right",
-                    labelWidth: labelWidth
+                    cols: [
+                        {
+                            view: "datepicker",
+                            label: "Birth date",
+                            width: 572,
+                            placeholder: "Patient Birth Date",
+                            name: "dob",
+                            readonly: true,
+                            format: "%d-%M-%Y",
+                            labelAlign: "right",
+                            labelWidth: labelWidth
+                        },
+                        {
+                            template: "",
+                            maxWidth: 50
+                        },
+                        {
+                            view: "text",
+                            attributes: { type: "number" },
+                            validate: function (value) {
+                                return !isNaN(value * 1);
+                            },
+                            width: 115,
+                            label: "Age",
+                            name: "age",
+                            readonly: true,
+                            labelAlign: "right",
+                            labelWidth: 40
+                        },
+                        {
+                            view: "combo",
+                            label: "",
+                            name: "ageUnit",
+                            width: 100,
+                            readonly: true,
+                            value: "years",
+                            options: ["years", "months", "weeks", "days"]
+                        },
+                        { template: "" }
+                    ]
+
                 },
                 {
                     cols: [
@@ -101,7 +134,8 @@
                             options: ["m", "cm"]
                         },
                         {
-                            template: ""
+                            template: "",
+                            maxWidth: 50
                         },
                         {
                             view: "text",
@@ -113,16 +147,16 @@
                             width: 175,
                             name: "bsa",
                             labelAlign: "right",
-                            labelWidth: 75,
+                            labelWidth: 40,
                             readonly: true
                         },
                         {
                             view: "label",
                             label: "m2",
                             width: 40,
-                            align: "right",
-                            name: "bsa"
-                        }
+                            align: "right"
+                        },
+                        { template: "" }
                     ]
                 },
                 { template: "", height: 20 },

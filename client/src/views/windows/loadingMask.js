@@ -40,8 +40,6 @@
      * @returns {view} a loading mask view
      */
     exports.init = function (app) {
-        app.debug('client:' + id)('init');
-
         // Subscribe to loading event
         app.bus.view.subscribe('show_loading_mask', function (data, envelope) {
             app.debug(id, envelope);
@@ -54,6 +52,8 @@
                 loading: loading
             });
         };
+
+        app.debug('client:' + id)('init');
 
     };
 

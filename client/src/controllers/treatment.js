@@ -2,7 +2,7 @@
  * @module controllers/treatment
  */
 
-/*global webix, $$ */
+/*global webix, $$, _ */
 
 (function () {
     "use strict";
@@ -25,10 +25,16 @@
 
 
         app.bus.view.subscribe('treatmentList.edit', function (data, envelope) {
+            var treatment = $$('treatmentList').data.getRange();
+
             debug(envelope);
 
             webix.ui(treatmentBody.getView(app), $$(patientBody.getId()));
             treatmentBody.init(app);
+
+            app.bus.controller.publish("treatment.edit", {
+                treatment: treatment
+            });
         });
 
         app.bus.view.subscribe('treatmentBody.back', function (data, envelope) {
@@ -38,6 +44,27 @@
             patientBody.init(app);
         });
 
+        app.bus.view.subscribe("patientList.onItemClick", function (data, envelope) {
+            var post = _.partial(app.request.post, app.settings.demo),
+
+                succ = function (resp) {
+                    debug(resp);
+                    app.bus.controller.publish("patient.treatment", {
+                        treatment: resp.result.orders
+                    });
+                },
+
+                fail = function (err) {
+                    debug(err);
+                };
+
+            debug(envelope.topic, data);
+
+            app.loading(true);
+            post(succ, fail, "treatment", { id: data.item.id });
+            app.loading(false);
+
+        });
 
         debug('init');
     };

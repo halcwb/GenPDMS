@@ -8,6 +8,24 @@
 (function () {
     "use strict";
 
+    var dateDiff = function (d1, d2) {
+        var days = (d1 - d2) / 1000 / 60 / 60 / 24;
+        if (days < 7)   return Math.round(days);
+        if (days < 30)  return Math.round(days / 7);
+        if (days < 365) return Math.round(days / 30);
+        return Math.round(days / 365);
+    };
+
+    var dobYears = function (yrs) {
+        var dob = new Date();
+        dob.setDate(dob.getDate() - 365 * yrs);
+        return dob;
+    };
+
+    var bsa = function (hght, wght) {
+        return Math.round(Math.sqrt((hght * wght)/3600) * 10) / 10;
+    };
+
     /**
      * Demo/test data
      * @type {data}
@@ -25,12 +43,110 @@
             reqResp: [
                 {
                     req: {},
-                    resp: { succ: true, result: { patients: [
-                        { name: 'John Cedar', dob: '3/11/1967' },
-                        { name: 'Frederick Maple', dob: '3/11/1967'  },
-                        { name: 'Christine Damian', dob: '3/11/1967'  },
-                        { name: 'Eric Underwood', dob: '3/11/1967'  }
-                    ]}  }
+                    resp: {
+                        succ: true,
+                        result: {
+                            patients: [
+                                { id: "1", no: "1", lname: 'Cedar',     fname: "John",      dob: dobYears(1),    weight: "10",   weightUnit: "kg",   length: "1.2",  lengthUnit: "m",  bsa: bsa(120, 10), age: dateDiff(new Date(), dobYears(1)),    ageUnit: "years" },
+                                { id: "2", no: "2", lname: 'Maple',     fname: "Frederick", dob: dobYears(0.01), weight: "1200", weightUnit: "gram", length: "49",   lengthUnit: "cm", bsa: bsa(49, 1.2), age: dateDiff(new Date(), dobYears(0.01)), ageUnit: "days" },
+                                { id: "3", no: "3", lname: 'Damian',    fname: "Christine", dob: dobYears(0.5),  weight: "5",    weightUnit: "kg",   length: "89",   lengthUnit: "cm", bsa: bsa(89, 5),   age: dateDiff(new Date(), dobYears(0.5)),  ageUnit: "months" },
+                                { id: "4", no: "4", lname: 'Underwood', fname: "Eric",      dob: dobYears(30),   weight: "70",   weightUnit: "kg",   length: "1.87", lengthUnit: "m",  bsa: bsa(187, 30), age: dateDiff(new Date(), dobYears(30)),   ageUnit: "years" }
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        'indications': {
+            reqResp: [
+                {
+                    req: {},
+                    resp: { succ: true, result: {
+                        indications: [
+                            { id: "1", indication: "pain" },
+                            { id: "2", indication: "low blood pressure" },
+                            { id: "3", indication: "convulsions" },
+                            { id: "4", indication: "asthma" },
+                            { id: "5", indication: "fever unknown origin" },
+                            { id: "6", indication: "new onset diabetes" },
+                            { id: "7", indication: "sedation" }
+                        ]
+                    }  }
+                },
+                {
+                    req: { id: "1" }, // convulsions
+                    resp: { succ: true, result: {
+                        indications: [
+                            { id: "3", indication: "convulsions" },
+                            { id: "5", indication: "fever unknown origin" }
+                        ]
+                    }  }
+                },
+                {
+                    req: { id: "2" }, // fever and low bloodpressure
+                    resp: { succ: true, result: {
+                        indications: [
+                            { id: "1", indication: "pain" },
+                            { id: "2", indication: "low blood pressure" },
+                            { id: "5", indication: "fever unknown origin" },
+                            { id: "7", indication: "sedation" }
+                        ]
+                    }  }
+                },
+                {
+                    req: { id: "3" }, // convulsions and fever
+                    resp: { succ: true, result: {
+                        indications: [
+                            { id: "1", indication: "pain" },
+                            { id: "2", indication: "low blood pressure" },
+                            { id: "3", indication: "convulsions" },
+                            { id: "4", indication: "asthma" },
+                            { id: "5", indication: "fever unknown origin" }
+                        ]
+                    }  }
+                },
+                {
+                    req: { id: "4" }, // asthma
+                    resp: { succ: true, result: {
+                        indications: [
+                            { id: "4", indication: "asthma" }
+                        ]
+                    }  }
+                }
+            ]
+        },
+        'treatment': {
+            reqResp: [
+                {
+                    req: { id: "1" }, // convulsions 10 kg
+                    resp: { succ: true, result: {
+                        orders: [
+                            { id: "1", order: "diazepam 5 mg rect (5 mg/kg)" },
+                            { id: "2", order: "midazolam 1 mg iv (0.1 mg/kg)" }
+                        ]
+                    }  }
+                },
+                {
+                    req: { id: "2" }, // fever and low bloodpressure 1200 gram
+                    resp: { succ: true, result: {
+                        orders: [
+                            { id: "1", indication: "low blood pressure", order: "dopamin 30 mg/50 ml saline 1 ml/hour (8.3 mcg/kg/min)", start: new Date(), stop: null, orderable: "dopamin 30 mg/50 ml", route: "iv", freq: "", qty: "", qtyUnit: "", rate: "1", rateUnit: "ml/hour", dose: 8.3, doseUnit: "mcg/kg/min"  }
+                        ]
+                    }  }
+                },
+                {
+                    req: { id: "3" }, // convulsions
+                    resp: { succ: true, result: {
+                        orders: [
+                        ]
+                    }  }
+                },
+                {
+                    req: { id: "4" }, // new onset dm
+                    resp: { succ: true, result: {
+                        orders: [
+                        ]
+                    }  }
                 }
             ]
         }
