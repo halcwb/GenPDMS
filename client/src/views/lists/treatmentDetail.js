@@ -52,7 +52,7 @@
                     id: 'route',
                     header: 'Route',
                     editor: 'combo',
-                    width: 125
+                    width: 80
                 },
                 {
                     id: 'freq',
@@ -71,7 +71,19 @@
                     id: 'qtyUnit',
                     header: 'Unit',
                     editor: 'combo',
-                    width: 125
+                    width: 75
+                },
+                {
+                    id: 'time',
+                    header: 'Time',
+                    width: 75,
+                    editor: 'text'
+                },
+                {
+                    id: 'timeUnit',
+                    header: 'Unit',
+                    width: 75,
+                    editor: 'combo'
                 },
                 {
                     id: 'rate',
@@ -94,7 +106,7 @@
                 {
                     id: 'doseUnit',
                     header: 'Unit',
-                    width: 125,
+                    width: 100,
                     editor: 'combo'
                 }
             ],
@@ -104,8 +116,26 @@
             data: [],
             on: {
                 'onBeforeEditStart': function (item) {
-                    var me = this;
+                    var me = this,
+                        order = me.data.getItem(item),
+                        column = item.column;
+
                     if (item.row.indexOf('$') !== -1) {
+                        me.unselectAll();
+                        return false;
+
+                    } else if (order.type === "cont" && (column === "freq" ||
+                                                         column === "qty" ||
+                                                         column === "time" ||
+                                                         column === "timeUnit" ||
+                                                         column === "qtyUnit")) {
+                        me.unselectAll();
+                        return false;
+
+                    } else if (order.type === "disc" && (column === "time" ||
+                                                         column === "timeUnit" ||
+                                                         column === "rate" ||
+                                                         column === "rateUnit")) {
                         me.unselectAll();
                         return false;
                     }
