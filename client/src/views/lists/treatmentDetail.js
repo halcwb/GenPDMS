@@ -52,14 +52,20 @@
                     id: 'route',
                     header: 'Route',
                     editor: 'combo',
-                    width: 80
+                    width: 70
                 },
                 {
                     id: 'freq',
                     header: 'Frequency',
-                    width: 100,
+                    width: 90,
                     editor: 'combo',
                     sort: 'string'
+                },
+                {
+                    id: 'freqUnit',
+                    header: 'Unit',
+                    editor: 'combo',
+                    width: 75
                 },
                 {
                     id: 'qty',
@@ -125,6 +131,7 @@
                         return false;
 
                     } else if (order.type === "cont" && (column === "freq" ||
+                                                         column === "freqUnit" ||
                                                          column === "qty" ||
                                                          column === "time" ||
                                                          column === "timeUnit" ||
