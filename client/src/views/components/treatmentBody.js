@@ -19,6 +19,7 @@
                 debug(envelope.topic, data);
 
                 $$(id + ".header").setValues({
+                    no: patient.no,
                     name: patient.name,
                     dob: webix.Date.dateToStr("%d-%M-%Y")(patient.dob),
                     age: patient.age,
@@ -36,7 +37,7 @@
             id: id,
             rows: [
                 {
-                    template: 'Patient: #name#, Birth date: #dob#, Age: #age# #ageUnit#, Weight: #weight# #weightUnit#',
+                    template: 'Id: #no#, Patient: #name#, Birth date: #dob#, Age: #age# #ageUnit#, Weight: #weight# #weightUnit#',
                     id: id + '.header',
                     height: 40
                 },

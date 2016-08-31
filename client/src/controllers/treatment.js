@@ -40,10 +40,19 @@
         });
 
         app.bus.view.subscribe('treatmentBody.back', function (data, envelope) {
-            debug(envelope);
+            var pat = $$("treatmentBody.header").getValues();
+
+            debug(envelope.topic, data, pat);
 
             webix.ui(patientBody.getView(app), $$(treatmentBody.getId()));
             patientBody.init(app);
+
+            pat.id = pat.no;
+            $$("patientList").select(pat.id);
+            app.bus.view.publish("patientList.onItemClick", {
+                item: pat
+            });
+
         });
 
         app.bus.view.subscribe("patientList.onItemClick", function (data, envelope) {

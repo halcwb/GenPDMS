@@ -25,7 +25,10 @@
 
             $$(btnId).attachEvent('onItemClick', function () {
                 args.debug('publish', btnId);
-                args.app.bus.view.publish(btnId, { btn: $$(btnId) });
+                args.app.bus.view.publish(btnId, {
+                    btn: $$(btnId),
+                    args: args
+                });
             });
         });
 

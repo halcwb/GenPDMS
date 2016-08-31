@@ -27,10 +27,6 @@
             var pat = data.item;
 
             debug(envelope.topic, data);
-/*
-            pat.fname = pat.name.split(' ')[0];
-            pat.fname = pat.name.split(' ')[1];
-*/
             $$('patientForm').setValues(pat);
 
             formReadOnly($$('patientForm'), true);

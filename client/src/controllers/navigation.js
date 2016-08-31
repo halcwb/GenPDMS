@@ -25,7 +25,6 @@
                 webix.ui(patientDetails.getView(app), $$(protocolDetails.getId()));
                 patientDetails.init(app);
             }
-
         });
 
     };
