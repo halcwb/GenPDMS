@@ -18,7 +18,18 @@
                 { id: 'name', header: 'Name', fillspace: true, sort: 'string' }
             ],
             data: []
-        };
+        },
+
+        subscribe = _.once(function (app, debug) {
+            app.bus.controller.subscribe("patient.patients", function (data, envelope) {
+                debug(envelope.topic, data);
+
+                $$(id).clearAll();
+                $$(id).data.importData(_.each(data.pats, function (pat) {
+                    pat.name = pat.lname + " " + pat.fname;
+                }));
+            });
+        });
 
     exports.getId = function () { return id; };
 
@@ -46,14 +57,7 @@
             app.bus.view.publish(evt, data);
         });
 
-        app.bus.controller.subscribe("patient.patients", function (data, envelope) {
-            debug(envelope.topic, data);
-
-            $$(id).clearAll();
-            $$(id).data.importData(_.each(data.pats, function (pat) {
-                pat.name = pat.lname + " " + pat.fname;
-            }));
-        });
+        subscribe(app, debug);
 
         app.bus.view.publish(id + ".init", {});
 

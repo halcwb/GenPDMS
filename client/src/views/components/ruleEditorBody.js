@@ -10,6 +10,7 @@
 
     var id = 'ruleEditorBody',
         toolbarId = id + '.toolbar',
+
         view = {
             id: id,
             rows: [{

@@ -10,6 +10,7 @@
     var id = 'treatmentList',
         treatmentToolbarId = id + '.toolbar',
         reviewTip = 'Add or remove treatment according to patient signs and available protocols',
+
         view = {
             rows: [
                 {
@@ -39,7 +40,15 @@
                     ]
                 }
             ]
-        };
+        },
+
+        subscribe = _.once(function (app, debug) {
+            app.bus.controller.subscribe("patient.treatment", function (data, envelope) {
+                debug(envelope.topic, data);
+
+                $$(id).data.importData(data.treatment);
+            });
+        });
 
     exports.getId = function () { return id; };
 
@@ -57,11 +66,7 @@
             debug: debug
         });
 
-        app.bus.controller.subscribe("patient.treatment", function (data, envelope) {
-            debug(envelope.topic, data);
-
-            $$(id).data.importData(data.treatment);
-        });
+        subscribe(app, debug);
 
         debug('init');
     };

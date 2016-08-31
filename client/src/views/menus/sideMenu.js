@@ -2,17 +2,35 @@
  * Created by halcwb on 05/08/16.
  */
 
-/*global webix, $$, window */
+/*global webix, $$, window, _ */
 
 (function () {
     "use strict";
 
-    var id = 'sideMenu';
+    var id = 'sideMenu',
+
+        subscribe = _.once(function (app, debug) {
+            app.bus.controller.subscribe('set.status', function () {
+                var status = app.settings.demo ? 'demo' : 'online';
+
+                $$(id).getBody().updateItem('server', { value: status });
+            });
+
+            app.bus.controller.subscribe('show.sideMenu', function () {
+                var view = $$(id);
+
+                if (view.config.hidden) {
+                    view.show();
+                } else {
+                    view.hide();
+                }
+            });
+
+        });
 
     exports.init = function (app) {
-        var enabled = window.localStorage.debug === '' ? 'disabled' : 'enabled';
-
-        app.debug('client:' + id + ':init')('init');
+        var debug = app.debug("client:" + id + ":init"),
+            enabled = window.localStorage.debug === '' ? 'disabled' : 'enabled';
 
         webix.ui({
             id: id,
@@ -44,23 +62,9 @@
             }
         });
 
-        app.bus.controller.subscribe('set.status', function () {
-            var status = app.settings.demo ? 'demo' : 'online';
+        subscribe(app, debug);
 
-            $$(id).getBody().updateItem('server', { value: status });
-        });
-
-        app.bus.controller.subscribe('show.sideMenu', function () {
-            var view = $$(id);
-
-            if (view.config.hidden) {
-                view.show();
-            } else {
-                view.hide();
-            }
-        });
-
-
+        debug("init");
     };
 
 })();

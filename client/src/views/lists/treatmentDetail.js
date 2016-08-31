@@ -9,6 +9,7 @@
     "use strict";
 
     var id = 'treatmentDetailList',
+
         view = {
             view: 'treetable',
             id: id,
@@ -148,7 +149,21 @@
                     }
                 }
             }
-        };
+        },
+
+        subscribe = _.once(function (app, debug) {
+            app.bus.controller.subscribe("treatment.edit", function (data, envelope) {
+                var treatment = _.each(data.treatment, function (ord) {
+                    ord.no = ord.id;
+                });
+
+                debug(envelope.topic, data);
+
+                $$(id).clearAll();
+                $$(id).parse(treatment);
+            });
+
+        });
 
     exports.getId = function () { return id; };
 
@@ -167,16 +182,7 @@
             }
         };
 
-        app.bus.controller.subscribe("treatment.edit", function (data, envelope) {
-            var treatment = _.each(data.treatment, function (ord) {
-                ord.no = ord.id;
-            });
-
-            debug(envelope.topic, data);
-
-            $$(id).clearAll();
-            $$(id).parse(treatment);
-        });
+        subscribe(app, debug);
 
         debug('init');
     };

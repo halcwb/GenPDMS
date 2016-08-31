@@ -2,7 +2,7 @@
  * @module views/windows/loadingMask
  */
 
-/*global webix, $$ */
+/*global webix, $$, _ */
 
 (function () {
     "use strict";
@@ -30,7 +30,14 @@
                 $$(id).hide();
                 $$(id).destructor();
             }
-        };
+        },
+
+        subscribe = _.once(function (app, debug) {
+            app.bus.view.subscribe('show_loading_mask', function (data, envelope) {
+                app.debug(id, envelope);
+                doWait(data.loading);
+            });
+        });
 
 
     /**
@@ -40,12 +47,9 @@
      * @returns {view} a loading mask view
      */
     exports.init = function (app) {
-        // Subscribe to loading event
-        app.bus.view.subscribe('show_loading_mask', function (data, envelope) {
-            app.debug(id, envelope);
-            doWait(data.loading);
-        });
+        subscribe(app, app.debug("client:" + id + ":init"));
 
+        // Subscribe to loading event
         // Make app loading shortcut
         app.loading = function (loading) {
             app.bus.view.publish('show_loading_mask', {

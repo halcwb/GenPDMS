@@ -9,7 +9,25 @@
 
     var id = 'treatmentBody',
         toolbarId = id + '.toolbar',
-        treatmentDetails = require('./../lists/treatmentDetail.js');
+        treatmentDetails = require('./../lists/treatmentDetail.js'),
+
+        subscribe = _.once(function (app, debug) {
+
+            app.bus.controller.subscribe("treatment.edit", function (data, envelope) {
+                var patient = data.patient;
+
+                debug(envelope.topic, data);
+
+                $$(id + ".header").setValues({
+                    name: patient.name,
+                    dob: webix.Date.dateToStr("%d-%M-%Y")(patient.dob),
+                    age: patient.age,
+                    ageUnit: patient.ageUnit,
+                    weight: patient.weight,
+                    weightUnit: patient.weightUnit
+                });
+            });
+        });
 
     exports.getId = function () { return id; };
 
@@ -76,20 +94,7 @@
             debug: debug
         });
 
-        app.bus.controller.subscribe("treatment.edit", function (data, envelope) {
-            var patient = data.patient;
-
-            debug(envelope.topic, data);
-
-            $$(id + ".header").setValues({
-                name: patient.name,
-                dob: webix.Date.dateToStr("%d-%M-%Y")(patient.dob),
-                age: patient.age,
-                ageUnit: patient.ageUnit,
-                weight: patient.weight,
-                weightUnit: patient.weightUnit
-            });
-        });
+        subscribe(app, debug);
 
         treatmentDetails.init(app);
 

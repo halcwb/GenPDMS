@@ -10,6 +10,7 @@
     var id = 'indicationList',
         toolbarId = id + '.toolbar',
         addTip = 'Add an indication',
+
         view = {
             rows: [
                 {
@@ -38,7 +39,15 @@
                     ]
                 }
             ]
-        };
+        },
+
+        subscribe = _.once(function (app, debug) {
+            app.bus.controller.subscribe("patient.indications", function (data, envelope) {
+                debug(envelope.topic, data);
+
+                $$(id).data.importData(data.indications);
+            });
+        });
 
     exports.getId = function () { return id; };
 
@@ -56,11 +65,7 @@
             debug: debug
         });
 
-        app.bus.controller.subscribe("patient.indications", function (data, envelope) {
-            debug(envelope.topic, data);
-
-            $$(id).data.importData(data.indications);
-        });
+        subscribe(app, debug);
 
         debug('init');
     };
