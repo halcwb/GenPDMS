@@ -25,7 +25,8 @@
 
 
         app.bus.view.subscribe('treatmentList.edit', function (data, envelope) {
-            var treatment = $$('treatmentList').data.getRange();
+            var treatment = $$('treatmentList').data.getRange(),
+                patient   = $$("patientForm").getValues();
 
             debug(envelope);
 
@@ -33,6 +34,7 @@
             treatmentBody.init(app);
 
             app.bus.controller.publish("treatment.edit", {
+                patient: patient,
                 treatment: treatment
             });
         });

@@ -18,14 +18,9 @@
             id: id,
             rows: [
                 {
-                    template: 'Patient: #name# Birth date: #dob# Weight: #weight# ',
+                    template: 'Patient: #name#, Birth date: #dob#, Age: #age# #ageUnit#, Weight: #weight# #weightUnit#',
                     id: id + '.header',
-                    height: 40,
-                    data: {
-                        name: 'Test Patient',
-                        dob: '12-Mar-1956',
-                        weight: '70 kg'
-                    }
+                    height: 40
                 },
                 {
                     multi: 'mixed',
@@ -79,6 +74,21 @@
             id: toolbarId,
             app: app,
             debug: debug
+        });
+
+        app.bus.controller.subscribe("treatment.edit", function (data, envelope) {
+            var patient = data.patient;
+
+            debug(envelope.topic, data);
+
+            $$(id + ".header").setValues({
+                name: patient.name,
+                dob: webix.Date.dateToStr("%d-%M-%Y")(patient.dob),
+                age: patient.age,
+                ageUnit: patient.ageUnit,
+                weight: patient.weight,
+                weightUnit: patient.weightUnit
+            });
         });
 
         treatmentDetails.init(app);

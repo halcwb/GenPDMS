@@ -25,17 +25,17 @@
                 {
                     id: 'start',
                     header: 'Start',
-                    width: 100,
+                    width: 125,
                     editor: 'date',
-                    format: function (value) { return webix.i18n.dateFormatStr(value); },
+                    format: webix.Date.dateToStr("%d-%M-%y %H:%i"),
                     sort: 'date'
                 },
                 {
                     id: 'stop',
                     header: 'Stop',
-                    width: 100,
+                    width: 125,
                     editor: 'date',
-                    format: function (value) { return webix.i18n.dateFormatStr(value); },
+                    format: webix.Date.dateToStr("%d-%M-%y %H:%i"),
                     sort: 'date'
                 },
                 {
@@ -52,12 +52,12 @@
                     id: 'route',
                     header: 'Route',
                     editor: 'combo',
-                    width: 70
+                    width: 60
                 },
                 {
                     id: 'freq',
-                    header: 'Frequency',
-                    width: 90,
+                    header: 'Freq',
+                    width: 60,
                     editor: 'combo',
                     sort: 'string'
                 },
@@ -82,7 +82,7 @@
                 {
                     id: 'time',
                     header: 'Time',
-                    width: 75,
+                    width: 60,
                     editor: 'text'
                 },
                 {
@@ -94,7 +94,7 @@
                 {
                     id: 'rate',
                     header: 'Rate',
-                    width: 75,
+                    width: 60,
                     editor: 'text'
                 },
                 {
@@ -160,12 +160,19 @@
     exports.init = function (app) {
         var debug = app.debug('client:' + id + ':init');
 
+        webix.editors.$popup = {
+            date: {
+                view: "popup",
+                body: { view: "calendar", timepicker: true, icons: true }
+            }
+        };
+
         app.bus.controller.subscribe("treatment.edit", function (data, envelope) {
             var treatment = _.each(data.treatment, function (ord) {
                 ord.no = ord.id;
             });
 
-            debug(envelope.topic, treatment);
+            debug(envelope.topic, data);
 
             $$(id).clearAll();
             $$(id).parse(treatment);
