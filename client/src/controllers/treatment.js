@@ -47,10 +47,9 @@
             webix.ui(patientBody.getView(app), $$(treatmentBody.getId()));
             patientBody.init(app);
 
-            pat.id = pat.no;
-            $$("patientList").select(pat.id);
+            $$("patientList").select(pat.no);
             app.bus.view.publish("patientList.onItemClick", {
-                item: pat
+                item: $$("patientList").getItem(pat.no)
             });
 
         });
