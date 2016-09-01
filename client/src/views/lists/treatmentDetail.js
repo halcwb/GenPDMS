@@ -53,7 +53,7 @@
                     id: 'route',
                     header: 'Route',
                     editor: 'combo',
-                    width: 60
+                    width: 100
                 },
                 {
                     id: 'freq',
@@ -134,9 +134,9 @@
                     } else if (order.type === "cont" && (column === "freq" ||
                                                          column === "freqUnit" ||
                                                          column === "qty" ||
+                                                         column === "qtyUnit" ||
                                                          column === "time" ||
-                                                         column === "timeUnit" ||
-                                                         column === "qtyUnit")) {
+                                                         column === "timeUnit")) {
                         me.unselectAll();
                         return false;
 
@@ -144,6 +144,16 @@
                                                          column === "timeUnit" ||
                                                          column === "rate" ||
                                                          column === "rateUnit")) {
+                        me.unselectAll();
+                        return false;
+                    } else if (order.type === "proc" && (column === "freq" ||
+                                                         column === "freqUnit" ||
+                                                         column === "time" ||
+                                                         column === "timeUnit" ||
+                                                         column === "rate" ||
+                                                         column === "rateUnit" ||
+                                                         column === "dose" ||
+                                                         column === "doseUnit")) {
                         me.unselectAll();
                         return false;
                     }

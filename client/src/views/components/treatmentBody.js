@@ -9,7 +9,9 @@
 
     var id = 'treatmentBody',
         toolbarId = id + '.toolbar',
+
         treatmentDetails = require('./../lists/treatmentDetail.js'),
+        totals           = require("./../lists/totals.js"),
 
         subscribe = _.once(function (app, debug) {
 
@@ -53,7 +55,7 @@
                         {
                             header: 'Totals',
                             collapsed: true,
-                            body: 'Totals'
+                            body: totals.getView(app)
                         }
                     ]
                 },
@@ -98,6 +100,7 @@
         subscribe(app, debug);
 
         treatmentDetails.init(app);
+        totals.init(app);
 
         debug('init');
     };
