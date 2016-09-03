@@ -2,7 +2,7 @@
  * @module controllers/indication
  */
 
-/*global webix, $$, _ */
+/*global webix, _ */
 
 (function () {
     "use strict";

@@ -91,20 +91,24 @@
         require("./lib/util/reload.js").init(app);
 
 
-        require('./views/windows/loadingMask.js').init(app);
 
         // **** Initialize Controllers ****
 
-        require('./controllers/app.js').init(app);
-        require('./controllers/navigation.js').init(app);
-        require('./controllers/ruleEditor.js').init(app);
-        require('./controllers/tooltip.js').init(app);
-        require('./controllers/patient.js').init(app);
-        require('./controllers/treatment.js').init(app);
-        require('./controllers/indication.js').init(app);
-        require('./controllers/totals.js').init(app);
-
+        _.each([
+            require('./controllers/app.js'),
+            require('./controllers/navigation.js'),
+            require('./controllers/ruleEditor.js'),
+            require('./controllers/tooltip.js'),
+            require('./controllers/patient.js'),
+            require('./controllers/treatment.js'),
+            require('./controllers/indication.js'),
+            require('./controllers/totals.js')
+        ], function (c) {
+            c.init(app);
+        });
+        
         // **** Initialize Views ****
+        require('./views/windows/loadingMask.js').init(app);
 
         require('./views/ui.js').init(app);
         require('./views/windows/alert.js').init(app);
