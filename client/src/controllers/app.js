@@ -2,7 +2,7 @@
  * @module controllers/app
  */
 
-/* global $$ */
+/* global */
 
 (function () {
     "use strict";

@@ -73,6 +73,12 @@
         },
 
         subscribe = _.once(function (app, debug) {
+
+            app.bus.controller.subscribe("patient.totals", function (data, envelope) {
+                debug(envelope.topic, data);
+
+                $$(id).data.importData(data.totals);
+            });
         });
 
     exports.getId = function () { return id; };

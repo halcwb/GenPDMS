@@ -102,6 +102,7 @@
         require('./controllers/patient.js').init(app);
         require('./controllers/treatment.js').init(app);
         require('./controllers/indication.js').init(app);
+        require('./controllers/totals.js').init(app);
 
         // **** Initialize Views ****
 

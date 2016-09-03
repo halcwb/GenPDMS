@@ -37,6 +37,10 @@
                 patient: patient,
                 treatment: treatment
             });
+
+            app.bus.controller.publish("treatment.totals", {
+                id: patient.id
+            });
         });
 
         app.bus.view.subscribe('treatmentBody.back', function (data, envelope) {

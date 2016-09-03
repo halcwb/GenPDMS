@@ -161,6 +161,78 @@
                     }  }
                 }
             ]
+        },
+        'totals': {
+            reqResp: [
+                {
+                    req: { id: "1" },
+                    resp: { succ: true, result: {
+                        totals: [
+                            { id: "1", item: "fluid",        qty: "", qtyUnit: "ml/kg/day",   minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" },
+                            { id: "2", item: "protein",      qty: "", qtyUnit: "g/kg/day",    minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" },
+                            { id: "3", item: "carbohydrate", qty: "", qtyUnit: "g/kg/day",    minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" },
+                            { id: "4", item: "energy",       qty: "", qtyUnit: "kCal/kg/day", minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" },
+                            { id: "5", item: "lipid",        qty: "", qtyUnit: "g/kg/day",    minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" },
+                            { id: "6", item: "potassium",    qty: "", qtyUnit: "mmol/kg/day", minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" },
+                            { id: "7", item: "calcium",      qty: "", qtyUnit: "mmol/kg/day", minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" },
+                            { id: "8", item: "magnesium",    qty: "", qtyUnit: "mmol/kg/day", minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" },
+                            { id: "9", item: "sodium",       qty: "", qtyUnit: "mmol/kg/day", minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" },
+                            { id: "10", item: "phosphate",   qty: "", qtyUnit: "mmol/kg/day", minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" }
+                        ]
+                    }  }
+                },
+                {
+                    req: { id: "2" },
+                    resp: { succ: true, result: {
+                        totals: [
+                            { id: "1", item: "fluid",        qty: "", qtyUnit: "ml/kg/day",   minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" },
+                            { id: "2", item: "protein",      qty: "", qtyUnit: "g/kg/day",    minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" },
+                            { id: "3", item: "carbohydrate", qty: "", qtyUnit: "g/kg/day",    minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" },
+                            { id: "4", item: "energy",       qty: "", qtyUnit: "kCal/kg/day", minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" },
+                            { id: "5", item: "lipid",        qty: "", qtyUnit: "g/kg/day",    minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" },
+                            { id: "6", item: "potassium",    qty: "", qtyUnit: "mmol/kg/day", minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" },
+                            { id: "7", item: "calcium",      qty: "", qtyUnit: "mmol/kg/day", minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" },
+                            { id: "8", item: "magnesium",    qty: "", qtyUnit: "mmol/kg/day", minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" },
+                            { id: "9", item: "sodium",       qty: "", qtyUnit: "mmol/kg/day", minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" },
+                            { id: "10", item: "phosphate",   qty: "", qtyUnit: "mmol/kg/day", minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" }
+                        ]
+                    }  }
+                },
+                {
+                    req: { id: "3" },
+                    resp: { succ: true, result: {
+                        totals: [
+                            { id: "1", item: "fluid",        qty: "", qtyUnit: "ml/kg/day",   minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" },
+                            { id: "2", item: "protein",      qty: "", qtyUnit: "g/kg/day",    minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" },
+                            { id: "3", item: "carbohydrate", qty: "", qtyUnit: "g/kg/day",    minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" },
+                            { id: "4", item: "energy",       qty: "", qtyUnit: "kCal/kg/day", minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" },
+                            { id: "5", item: "lipid",        qty: "", qtyUnit: "g/kg/day",    minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" },
+                            { id: "6", item: "potassium",    qty: "", qtyUnit: "mmol/kg/day", minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" },
+                            { id: "7", item: "calcium",      qty: "", qtyUnit: "mmol/kg/day", minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" },
+                            { id: "8", item: "magnesium",    qty: "", qtyUnit: "mmol/kg/day", minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" },
+                            { id: "9", item: "sodium",       qty: "", qtyUnit: "mmol/kg/day", minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" },
+                            { id: "10", item: "phosphate",   qty: "", qtyUnit: "mmol/kg/day", minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" }
+                        ]
+                    }  }
+                },
+                {
+                    req: { id: "4" },
+                    resp: { succ: true, result: {
+                        totals: [
+                            { id: "1", item: "fluid",        qty: "", qtyUnit: "ml/kg/day",   minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" },
+                            { id: "2", item: "protein",      qty: "", qtyUnit: "g/kg/day",    minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" },
+                            { id: "3", item: "carbohydrate", qty: "", qtyUnit: "g/kg/day",    minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" },
+                            { id: "4", item: "energy",       qty: "", qtyUnit: "kCal/kg/day", minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" },
+                            { id: "5", item: "lipid",        qty: "", qtyUnit: "g/kg/day",    minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" },
+                            { id: "6", item: "potassium",    qty: "", qtyUnit: "mmol/kg/day", minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" },
+                            { id: "7", item: "calcium",      qty: "", qtyUnit: "mmol/kg/day", minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" },
+                            { id: "8", item: "magnesium",    qty: "", qtyUnit: "mmol/kg/day", minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" },
+                            { id: "9", item: "sodium",       qty: "", qtyUnit: "mmol/kg/day", minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" },
+                            { id: "10", item: "phosphate",   qty: "", qtyUnit: "mmol/kg/day", minQty: "", maxQty: "", normUnit: "ml/kg/day", labQty: "", labUnit: "" }
+                        ]
+                    }  }
+                }
+            ]
         }
     };
 
