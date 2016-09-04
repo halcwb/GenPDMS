@@ -11,8 +11,7 @@
         ruleEditorBody = require('./../views/components/ruleEditorBody.js'),
         ruleEditorNode = 'rule_editor';
 
-    exports.init = function (app) {
-        var debug = app.debug('client:controllers:rule');
+    exports.init = function (app, debug) {
 
         app.bus.view.subscribe('protocolOrderList.ruleEditor', function (data, envelope) {
             debug(envelope);

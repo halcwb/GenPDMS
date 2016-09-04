@@ -8,8 +8,7 @@
     "use strict";
 
 
-    exports.init = function (app) {
-        var debug = app.debug('client:controllers:indication:init');
+    exports.init = function (app, debug) {
 
         app.bus.view.subscribe('indicationList.add', function (data, envelope) {
             var msg = 'Not implemented yet:</br>' +
@@ -43,7 +42,6 @@
 
         });
 
-        debug('init');
     };
 
 

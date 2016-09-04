@@ -7,11 +7,9 @@
 (function () {
     "use strict";
 
-    exports.init  = function (app) {
+    exports.init  = function (app, debug) {
         var patientDetails = require('./../views/components/patientDetails.js'),
-            protocolDetails = require('./../views/components/protocolDetails.js'),
-
-            debug = app.debug('client:controllers:navigation');
+            protocolDetails = require('./../views/components/protocolDetails.js');
 
         app.bus.view.subscribe('navigation.tabclick', function (data, envelope) {
             debug(envelope);

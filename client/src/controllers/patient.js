@@ -14,8 +14,7 @@
         });
     };
 
-    exports.init = function (app) {
-        var debug = app.debug('client:controllers:patient:init');
+    exports.init = function (app, debug) {
 
         app.bus.view.subscribe('patientForm.edit', function (data, envelope) {
             debug(envelope.topic, envelope.data);
@@ -76,7 +75,6 @@
 
         });
 
-        debug('init');
     };
 
 })();

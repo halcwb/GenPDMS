@@ -16,9 +16,8 @@
         'tab.treatmentList': '<b>Running ordes</b> </br>Orders and indications are evaluated according to protocols'
     };
 
-    exports.init = function (app) {
-        var tooltipId = 'tooltip',
-            debug = app.debug('client:controllers:tooltip');
+    exports.init = function (app, debug) {
+        var tooltipId = 'tooltip';
 
         app.bus.view.subscribe('*.*.mouseenter', function (data, envelope) {
             var showTooltip = function () {

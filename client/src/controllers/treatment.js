@@ -8,10 +8,9 @@
     "use strict";
 
 
-    exports.init = function (app) {
+    exports.init = function (app, debug) {
         var treatmentBody = require('./../views/components/treatmentBody.js'),
-            patientBody   = require('./../views/components/patientBody.js'),
-            debug = app.debug('client:controllers:treatment:init');
+            patientBody   = require('./../views/components/patientBody.js');
 
         app.bus.view.subscribe('treatmentList.review', function (data, envelope) {
             var msg = 'Not implemented yet:</br>' +

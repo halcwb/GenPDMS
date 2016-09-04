@@ -84,12 +84,11 @@
 
 
     webix.ready(function () {
-
+        var path = require("path");
 
         // **** Starting reload for development ****
 
         require("./lib/util/reload.js").init(app);
-
 
 
         // **** Initialize Controllers ****
@@ -104,15 +103,24 @@
             require('./controllers/indication.js'),
             require('./controllers/totals.js')
         ], function (c) {
-            c.init(app);
+            var id = "temp", //_.first(_.last(c.split("/")).split(".")),
+                debug = app.debug("client:controllers:" + id);
+
+            c.init(app, debug);
+            debug(c);
         });
         
         // **** Initialize Views ****
-        require('./views/windows/loadingMask.js').init(app);
 
-        require('./views/ui.js').init(app);
-        require('./views/windows/alert.js').init(app);
-        require('./views/windows/tooltip.js').init(app);
+        _.each([
+            require('./views/windows/loadingMask.js'),
+            require('./views/windows/alert.js'),
+            require('./views/windows/tooltip.js'),
+            require('./views/ui.js')
+        ], function (v) {
+            v.init(app);
+        });
+        
 
         app.debug('client:app')("Starting the app!");
 

@@ -7,8 +7,7 @@
 (function () {
     "use strict";
 
-    exports.init = function (app) {
-        var debug = app.debug("client:controllers:totals");
+    exports.init = function (app, debug) {
 
         app.bus.controller.subscribe("treatment.totals", function (data, envelope) {
             var post = _.partial(app.request.post, app.settings.demo),
@@ -32,7 +31,6 @@
 
         });
 
-        debug("init");
     };
 
 })();

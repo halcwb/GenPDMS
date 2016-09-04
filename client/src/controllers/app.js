@@ -15,10 +15,7 @@
      * app.bus.view.subscribe</br>
      * app.bus.controller.publish</br>
      */
-    exports.init = function (app) {
-        var debug = app.debug('client:controllers:app');
-
-        debug('init');
+    exports.init = function (app, debug) {
 
         app.bus.view.subscribe('bottomBar.click', function (data, envelope) {
             debug(envelope);
