@@ -3,7 +3,7 @@
  */
 
 
-/*global webix, $$, _ */
+/*global webix, $$, _, Blockly */
 
 (function () {
     "use strict";
@@ -38,14 +38,19 @@
                     }
                 ]
             }]
-        };
+        },
+
+        ruleEditorNode = 'rule_editor';
+
 
     exports.getId = function () { return id; };
+
 
     exports.getView = function (app) {
         app.debug('client:' + id + '.getView')(view);
         return view;
     };
+
 
     exports.init = function (app) {
         var debug = app.debug('client:views:components:ruleEditor');
@@ -55,6 +60,20 @@
             app: app,
             debug: debug
         });
+
+        $$('ruleEditor').getNode().id = ruleEditorNode;
+
+        var workspace = Blockly.inject(ruleEditorNode, {
+            toolbox: document.getElementById('rule_editor_toolbox')
+        });
+
+        workspace.addChangeListener(function () {
+            var xml = Blockly.Xml.workspaceToDom(workspace);
+            app.bus.controller.publish('ruleEditor.rule', {
+                rule: (Blockly.Xml.domToText(xml))
+            });
+        });
+
 
         debug('init');
     };

@@ -9,8 +9,8 @@
 
 
     exports.init = function (app, debug) {
-        var treatmentBody = require('./../views/components/treatmentBody.js'),
-            patientBody   = require('./../views/components/patientBody.js');
+        var treatmentBody = 'treatmentBody',
+            patientBody   = 'patientBody';
 
         app.bus.view.subscribe('treatmentList.review', function (data, envelope) {
             var msg = 'Not implemented yet:</br>' +
@@ -29,8 +29,7 @@
 
             debug(envelope);
 
-            webix.ui(treatmentBody.getView(app), $$(patientBody.getId()));
-            treatmentBody.init(app);
+            $$(treatmentBody).show();
 
             app.bus.controller.publish("treatment.edit", {
                 patient: patient,
@@ -47,13 +46,7 @@
 
             debug(envelope.topic, data, pat);
 
-            webix.ui(patientBody.getView(app), $$(treatmentBody.getId()));
-            patientBody.init(app);
-
-            $$("patientList").select(pat.no);
-            app.bus.view.publish("patientList.onItemClick", {
-                item: $$("patientList").getItem(pat.no)
-            });
+            $$(patientBody).show();
 
         });
 

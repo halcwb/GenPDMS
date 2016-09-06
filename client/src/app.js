@@ -93,18 +93,17 @@
 
         // **** Initialize Controllers ****
 
-        _.each([
-            require('./controllers/app.js'),
-            require('./controllers/navigation.js'),
-            require('./controllers/ruleEditor.js'),
-            require('./controllers/tooltip.js'),
-            require('./controllers/patient.js'),
-            require('./controllers/treatment.js'),
-            require('./controllers/indication.js'),
-            require('./controllers/totals.js')
-        ], function (c) {
-            var id = "temp", //_.first(_.last(c.split("/")).split(".")),
-                debug = app.debug("client:controllers:" + id);
+        _.chain({
+            "app":        require('./controllers/app.js'),
+            "navigation": require('./controllers/navigation.js'),
+            "ruleEditor": require('./controllers/ruleEditor.js'),
+            "tooltip":    require('./controllers/tooltip.js'),
+            "patient":    require('./controllers/patient.js'),
+            "treatment":  require('./controllers/treatment.js'),
+            "indication": require('./controllers/indication.js'),
+            "totals":     require('./controllers/totals.js')
+        }).mapObject(function (c, id) {
+            var debug = app.debug("client:controllers:" + id);
 
             c.init(app, debug);
             debug(c);
@@ -120,7 +119,6 @@
         ], function (v) {
             v.init(app);
         });
-        
 
         app.debug('client:app')("Starting the app!");
 

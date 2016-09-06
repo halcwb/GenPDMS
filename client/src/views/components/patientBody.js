@@ -8,8 +8,11 @@
     "use strict";
 
     var id = 'patientBody',
+
         navigation = require('./navigation.js'),
         patientDetails = require('./patientDetails.js'),
+        protocolDetails = require("./protocolDetails.js"),
+
         goldenRatio = (1 + Math.sqrt(5))/2;
 
     exports.getId = function () { return id; };
@@ -20,7 +23,12 @@
                 cols: [
                     _.extend(navigation.getView(app), { gravity: 1/goldenRatio }),
                     { view: 'resizer' },
-                    patientDetails.getView(app)
+                    {
+                        view: "multiview", cells: [
+                            patientDetails.getView(app),
+                            protocolDetails.getView(app)
+                        ]
+                    }
                 ]
             };
 
@@ -31,7 +39,9 @@
 
     exports.init = function (app) {
         require('./navigation.js').init(app);
+
         patientDetails.init(app);
+        protocolDetails.init(app);
 
         app.debug('client' + id + '.init')('init');
     };

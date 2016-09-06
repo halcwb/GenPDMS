@@ -24,9 +24,9 @@
     exports.init = function (app) {
 
         var header = require('./bars/header.js'),
-            status = require('./templates/statusBar.js'),
-            body   = require('./components/patientBody.js'),
-
+            body   = require('./components/body.js'),
+            status = require("./templates/statusBar.js"),
+            
             debug = app.debug('client:' + id + ':init');
 
         debug('init');
