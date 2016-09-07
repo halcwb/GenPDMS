@@ -10,13 +10,16 @@
     var id = 'sideMenu',
 
         subscribe = _.once(function (app, debug) {
-            app.bus.controller.subscribe('set.status', function () {
+            var bus = app.bus.controller,
+                msg = app.msg;
+
+            bus.subscribe('set.status', function () {
                 var status = app.settings.demo ? 'demo' : 'online';
 
                 $$(id).getBody().updateItem('server', { value: status });
             });
 
-            app.bus.controller.subscribe('show.sideMenu', function () {
+            bus.subscribe(msg.sideMenu.show, function () {
                 var view = $$(id);
 
                 if (view.config.hidden) {
@@ -30,7 +33,9 @@
 
     exports.init = function (app) {
         var debug = app.debug("client:" + id + ":init"),
-            enabled = window.localStorage.debug === '' ? 'disabled' : 'enabled';
+            enabled = window.localStorage.debug === '' ? 'disabled' : 'enabled',
+            bus = app.bus.view,
+            msg = app.msg;
 
         webix.ui({
             id: id,
@@ -53,8 +58,8 @@
                 ],
                 on: {
                     'onItemClick': function (id, e, trg) {
-                        app.bus.view.publish('side_menu_item', {
-                            id: id,
+                        bus.publish(msg.sideMenu.item, {
+                            item: id,
                             trg: trg
                         });
                     }

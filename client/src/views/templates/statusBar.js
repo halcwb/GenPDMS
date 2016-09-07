@@ -13,7 +13,7 @@
             template: 'status: #status# | message: #message#',
             id: id,
             height: 30,
-            data: { status: '', message: '' }
+            data: { status: "status", message: "message", title: "info" }
         },
 
         subscribe = _.once(function (app, debug) {
@@ -62,11 +62,12 @@
      */
     exports.init = function (app) {
         //noinspection JSUnresolvedFunction
-        var debug = app.debug('client:' + id);
+        var debug = app.debug('client:' + id),
+            msg = app.msg;
 
 
         webix.event($$(id).$view, 'click', function () {
-            app.bus.view.publish('status_bar_message', {
+            app.bus.view.publish(msg.status.text, {
                 text: $$(id).getValues().message
             });
         });

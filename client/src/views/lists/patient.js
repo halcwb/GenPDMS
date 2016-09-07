@@ -8,6 +8,7 @@
     "use strict";
 
     var id = 'patientList',
+
         view = {
             view: 'datatable',
             id: id,
@@ -21,7 +22,8 @@
         },
 
         subscribe = _.once(function (app, debug) {
-            app.bus.controller.subscribe("patient.patients", function (data, envelope) {
+
+            app.bus.controller.subscribe(app.msg.patient.patients, function (data, envelope) {
                 debug(envelope.topic, data);
 
                 $$(id).clearAll();
@@ -39,7 +41,9 @@
     };
 
     exports.init = function (app) {
-        var debug = app.debug('client:' + id + ':init');
+        var debug = app.debug('client:' + id + ':init'),
+            bus = app.bus.view,
+            msg = app.msg;
 
         webix.ui({
             view: 'contextmenu',
@@ -50,16 +54,15 @@
         }).attachTo($$(id));
 
         $$(id).attachEvent('onItemClick', function (item) {
-            var evt = id + '.onItemClick',
-                data = { item: $$(id).data.getItem(item.row) };
+            var data = { item: $$(id).data.getItem(item.row) };
 
-            debug(evt, data);
-            app.bus.view.publish(evt, data);
+            debug(msg.patient.patient, data);
+            app.bus.view.publish(msg.patient.patient, data);
         });
 
         subscribe(app, debug);
 
-        app.bus.view.publish(id + ".init", {});
+        bus.publish(msg.patient.patients, {});
 
         debug('init');
     };

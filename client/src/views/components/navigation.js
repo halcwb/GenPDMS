@@ -38,6 +38,8 @@
 
     exports.init = function (app) {
         var debug = app.debug('client:' + id + ':init'),
+            bus = app.bus,
+            msg = app.msg,
             tabs = {};
 
         tabs['tab.' + patientList.getId()] = 'patients';
@@ -47,12 +49,10 @@
         protocolList.init(app);
 
         $$(id).getTabbar().attachEvent('onBeforeTabClick', function (tabId) {
-            var evt = id + '.tabclick';
+            debug('publish', tabs[tabId]);
 
-            debug('publish', evt, tabs[tabId]);
-
-            app.bus.view.publish(evt, {
-                tab: tabs[tabId]
+            bus.view.publish(msg.ui.detailsBody, {
+                item: tabs[tabId]
             });
         });
 

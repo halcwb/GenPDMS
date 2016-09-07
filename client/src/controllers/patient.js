@@ -15,14 +15,16 @@
     };
 
     exports.init = function (app, debug) {
+        var bus = app.bus,
+            msg = app.msg;
 
-        app.bus.view.subscribe('patientForm.edit', function (data, envelope) {
+        bus.view.subscribe(msg.patient.edit, function (data, envelope) {
             debug(envelope.topic, envelope.data);
 
             formReadOnly(data.btn.getFormView(), false);
         });
 
-        app.bus.view.subscribe('patientList.onItemClick', function (data, envelope) {
+        bus.view.subscribe(msg.patient.patient, function (data, envelope) {
             var pat = data.item;
 
             debug(envelope.topic, data);
@@ -34,14 +36,14 @@
             });
         });
 
-        app.bus.view.subscribe('patientForm.new', function (data, envelope) {
+        bus.view.subscribe(msg.patient.new, function (data, envelope) {
             debug(envelope.topic, data);
 
             data.btn.getFormView().clear();
             formReadOnly(data.btn.getFormView(), false);
         });
 
-        app.bus.view.subscribe('patientForm.save', function (data, envelope) {
+        bus.view.subscribe(msg.patient.save, function (data, envelope) {
             var msg = 'Not implemented yet:</br>' +
                        envelope.topic + '</br>' +
                       'will save the patient in the database';
@@ -53,14 +55,14 @@
             formReadOnly(data.btn.getFormView(), true);
         });
 
-        app.bus.view.subscribe("patientList.init", function (data, envelope) {
+        bus.view.subscribe(msg.patient.patients, function (data, envelope) {
             debug(envelope, data);
 
             var post = _.partial(app.request.post, app.settings.demo),
 
                 succ = function (resp) {
                     debug(resp);
-                    app.bus.controller.publish("patient.patients", {
+                    app.bus.controller.publish(msg.patient.patients, {
                         pats: resp.result.patients
                     });
                 },

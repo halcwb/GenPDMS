@@ -11,38 +11,11 @@
         toolbarId = id + '.toolbar',
         addTip = 'Add an indication',
 
-        view = {
-            rows: [
-                {
-                    view: 'datatable',
-                    id: id,
-                    resizeColumn: true,
-                    select: 'row',
-                    editable: true,
-                    columns: [
-                        {
-                            id: 'indication',
-                            header: 'Indication',
-                            fillspace: true,
-                            sort: 'string'
-                        }
-                    ],
-                    data: []
-                },
-                {
-                    view: 'toolbar',
-                    id: toolbarId,
-                    height: 40,
-                    cols: [
-                        { template: '' },
-                        { view: 'button', id: id + '.add', value: 'Add', tooltip: addTip, width: 75 }
-                    ]
-                }
-            ]
-        },
-
         subscribe = _.once(function (app, debug) {
-            app.bus.controller.subscribe("patient.indications", function (data, envelope) {
+            var bus = app.bus.controller,
+                msg = app.msg;
+
+            bus.subscribe(msg.patient.indications, function (data, envelope) {
                 debug(envelope.topic, data);
 
                 $$(id).data.importData(data.indications);
@@ -52,22 +25,59 @@
     exports.getId = function () { return id; };
 
     exports.getView = function (app) {
-        app.debug('client:' + id + ':getView')(view);
+        var bus = app.bus.view,
+            msg = app.msg,
+
+            debug = app.debug("client:views" + id),
+
+            view = {
+                rows: [
+                    {
+                        view: 'datatable',
+                        id: id,
+                        resizeColumn: true,
+                        select: 'row',
+                        editable: true,
+                        columns: [
+                            {
+                                id: 'indication',
+                                header: 'Indication',
+                                fillspace: true,
+                                sort: 'string'
+                            }
+                        ],
+                        data: []
+                    },
+                    {
+                        view: 'toolbar',
+                        id: toolbarId,
+                        height: 40,
+                        cols: [
+                            { template: '' },
+                            {
+                                view: 'button',
+                                id: id + '.add',
+                                value: 'Add',
+                                tooltip: addTip,
+                                width: 75,
+                                click: function () {
+                                    bus.publish(msg.indication.add, {});
+                                }
+                            }
+                        ]
+                    }
+                ]
+            };
+
+
+        debug(view);
         return view;
     };
 
     exports.init = function (app) {
-        var debug = app.debug('client:' + id + ':init');
-
-        app.util.publishButton({
-            id: toolbarId,
-            app: app,
-            debug: debug
-        });
+        var debug = app.debug("client:views" + id);
 
         subscribe(app, debug);
-
-        debug('init');
     };
 
 

@@ -1,19 +1,35 @@
 /**
- * views/components/patientBody
+ * views/components/detailsBody
  */
 
-/*global _ */
+/*global $$, _ */
 
 (function () {
     "use strict";
 
-    var id = 'patientBody',
+    var id = 'detailsBody',
 
         navigation = require('./navigation.js'),
         patientDetails = require('./patientDetails.js'),
         protocolDetails = require("./protocolDetails.js"),
 
-        goldenRatio = (1 + Math.sqrt(5))/2;
+        goldenRatio = (1 + Math.sqrt(5))/2,
+
+        subscribe = _.once(function (app, debug) {
+            var bus = app.bus,
+                msg = app.msg,
+                item = {
+                    patient: patientDetails.getId(),
+                    protocol: protocolDetails.getId()
+                };
+
+            bus.controller.subscribe(msg.ui.detailsBody, function (data, envelope) {
+
+                debug(envelope.topic, data);
+
+                $$(item[data.item]).show();
+            });
+        });
 
     exports.getId = function () { return id; };
 
@@ -38,12 +54,15 @@
     };
 
     exports.init = function (app) {
-        require('./navigation.js').init(app);
+        var debug = app.debug("client:" + id + ":init");
 
+        debug("init");
+
+        navigation.init(app);
         patientDetails.init(app);
         protocolDetails.init(app);
 
-        app.debug('client' + id + '.init')('init');
+        subscribe(app, debug);
     };
 
 })();

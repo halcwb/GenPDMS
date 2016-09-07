@@ -16,23 +16,28 @@
      * app.bus.controller.publish</br>
      */
     exports.init = function (app, debug) {
+        var msg = app.msg,
+            bus = app.bus;
 
-        app.bus.view.subscribe('bottomBar.click', function (data, envelope) {
-            debug(envelope);
-            app.bus.controller.publish('app.alert', {
-                title: 'Error',
-                type: 'alert-error',
+        // Show the status text in an alert
+        bus.view.subscribe(msg.status.text, function (data, envelope) {
+            debug(envelope.topic, data);
+
+            bus.controller.publish(msg.alert.show, {
+                title: "Messages",
+                type: "alert-info",
                 text: data.text
             });
         });
 
-        app.bus.view.subscribe('side_menu_item', function (data, envelope) {
+        // Invoke the handler for the menu item
+        bus.view.subscribe(msg.sideMenu.item, function (data, envelope) {
             var status,
                 handle = {
                     'server': function () {
                         app.settings.demo = !app.settings.demo;
                         status = app.settings.demo ? 'demo' : 'online';
-                        app.bus.controller.publish('set.status', { status: status });
+                        bus.controller.publish(msg.status.text, { status: status });
                     },
                     'debug': function (data) {
                         var enabled = data.trg.innerText.split(': ')[1];
@@ -47,14 +52,15 @@
                     }
                 };
 
-            debug(envelope);
-            handle[data.id](data, envelope);
+            debug(envelope.topic, data);
+            handle[data.item](data, envelope);
         });
 
-        app.bus.view.subscribe('show.sideMenu', function (data, envelope) {
+        // Show the side menu
+        bus.view.subscribe(msg.sideMenu.show, function (data, envelope) {
             debug(envelope);
 
-            app.bus.controller.publish('show.sideMenu', {});
+            bus.controller.publish(msg.sideMenu.show, {});
         });
 
     };

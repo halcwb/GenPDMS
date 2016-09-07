@@ -14,8 +14,12 @@
         totals           = require("./../lists/totals.js"),
 
         subscribe = _.once(function (app, debug) {
+            var bus = app.bus,
+                msg = app.msg;
 
-            app.bus.controller.subscribe("treatment.edit", function (data, envelope) {
+            debug("subscribe");
+
+            bus.controller.subscribe(msg.treatment.edit, function (data, envelope) {
                 var patient = data.patient;
 
                 debug(envelope.topic, data);
@@ -89,12 +93,14 @@
     };
 
     exports.init = function (app) {
-        var debug = app.debug('client:views:components:' + id + ':init');
+        var debug = app.debug('client:views:components:' + id + ':init'),
+            bus = app.bus,
+            msg = app.msg;
 
-        app.util.publishButton({
-            id: toolbarId,
-            app: app,
-            debug: debug
+        $$(id + ".back").attachEvent("onItemClick", function () {
+            bus.view.publish(msg.ui.mainBody, {
+                item: "details"
+            });
         });
 
         subscribe(app, debug);

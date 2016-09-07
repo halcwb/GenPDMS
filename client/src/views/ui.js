@@ -24,9 +24,9 @@
     exports.init = function (app) {
 
         var header = require('./bars/header.js'),
-            body   = require('./components/body.js'),
+            body   = require('./components/mainBody.js'),
             status = require("./templates/statusBar.js"),
-            
+
             debug = app.debug('client:' + id + ':init');
 
         debug('init');
@@ -45,6 +45,7 @@
             ]
         });
 
+
         // **** Initialize Views ****
 
         header.init(app);
@@ -53,9 +54,10 @@
 
         require('./menus/sideMenu.js').init(app);
 
+
         // **** Views Initialized ****
 
-        app.bus.view.publish('ui.ready', {});
+        app.bus.view.publish(app.msg.ui.ready, {});
 
     };
 

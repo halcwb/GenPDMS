@@ -7,7 +7,7 @@
 (function () {
     "use strict";
 
-    var body   = require('./../views/components/body.js'),
+    var body   = require('./../views/components/mainBody.js'),
         editor = require('./../views/components/ruleEditorBody.js');
 
     exports.init = function (app) {
@@ -18,21 +18,6 @@
 
             webix.ui(editor.getView(app), $$(body.getId()));
             editor.init(app);
-
-            /*
-            $$('ruleEditor').getNode().id = ruleEditorNode;
-
-            var workspace = Blockly.inject(ruleEditorNode, {
-                toolbox: document.getElementById('rule_editor_toolbox')
-            });
-
-            workspace.addChangeListener(function () {
-                var xml = Blockly.Xml.workspaceToDom(workspace);
-                app.bus.controller.publish('ruleEditor.rule', {
-                    rule: (Blockly.Xml.domToText(xml))
-                });
-            });
-            */
 
         });
 

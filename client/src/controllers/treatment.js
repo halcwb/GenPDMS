@@ -9,10 +9,11 @@
 
 
     exports.init = function (app, debug) {
-        var treatmentBody = 'treatmentBody',
-            patientBody   = 'patientBody';
+        var bus = app.bus,
+            msg = app.msg;
 
-        app.bus.view.subscribe('treatmentList.review', function (data, envelope) {
+        // Review a treatment and update patient treatment with the result
+        bus.view.subscribe(msg.treatment.review, function (data, envelope) {
             var msg = 'Not implemented yet:</br>' +
                 envelope.topic + '</br>' +
                 'will add or remove orders according to protocols';
@@ -22,40 +23,43 @@
             webix.message(msg);
         });
 
+        // Edit the treatment in the treatment edit ui
+        bus.view.subscribe(msg.treatment.edit, function (data, envelope) {
+            var treatment = data.treatment,
+                patient   = data.patient;
 
-        app.bus.view.subscribe('treatmentList.edit', function (data, envelope) {
-            var treatment = $$('treatmentList').data.getRange(),
-                patient   = $$("patientForm").getValues();
+            debug(envelope.topic, data);
 
-            debug(envelope);
+            // Let main body now that treatment ui should be shown
+            bus.controller.publish(msg.ui.mainBody, { item: "treatment" });
 
-            $$(treatmentBody).show();
-
-            app.bus.controller.publish("treatment.edit", {
+            // Publish the patient treatment
+            bus.controller.publish(msg.treatment.edit, {
                 patient: patient,
                 treatment: treatment
             });
 
-            app.bus.controller.publish("treatment.totals", {
+            // Publish the treatment totals
+            bus.controller.publish(msg.treatment.totals, {
                 id: patient.id
             });
         });
 
-        app.bus.view.subscribe('treatmentBody.back', function (data, envelope) {
-            var pat = $$("treatmentBody.header").getValues();
+        //
+        bus.view.subscribe(msg.ui.mainBody, function (data, envelope) {
+            debug(envelope.topic, data);
 
-            debug(envelope.topic, data, pat);
-
-            $$(patientBody).show();
-
+            bus.controller.publish(msg.ui.mainBody, { item: "details" });
         });
 
-        app.bus.view.subscribe("patientList.onItemClick", function (data, envelope) {
+        // If specific patient is selected, get the treatment for that patient and
+        // publish the patient treatment.
+        bus.view.subscribe(msg.patient.patient, function (data, envelope) {
             var post = _.partial(app.request.post, app.settings.demo),
 
                 succ = function (resp) {
                     debug(resp);
-                    app.bus.controller.publish("patient.treatment", {
+                    bus.controller.publish(msg.patient.treatment, {
                         treatment: resp.result.orders
                     });
                 },
@@ -72,7 +76,6 @@
 
         });
 
-        debug('init');
     };
 
 

@@ -69,6 +69,9 @@
     app.bus = require('./lib/util/msgBus.js');
 
 
+    app.msg = require("./msg.js");
+
+
     /**
      * Request object</br>
      * {@link module:lib/ajax/request}

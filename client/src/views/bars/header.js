@@ -31,20 +31,22 @@
     };
 
     exports.init = function (app) {
-        var debug = app.debug('client' + id + ':init');
+        var debug = app.debug('client' + id + ':init'),
+            bus = app.bus,
+            msg = app.msg;
 
         debug('init');
 
         $$(iconId).attachEvent('onItemClick', function () {
-            app.bus.view.publish('show.sideMenu', {});
+            bus.view.publish(msg.sideMenu.show, {});
         });
 
         webix.event($$(iconId).getNode(), 'mouseenter', function (e) {
-            app.bus.view.publish(iconId + '.mouseenter', { e: e });
+            bus.view.publish(iconId + '.mouseenter', { e: e });
         });
 
         webix.event($$(iconId).getNode(), 'mouseleave', function (e) {
-            app.bus.view.publish(iconId + '.mouseleave', { e: e });
+            bus.view.publish(iconId + '.mouseleave', { e: e });
         });
 
     };

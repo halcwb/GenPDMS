@@ -9,8 +9,11 @@
 
 
     exports.init = function (app, debug) {
+        var bus = app.bus,
+            msg = app.msg;
 
-        app.bus.view.subscribe('indicationList.add', function (data, envelope) {
+        // Add an indication to the list of medications
+        bus.view.subscribe(msg.indication.add, function (data, envelope) {
             var msg = 'Not implemented yet:</br>' +
                 envelope.topic + '</br>' +
                 'will add or indications';
@@ -20,12 +23,13 @@
             webix.message(msg);
         });
 
-        app.bus.view.subscribe("patientList.onItemClick", function (data, envelope) {
+        // For the selected patient publish the indications
+        bus.view.subscribe(msg.patient.patient, function (data, envelope) {
             var post = _.partial(app.request.post, app.settings.demo),
 
                 succ = function (resp) {
                     debug(resp);
-                    app.bus.controller.publish("patient.indications", {
+                    bus.controller.publish(msg.patient.indications, {
                         indications: resp.result.indications
                     });
                 },

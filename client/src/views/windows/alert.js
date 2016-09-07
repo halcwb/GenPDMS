@@ -10,22 +10,25 @@
 
     var id = 'alert',
         subscribe = _.once(function (app, debug) {
-            app.bus.controller.subscribe('show_alert', function (data, envelope) {
+            var msg = app.msg;
+
+            app.bus.controller.subscribe(msg.alert.show, function (data, envelope) {
                 var text = '';
 
-                debug('show_alert', envelope);
+                debug(envelope.topic, data);
 
                 if (data.text) {
-                    text = data.text.substr(0, 200);
-                    if (text.length <= data.text.length) {
+                    text = data.text.substr(0, data.length || 200);
+                    if (text.length < data.text.length) {
                         text = text + '...';
                     }
 
                     webix.alert({
                         title: data.title,
                         text: text,
+                        type: data.type,
                         callback: function () {
-                            app.bus.view.publish('alert.click', { text: text });
+                            app.bus.view.publish(msg.alert.ok, { text: text });
                         }
                     });
 

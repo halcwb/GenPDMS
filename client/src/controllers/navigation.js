@@ -8,17 +8,17 @@
     "use strict";
 
     exports.init  = function (app, debug) {
-        var patientDetails  = "patientDetails",
-            protocolDetails = "protocolDetails";
+        var bus = app.bus,
+            msg = app.msg;
 
-        app.bus.view.subscribe('navigation.tabclick', function (data, envelope) {
-            debug(envelope);
+        bus.view.subscribe(msg.ui.detailsBody, function (data, envelope) {
+            debug(envelope.topic, data);
 
-            if (data.tab === 'protocols') {
-                $$(protocolDetails).show();
+            if (data.item === 'protocols') {
+                bus.controller.publish(msg.ui.detailsBody, { item: "protocol" });
 
-            } else if (data.tab === 'patients') {
-                $$(patientDetails).show();
+            } else if (data.item === 'patients') {
+                bus.controller.publish(msg.ui.detailsBody, { item: "patient" });
             }
         });
 
