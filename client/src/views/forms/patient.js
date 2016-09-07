@@ -11,6 +11,33 @@
 
     var labelWidth = 100;
 
+    var formReadOnly = function (form, readOnly) {
+        _.forEach(form.elements, function (el) {
+            el.config.readonly = readOnly;
+            el.refresh();
+        });
+    };
+
+    var subscribe = _.once(function (app, debug) {
+        var bus = app.bus,
+            msg = app.msg;
+
+        // load the patient form with the patient in the message
+        bus.controller.subscribe(msg.patient.patient, function (data, envelope) {
+            var formId = id;
+
+            debug(envelope.topic, data);
+
+            // load form with patient data
+            $$(formId).setValues(data.patient);
+
+            // set form to read only
+            formReadOnly($$(formId), true);
+
+        });
+    });
+
+
     var view = {
         view: "form",
         id: id,
@@ -201,17 +228,9 @@
     exports.init = function (app) {
         var debug = app.debug("client:" + id);
 
-        app.util.publishButton({
-            id: id,
-            app: app,
-            debug: debug
-        });
-
-        app.bus.view.publish(id + ".new", {
-            btn: $$(id + ".new")
-        });
-
         debug("init");
+
+        subscribe(app, debug);
     };
 
 })();

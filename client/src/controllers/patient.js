@@ -25,14 +25,10 @@
         });
 
         bus.view.subscribe(msg.patient.patient, function (data, envelope) {
-            var pat = data.item;
-
             debug(envelope.topic, data);
-            $$('patientForm').setValues(pat);
 
-            formReadOnly($$('patientForm'), true);
-            _.forEach($$('treatmentList.toolbar').getChildViews(), function (el) {
-                el.enable();
+            bus.controller.publish(msg.patient.patient, {
+                patient: data.item
             });
         });
 

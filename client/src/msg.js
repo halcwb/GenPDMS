@@ -27,7 +27,9 @@
             // let the ui show a particular mainBody, data: { item: 'body' }
             mainBody: "ui.mainBody",
             // let the ui show a detailsBody, data: { item: 'body' }
-            detailsBody: "ui.detailsBody"
+            detailsBody: "ui.detailsBody",
+            // let the ui show the patient details list, data: { item: 'list' }
+            patientList: "ui.patientList"
         },
         status: {
             text: "status.text"

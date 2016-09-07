@@ -14,7 +14,25 @@
         id = 'patientDetails',
         tabViewId = id + 'tabs',
 
-        reviewTip = 'Add or remove treatment according to patient signs and available protocols';
+        reviewTip = 'Add or remove treatment according to patient signs and available protocols',
+
+        subscribe = _.once(function (app, debug) {
+                var bus = app.bus,
+                    msg = app.msg;
+
+                // load the patient form with the patient in the message
+                bus.controller.subscribe(msg.patient.patient, function (data, envelope) {
+                    var barId = treatment.getId() + ".toolbar";
+
+                    debug(envelope.topic, data);
+
+                    // patient is selected so treatment buttons work
+                    _.forEach($$(barId).getChildViews(), function (el) {
+                        el.enable();
+                    });
+
+                });
+            });
 
 
     exports.getId = function () { return id; };
@@ -58,8 +76,8 @@
                                             tooltip: 'Edit orders',
                                             width: 75,
                                             click: function () {
-                                                var treatment = $$('treatmentList').data.getRange(),
-                                                    patient   = $$("patientForm").getValues();
+                                                var treatment = $$(treatment.getId()).data.getRange(),
+                                                    patient   = $$(form.getId()).getValues();
 
                                                 bus.publish(msg.treatment.edit, {
                                                     patient: patient,
@@ -94,6 +112,8 @@
         var debug = app.debug('client:' + id + ':init'),
             tabs = {};
 
+        debug('init');
+
         tabs['tab.' + indications.getId()] = 'indications';
         tabs['tab.' + treatment.getId()] = 'treatment';
 
@@ -113,7 +133,8 @@
             debug: debug
         });
 
-        debug('init');
+        subscribe(app, debug);
+
     };
 
 
