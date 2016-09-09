@@ -85,6 +85,9 @@ publishnuget.cmd
 !/client/build/config/
 !/client/build/util/
 !/client/spikes/
+!/client/spikes/model/
+!/client/spikes/module/
+!/client/spikes/karma/
 !/client/src/
 !/client/src/data/
 !/client/src/controllers/

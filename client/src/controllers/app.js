@@ -19,6 +19,11 @@
         var msg = app.msg,
             bus = app.bus;
 
+        bus.view.subscribe(msg.ui.ready, function (data, envelope) {
+            debug(envelope.topic, data);
+            bus.controller.publish(msg.ui.ready, data);
+        });
+
         // Show the status text in an alert
         bus.view.subscribe(msg.status.text, function (data, envelope) {
             debug(envelope.topic, data);

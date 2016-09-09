@@ -27,7 +27,10 @@
             body   = require('./components/mainBody.js'),
             status = require("./templates/statusBar.js"),
 
-            debug = app.debug('client:' + id + ':init');
+            debug = app.debug('client:' + id + ':init'),
+
+            bus = app.bus,
+            msg = app.msg;
 
         debug('init');
 
@@ -57,7 +60,7 @@
 
         // **** Views Initialized ****
 
-        app.bus.view.publish(app.msg.ui.ready, {});
+        bus.view.publish(msg.ui.ready, {});
 
     };
 

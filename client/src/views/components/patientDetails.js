@@ -9,30 +9,57 @@
 
     var form        = require('./../forms/patient.js'),
         indications = require('./../lists/indication.js'),
-        treatment   = require('./../lists/treatment.js'),
+        treatment   = require('./../lists/treatment.js');
 
-        id = 'patientDetails',
-        tabViewId = id + 'tabs',
+    var id = 'patientDetails',
+        tabViewId = id + 'tabs';
 
-        reviewTip = 'Add or remove treatment according to patient signs and available protocols',
+    var reviewTip = 'Add or remove treatment according to patient signs and available protocols';
 
-        subscribe = _.once(function (app, debug) {
-                var bus = app.bus,
-                    msg = app.msg;
+    var enableToolbars = function (id, enable) {
+        _.forEach($$(id).getChildViews(), function (el) {
+            if (el.name !== "button") return;
 
-                // load the patient form with the patient in the message
-                bus.controller.subscribe(msg.patient.patient, function (data, envelope) {
-                    var barId = treatment.getId() + ".toolbar";
+            if (enable) el.enable();
+            else el.disable();
+        });
+    },
+        enableTreatmentBar   = _.partial(enableToolbars, treatment.getId() + ".toolbar"),
+        enableIndicationsBar = _.partial(enableToolbars, indications.getId() + ".toolbar");
 
-                    debug(envelope.topic, data);
+    var subscribe = _.once(function (app, debug) {
+        var bus = app.bus,
+            msg = app.msg;
 
-                    // patient is selected so treatment buttons work
-                    _.forEach($$(barId).getChildViews(), function (el) {
-                        el.enable();
-                    });
+        bus.controller.subscribe(msg.ui.ready, function (data, envelope) {
+            debug(envelope.topic, data);
 
-                });
-            });
+            // no patient is selected so treatment buttons don't work
+            enableTreatmentBar(false);
+            // no patient is selected so indication buttons don't work
+            enableIndicationsBar(false);
+        });
+
+        bus.controller.subscribe(msg.patient.patient, function (data, envelope) {
+            debug(envelope.topic, data);
+
+            // patient is selected so treatment buttons work
+            enableTreatmentBar(true);
+            // patient is selected so indication buttons work
+            enableIndicationsBar(true);
+        });
+
+        bus.controller.subscribe(msg.patient.new, function (data, envelope) {
+            debug(envelope.topic, data);
+
+            // patient is selected so treatment buttons work
+            enableTreatmentBar(true);
+            // patient is selected so indication buttons work
+            enableIndicationsBar(true);
+
+        });
+
+    });
 
 
     exports.getId = function () { return id; };
@@ -76,12 +103,12 @@
                                             tooltip: 'Edit orders',
                                             width: 75,
                                             click: function () {
-                                                var treatment = $$(treatment.getId()).data.getRange(),
-                                                    patient   = $$(form.getId()).getValues();
+                                                var treatData = $$(treatment.getId()).data.getRange(),
+                                                    patData   = $$(form.getId()).getValues();
 
                                                 bus.publish(msg.treatment.edit, {
-                                                    patient: patient,
-                                                    treatment: treatment
+                                                    patient: patData,
+                                                    treatment: treatData
                                                 });
                                             }
                                         },
@@ -105,6 +132,7 @@
             }
         ]};
 
+        debug(view);
         return view;
     };
 

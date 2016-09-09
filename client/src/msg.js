@@ -40,7 +40,9 @@
         patient: {
             patients: "patient.patients",
             patient: "patient.patient",
+            // start editing current patient, data: {}
             edit: "patient.edit",
+            // start with a new patient, data: {}
             new: "patient.new",
             save: "patient.save",
             indications: "patient.indications",
