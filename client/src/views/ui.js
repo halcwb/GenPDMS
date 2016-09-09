@@ -9,6 +9,33 @@
 
     var id = 'ui';
 
+    var header = require('./bars/header.js'),
+        main   = require('./components/mainBody.js'),
+        editor = require("./components/ruleEditorBody.js"),
+        status = require("./templates/statusBar.js");
+
+
+    var subscribe = _.once(function (app, debug) {
+       var bus = app.bus,
+           msg = app.msg;
+
+        // Switch between rule editor and main body
+        bus.controller.subscribe(msg.ui.ruleEditor, function (data, envelope) {
+            debug(envelope.topic, data);
+
+            if (data.editor) {
+                webix.ui(editor.getView(app), $$(main.getId()));
+                editor.init(app);
+            } else {
+                webix.ui(main.getView(app), $$(editor.getId()));
+                var el = document.getElementsByClassName('blocklyToolboxDiv')[0];
+                el.parentNode.removeChild(el);
+                main.init(app);
+            }
+
+        });
+    });
+
     exports.getId = function () { return id; };
 
     /**
@@ -23,11 +50,7 @@
      */
     exports.init = function (app) {
 
-        var header = require('./bars/header.js'),
-            body   = require('./components/mainBody.js'),
-            status = require("./templates/statusBar.js"),
-
-            debug = app.debug('client:' + id + ':init'),
+        var debug = app.debug('client:' + id + ':init'),
 
             bus = app.bus,
             msg = app.msg;
@@ -43,7 +66,7 @@
             id: id,
             rows: [
                 header.getView(app),
-                body.getView(app),
+                main.getView(app),
                 status.getView(app)
             ]
         });
@@ -52,10 +75,14 @@
         // **** Initialize Views ****
 
         header.init(app);
-        body.init(app);
+        main.init(app);
         status.init(app);
 
         require('./menus/sideMenu.js').init(app);
+
+        // **** Subscribe to Message Bus ****
+
+        subscribe(app, debug);
 
 
         // **** Views Initialized ****

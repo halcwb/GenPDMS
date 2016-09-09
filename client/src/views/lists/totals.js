@@ -73,8 +73,10 @@
         },
 
         subscribe = _.once(function (app, debug) {
+            var bus = app.bus,
+                msg = app.msg;
 
-            app.bus.controller.subscribe("patient.totals", function (data, envelope) {
+            bus.controller.subscribe(msg.patient.totals, function (data, envelope) {
                 debug(envelope.topic, data);
 
                 $$(id).data.importData(data.totals);
@@ -90,7 +92,6 @@
 
     exports.init = function (app) {
         var debug = app.debug('client:' + id + ':init');
-
 
         subscribe(app, debug);
 

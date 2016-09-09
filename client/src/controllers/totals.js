@@ -8,13 +8,15 @@
     "use strict";
 
     exports.init = function (app, debug) {
+        var bus = app.bus,
+            msg = app.msg;
 
-        app.bus.controller.subscribe("treatment.totals", function (data, envelope) {
+        bus.controller.subscribe(msg.treatment.totals, function (data, envelope) {
             var post = _.partial(app.request.post, app.settings.demo),
 
                 succ = function (resp) {
                     debug(resp);
-                    app.bus.controller.publish("patient.totals", {
+                    bus.controller.publish(msg.patient.totals, {
                         totals: resp.result.totals
                     });
                 },

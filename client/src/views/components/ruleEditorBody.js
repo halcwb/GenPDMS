@@ -53,13 +53,9 @@
 
 
     exports.init = function (app) {
-        var debug = app.debug('client:views:components:ruleEditor');
-
-        app.util.publishButton({
-            id: toolbarId,
-            app: app,
-            debug: debug
-        });
+        var bus = app.bus,
+            msg = app.msg,
+            debug = app.debug('client:views:components:ruleEditor');
 
         $$('ruleEditor').getNode().id = ruleEditorNode;
 
@@ -74,6 +70,11 @@
             });
         });
 
+        $$("ruleEditor.back").attachEvent("onItemClick", function () {
+            bus.view.publish(msg.ui.ruleEditor, {
+                editor: false
+            });
+        });
 
         debug('init');
     };

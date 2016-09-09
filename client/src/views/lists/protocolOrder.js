@@ -58,7 +58,9 @@
     };
 
     exports.init = function (app) {
-        var debug = app.debug('client:' + id + ':init');
+        var bus = app.bus,
+            msg = app.msg,
+            debug = app.debug('client:' + id + ':init');
 
         if (!$$(id)) {
             webix.ui({
@@ -69,12 +71,11 @@
             }).attachTo($$(id));
         }
 
-        app.util.publishButton({
-            id: toolbarId,
-            app: app,
-            debug: debug
+        $$(id + ".ruleEditor").attachEvent("onItemClick", function () {
+            bus.view.publish(msg.ui.ruleEditor, {
+                editor: true
+            });
         });
-
 
         debug('init');
     };

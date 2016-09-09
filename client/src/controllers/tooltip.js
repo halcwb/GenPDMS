@@ -17,43 +17,25 @@
     };
 
     exports.init = function (app, debug) {
-        var tooltipId = 'tooltip';
+        var bus = app.bus,
+            msg = app.msg;
 
-        app.bus.view.subscribe('*.*.mouseenter', function (data, envelope) {
-            var showTooltip = function () {
-                var item = envelope.topic.replace('.mouseenter', ''),
-                    text = tooltips[item] ? tooltips[item] : item,
-                    // calculate x pos
-                    uiWidth  = $$('ui').getNode().clientWidth,
-                    tipWidth = 200,
-                    totWidth = data.e.clientX + tipWidth,
-                    x = totWidth > uiWidth ? (data.e.clientX - tipWidth) : data.e.clientX,
-                    // calculate y pos
-                    uiHeight  = $$('ui').getNode().clientHeight,
-                    tipHeight = 100,
-                    totHeight = data.e.clientY + tipHeight,
-                    y = totHeight > uiHeight ? (data.e.clientY - tipHeight) : data.e.clientY;
+        bus.view.subscribe('*.*.mouseenter', function (data, envelope) {
+            debug(envelope.topic, data);
 
-
-                $$('tooltip').show({ text: text }, { x: x, y: y });
-            };
-
-            debug(envelope);
-
-            app.tooltip = _.delay(showTooltip, 1000);
-            _.delay(function () {
-                clearTimeout(app.tooltip);
-                $$(tooltipId).hide();
-            }, 5000);
+            bus.controller.publish(msg.ui.tooltip, {
+                tooltip: true,
+                clientX: data.e.clientX,
+                clientY: data.e.clientY,
+                text: tooltips[envelope.topic.replace(".mouseenter", "")]
+            });
 
         });
 
 
-        app.bus.view.subscribe('*.*.mouseleave', function (data, envelope) {
-            debug(envelope);
-
-            clearTimeout(app.tooltip);
-            $$(tooltipId).hide();
+        bus.view.subscribe('*.*.mouseleave', function (data, envelope) {
+            debug(envelope.topic, data);
+            bus.controller.publish(msg.ui.tooltip, { tooltip: false });
         });
 
     };

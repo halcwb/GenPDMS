@@ -52,7 +52,7 @@
 
                 succ = function (resp) {
                     debug(resp);
-                    app.bus.controller.publish(msg.patient.patients, {
+                    bus.controller.publish(msg.patient.patients, {
                         pats: resp.result.patients
                     });
                 },

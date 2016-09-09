@@ -29,7 +29,11 @@
             // let the ui show a detailsBody, data: { item: 'body' }
             detailsBody: "ui.detailsBody",
             // let the ui show the patient details list, data: { item: 'list' }
-            patientList: "ui.patientList"
+            patientList: "ui.patientList",
+            // let the ui switch between main body and rule editor, data: { editor: true/false }
+            ruleEditor: "ui.ruleEditor",
+            // show a tooltip data: { tooltip: true/false, clientX, clientY, item, text }
+            tooltip: "ui.tooltip"
         },
         status: {
             text: "status.text"
@@ -46,7 +50,8 @@
             new: "patient.new",
             save: "patient.save",
             indications: "patient.indications",
-            treatment: "patient.treatment"
+            treatment: "patient.treatment",
+            totals: "patient.totals"
         },
         treatment: {
             review: "treatment.review",
