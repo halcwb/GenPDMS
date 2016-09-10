@@ -149,10 +149,18 @@
         indications.init(app);
         treatment.init(app);
 
-        $$(tabViewId).getTabbar().attachEvent('onBeforeTabClick', function (tabId) {
+        $$(tabViewId).getTabbar().attachEvent('onItemClick', function (tabId) {
             app.bus.view.publish(id + '.tabclick', {
                 tab: tabs[tabId]
             });
+
+            // hack, reattach events to tabs
+            app.util.publishTabEnter({
+                tabs: _.keys(tabs),
+                app: app,
+                debug: debug
+            });
+
         });
 
         app.util.publishTabEnter({

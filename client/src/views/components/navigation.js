@@ -48,11 +48,18 @@
         patientList.init(app);
         protocolList.init(app);
 
-        $$(id).getTabbar().attachEvent('onBeforeTabClick', function (tabId) {
+        $$(id).getTabbar().attachEvent('onItemClick', function (tabId) {
             debug('publish', tabs[tabId]);
 
             bus.view.publish(msg.ui.detailsBody, {
                 item: tabs[tabId]
+            });
+
+            // Re-attach events to the tabbar tabs
+            app.util.publishTabEnter({
+                tabs: ['tab.patientList', 'tab.protocolList'],
+                app: app,
+                debug: debug
             });
         });
 
