@@ -20,7 +20,7 @@
             debug("subscribe");
 
             bus.controller.subscribe(msg.treatment.edit, function (data, envelope) {
-                var patient = data.patient;
+                var patient = data.select;
 
                 debug(envelope.topic, data);
 

@@ -26,7 +26,7 @@
         // Edit the treatment in the treatment edit ui
         bus.view.subscribe(msg.treatment.edit, function (data, envelope) {
             var treatment = data.treatment,
-                patient   = data.patient;
+                patient   = data.select;
 
             debug(envelope.topic, data);
 
@@ -54,7 +54,7 @@
 
         // If specific patient is selected, get the treatment for that patient and
         // publish the patient treatment.
-        bus.view.subscribe(msg.patient.patient, function (data, envelope) {
+        bus.view.subscribe(msg.patient.select, function (data, envelope) {
             var post = _.partial(app.request.post, app.settings.demo),
 
                 succ = function (resp) {

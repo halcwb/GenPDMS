@@ -23,7 +23,7 @@
 
         subscribe = _.once(function (app, debug) {
 
-            app.bus.controller.subscribe(app.msg.patient.patients, function (data, envelope) {
+            app.bus.controller.subscribe(app.msg.patient.get, function (data, envelope) {
                 debug(envelope.topic, data);
 
                 $$(id).clearAll();
@@ -56,13 +56,13 @@
         $$(id).attachEvent('onItemClick', function (item) {
             var data = { item: $$(id).data.getItem(item.row) };
 
-            debug(msg.patient.patient, data);
-            app.bus.view.publish(msg.patient.patient, data);
+            debug(msg.patient.select, data);
+            app.bus.view.publish(msg.patient.select, data);
         });
 
         subscribe(app, debug);
 
-        bus.publish(msg.patient.patients, {});
+        bus.publish(msg.patient.get, {});
 
         debug('init');
     };

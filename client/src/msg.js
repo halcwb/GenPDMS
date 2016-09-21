@@ -42,10 +42,42 @@
             add: "indication.add"
         },
         patient: {
-            patients: "patient.patients",
-            patient: "patient.patient",
-            // start editing current patient, data: {}
+            // --- Get patient(-s) ---
+            // - view: { filter: obj }
+            // get patients filtered by filter object
+            // if filter is undefined, all patients are returned
+            // - controller: { patients: array }
+            // an array of patients that are retrieved
+            // update patients list with patients
+            get: "patient.get",
+
+            // --- Select a patient ---
+            // - view: { patient: obj }
+            // the selected patient
+            // - controller: { patient: obj }
+            // the selected patient
+            // update model with patient
+            // - model: { patient: obj }
+            // the selected patient
+            // updated views with the selected patient
+            select: "patient.select",
+
+            // --- Edit a patient ----
+            // - view: {}
+            // Start editing a patient
+            // update view to start editing
             edit: "patient.edit",
+
+            // --- Update a patient ---
+            // - view: { patient: obj }
+            // the updated patient
+            // - controller: { patient: obj }
+            // the updated patient
+            // - model: { patient: obj }
+            // update views with patient with the updated patient
+            update: "patient.update",
+
+
             // start with a new patient, data: {}
             new: "patient.new",
             save: "patient.save",

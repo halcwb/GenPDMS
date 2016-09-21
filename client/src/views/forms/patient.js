@@ -19,6 +19,7 @@
 
         _.forEach(form.elements, function (el) {
             el.config.readonly = readOnly;
+            // ToDo solve events memory leak problem
             el.refresh();
         });
     };
@@ -55,10 +56,10 @@
         scen[msg.patient.edit][saveBtn] = true;
 
         // Patient selected
-        scen[msg.patient.patient] = {};
-        scen[msg.patient.patient][newBtn]  = true;
-        scen[msg.patient.patient][editBtn] = true;
-        scen[msg.patient.patient][saveBtn] = false;
+        scen[msg.patient.select] = {};
+        scen[msg.patient.select][newBtn]  = true;
+        scen[msg.patient.select][editBtn] = true;
+        scen[msg.patient.select][saveBtn] = false;
 
         _.forEach([newBtn, editBtn, saveBtn], function (id) {
             var btn = $$(id);
@@ -80,13 +81,33 @@
         });
 
         // load the patient form with the patient in the message
-        bus.controller.subscribe(msg.patient.patient, function (data, envelope) {
+        bus.controller.subscribe(msg.patient.select, function (data, envelope) {
             var form = $$(id);
 
             debug(envelope.topic, data);
 
             // load form with patient data
-            form.setValues(data.patient);
+            form.noChange = true;
+            form.setValues(data.select);
+            form.noChange = false;
+
+            // set form to read only
+            formEnable(true);
+            formReadOnly(true);
+            setButtons(app, envelope.topic);
+        });
+
+        // load the patient form with the patient in the message
+        bus.model.subscribe(msg.patient.select, function (data, envelope) {
+            var form = $$(id);
+
+            debug(envelope.topic, data);
+
+            // load form with patient data
+            form.noChange = true;
+            form.setValues(data.select);
+            form.noChange = false;
+
 
             // set form to read only
             formEnable(true);
@@ -131,8 +152,8 @@
                 },
                 {
                     view: "text",
-                    label: "Last Name",
-                    placeholder: "Last Name",
+                    label: "First Name",
+                    placeholder: "First Name",
                     name: "fname",
                     readonly: true,
                     labelAlign: "right",
@@ -140,8 +161,8 @@
                 },
                 {
                     view: "text",
-                    label: "First Name",
-                    placeholder: "First Name",
+                    label: "Last Name",
+                    placeholder: "Last Name",
                     name: "lname",
                     readonly: true,
                     labelAlign: "right",
@@ -326,6 +347,20 @@
         $$(id + ".save").attachEvent("onItemClick", function () {
             bus.view.publish(msg.patient.save, {
                 patient: $$(id).getValues()
+            });
+        });
+
+        _.forEach($$(id).elements, function (el) {
+            el.attachEvent("onChange", function () {
+                var form = $$(id);
+
+                if (!form.noChange) {
+                    debug("publish", msg.patient.select);
+
+                    bus.view.publish(msg.patient.select, {
+                        patient: form.getValues()
+                    });
+                }
             });
         });
 

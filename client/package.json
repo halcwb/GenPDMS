@@ -9,6 +9,7 @@
   "dependencies": {
     "debug": "^2.2.0",
     "elly": "^1.1.0",
+    "model-component": "^1.2.6",
     "postal": "^2.0.4",
     "underscore": "^1.8.3",
     "webix": "^3.3.17"

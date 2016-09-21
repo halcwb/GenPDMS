@@ -40,7 +40,7 @@
             enableIndicationsBar(false);
         });
 
-        bus.controller.subscribe(msg.patient.patient, function (data, envelope) {
+        bus.controller.subscribe(msg.patient.select, function (data, envelope) {
             debug(envelope.topic, data);
 
             // patient is selected so treatment buttons work

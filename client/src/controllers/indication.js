@@ -24,7 +24,7 @@
         });
 
         // For the selected patient publish the indications
-        bus.view.subscribe(msg.patient.patient, function (data, envelope) {
+        bus.view.subscribe(msg.patient.select, function (data, envelope) {
             var post = _.partial(app.request.post, app.settings.demo),
 
                 succ = function (resp) {

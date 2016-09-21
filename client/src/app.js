@@ -27,6 +27,7 @@
 
     // Create app namespace
     window.app = {};
+    window.app.models = {};
 
     /**
      * settings container
@@ -111,7 +112,15 @@
             c.init(app, debug);
             debug(c);
         });
-        
+
+        // **** Initialize Models ****
+
+        _.each([
+            require("./models/patient.js")
+        ], function (model) {
+            app.models[model.getName()] = model;
+        });
+
         // **** Initialize Views ****
 
         _.each([

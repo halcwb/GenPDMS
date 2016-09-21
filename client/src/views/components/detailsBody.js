@@ -19,7 +19,7 @@
             var bus = app.bus,
                 msg = app.msg,
                 item = {
-                    patient: patientDetails.getId(),
+                    select: patientDetails.getId(),
                     protocol: protocolDetails.getId()
                 };
 
