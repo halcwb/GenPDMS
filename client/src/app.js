@@ -107,16 +107,16 @@
             "indication": require('./controllers/indication.js'),
             "totals":     require('./controllers/totals.js')
         }).mapObject(function (c, id) {
-            var debug = app.debug("client:controllers:" + id);
+            var debug = app.debug("controllers:" + id);
 
+            debug("init");
             c.init(app, debug);
-            debug(c);
         });
 
         // **** Initialize Models ****
 
         _.each([
-            require("./models/patient.js")
+            /*require("./models/patient.js") */
         ], function (model) {
             app.models[model.getName()] = model;
         });
@@ -132,7 +132,7 @@
             v.init(app);
         });
 
-        app.debug('client:app')("Starting the app!");
+        app.debug("app")("*** starting the app! ***");
 
         webix.hasRun = true;
 

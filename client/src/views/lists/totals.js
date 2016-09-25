@@ -8,95 +8,115 @@
     "use strict";
 
     var id = 'totalsList',
+        name = "views:lists:totals";
 
-        view = {
-            rows: [
-                {
-                    view: 'datatable',
-                    id: id,
-                    resizeColumn: true,
-                    select: 'row',
-                    editable: true,
-                    columns: [
-                        {
-                            id: 'item',
-                            header: 'Item',
-                            fillspace: true,
-                            sort: 'string'
-                        },
-                        {
-                            id: 'qty',
-                            header: 'Quantity',
-                            fillspace: true,
-                            sort: 'string'
-                        },
-                        {
-                            id: 'qtyUnit',
-                            header: 'Unit',
-                            fillspace: true,
-                            sort: 'combo'
-                        },
-                        {
-                            id: 'minQty',
-                            header: 'Norm Min',
-                            fillspace: true,
-                            sort: 'string'
-                        },
-                        {
-                            id: 'maxQty',
-                            header: 'Norm Max',
-                            fillspace: true,
-                            sort: 'string'
-                        },
-                        {
-                            id: 'normUnit',
-                            header: 'Unit',
-                            fillspace: true,
-                            sort: 'combo'
-                        },
-                        {
-                            id: 'labQty',
-                            header: 'Lab',
-                            fillspace: true,
-                            sort: 'string'
-                        },
-                        {
-                            id: 'labUnit',
-                            header: 'Unit',
-                            fillspace: true,
-                            sort: 'string'
-                        }
-                    ],
-                    data: []
-                }
-            ]
-        },
+    var view = {
+        rows: [
+            {
+                view: 'datatable',
+                id: id,
+                resizeColumn: true,
+                select: 'row',
+                editable: true,
+                columns: [
+                    {
+                        id: 'item',
+                        header: 'Item',
+                        fillspace: true,
+                        sort: 'string'
+                    },
+                    {
+                        id: 'qty',
+                        header: 'Quantity',
+                        fillspace: true,
+                        sort: 'string'
+                    },
+                    {
+                        id: 'qtyUnit',
+                        header: 'Unit',
+                        fillspace: true,
+                        sort: 'combo'
+                    },
+                    {
+                        id: 'minQty',
+                        header: 'Norm Min',
+                        fillspace: true,
+                        sort: 'string'
+                    },
+                    {
+                        id: 'maxQty',
+                        header: 'Norm Max',
+                        fillspace: true,
+                        sort: 'string'
+                    },
+                    {
+                        id: 'normUnit',
+                        header: 'Unit',
+                        fillspace: true,
+                        sort: 'combo'
+                    },
+                    {
+                        id: 'labQty',
+                        header: 'Lab',
+                        fillspace: true,
+                        sort: 'string'
+                    },
+                    {
+                        id: 'labUnit',
+                        header: 'Unit',
+                        fillspace: true,
+                        sort: 'string'
+                    }
+                ],
+                data: []
+            }
+        ]
+    };
 
-        subscribe = _.once(function (app, debug) {
-            var bus = app.bus,
-                msg = app.msg;
+    /*
+     Subscribe to Controllers
+     */
+    var subscribe = _.once(function (app, debug) {
+        var subscribe = _.partial(app.bus.controller.subscribe, debug),
+            msg = app.msg;
 
-            bus.controller.subscribe(msg.patient.totals, function (data, envelope) {
-                debug(envelope.topic, data);
-
-                $$(id).data.importData(data.totals);
-            });
+        subscribe(msg.patient.totals, function (data) {
+            $$(id).data.importData(data.totals);
         });
+    });
 
+    /*
+     Initialize view
+     */
+    var init = function (app) {
+        var debug = app.debug(name);
+
+        debug('init');
+
+        subscribe(app, debug);
+    };
+
+    /**
+     * #### Get the view id
+     * @returns {string}
+     */
     exports.getId = function () { return id; };
 
+    /**
+     * Get the view
+     * @param app
+     * @returns {object}
+     */
     exports.getView = function (app) {
-        app.debug('client:' + id + ':getView')(view);
+        app.debug(name)(view);
         return view;
     };
 
-    exports.init = function (app) {
-        var debug = app.debug('client:' + id + ':init');
-
-        subscribe(app, debug);
-
-        debug('init');
-    };
+    /**
+     * Initialize the view
+     * @param {object} app The application namespace
+     */
+    exports.init = function (app) { init(app); };
 
 
 })();

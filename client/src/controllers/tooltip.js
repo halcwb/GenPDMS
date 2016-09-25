@@ -16,28 +16,39 @@
         'tab.treatmentList': '<b>Running ordes</b> </br>Orders and indications are evaluated according to protocols'
     };
 
-    exports.init = function (app, debug) {
-        var bus = app.bus,
+    /*
+     Subscribe to View
+     */
+    var subscribeView = function (app, debug, publish) {
+        var subscribe = _.partial(app.bus.view.subscribe, debug),
             msg = app.msg;
 
-        bus.view.subscribe('*.*.mouseenter', function (data, envelope) {
-            debug(envelope.topic, data);
-
-            bus.controller.publish(msg.ui.tooltip, {
+        subscribe('*.*.mouseenter', function (data, envelope) {
+            publish(msg.ui.tooltip, {
                 tooltip: true,
                 clientX: data.e.clientX,
                 clientY: data.e.clientY,
                 text: tooltips[envelope.topic.replace(".mouseenter", "")]
             });
-
         });
 
-
-        bus.view.subscribe('*.*.mouseleave', function (data, envelope) {
-            debug(envelope.topic, data);
-            bus.controller.publish(msg.ui.tooltip, { tooltip: false });
+        subscribe('*.*.mouseleave', function () {
+            publish(msg.ui.tooltip, { tooltip: false });
         });
 
+    };
+
+    /*
+     Subscribe
+     */
+    var subscribe = _.once(function (app, debug) {
+        var publish = _.partial(app.bus.controller.publish, debug);
+
+        subscribeView(app, debug, publish);
+    });
+
+    exports.init = function (app, debug) {
+        subscribe(app, debug);
     };
 
 })();

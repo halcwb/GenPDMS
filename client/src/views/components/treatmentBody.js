@@ -1,5 +1,5 @@
 /**
- * @module views/treatmentBody
+ * @module views/components/treatmentBody
  */
 
 /*global webix, $$, _ */
@@ -8,36 +8,69 @@
     "use strict";
 
     var id = 'treatmentBody',
+        name = "views:components:treatmentBody",
         toolbarId = id + '.toolbar',
 
         treatmentDetails = require('./../lists/treatmentDetail.js'),
-        totals           = require("./../lists/totals.js"),
+        totals           = require("./../lists/totals.js");
 
-        subscribe = _.once(function (app, debug) {
-            var bus = app.bus,
-                msg = app.msg;
+    /*
+     Subscribe to Controllers
+     */
+    var subscribe = _.once(function (app, debug) {
+        var subscribe = _.partial(app.bus.controller.subscribe, debug),
+            msg = app.msg;
 
-            debug("subscribe");
+        debug("subscribe");
 
-            bus.controller.subscribe(msg.treatment.edit, function (data, envelope) {
-                var patient = data.select;
+        subscribe(msg.treatment.edit, function (data) {
+            var patient = data.patient;
 
-                debug(envelope.topic, data);
+            $$(id + ".header").setValues({
+                no: patient.no,
+                name: patient.name,
+                dob: webix.Date.dateToStr("%d-%M-%Y")(patient.dob),
+                age: patient.age,
+                ageUnit: patient.ageUnit,
+                weight: patient.weight,
+                weightUnit: patient.weightUnit
+            });
+        });
+    });
 
-                $$(id + ".header").setValues({
-                    no: patient.no,
-                    name: patient.name,
-                    dob: webix.Date.dateToStr("%d-%M-%Y")(patient.dob),
-                    age: patient.age,
-                    ageUnit: patient.ageUnit,
-                    weight: patient.weight,
-                    weightUnit: patient.weightUnit
-                });
+    /*
+     Initialize
+     */
+    var init = function (app) {
+        var debug = app.debug(name),
+            publish = _.partial(app.bus.view.publish, debug),
+            msg = app.msg;
+
+        debug('init');
+
+        $$(id + ".back").attachEvent("onItemClick", function () {
+            publish(msg.ui.mainBody, {
+                item: "details"
             });
         });
 
+        subscribe(app, debug);
+
+        treatmentDetails.init(app);
+        totals.init(app);
+    };
+
+    /**
+     * #### Get the view id
+     * @returns {string}
+     */
     exports.getId = function () { return id; };
 
+    /***
+     * #### Get the view config
+     * @param {object} app The application namespace
+     * @returns {object}
+     */
     exports.getView = function (app) {
         var view = {
             id: id,
@@ -88,28 +121,15 @@
             ]
         };
 
-        app.debug('client:views:components:' + id + ':getView')(view);
+        app.debug(name)(view);
         return view;
     };
 
-    exports.init = function (app) {
-        var debug = app.debug('client:views:components:' + id + ':init'),
-            bus = app.bus,
-            msg = app.msg;
-
-        $$(id + ".back").attachEvent("onItemClick", function () {
-            bus.view.publish(msg.ui.mainBody, {
-                item: "details"
-            });
-        });
-
-        subscribe(app, debug);
-
-        treatmentDetails.init(app);
-        totals.init(app);
-
-        debug('init');
-    };
+    /**
+     * Initialize the application
+     * @param {object} app The application namespace
+     */
+    exports.init = function (app) { init(app); };
 
 
 })();

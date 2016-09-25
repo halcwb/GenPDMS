@@ -9,6 +9,9 @@
 
     var id = 'loadingMask',
 
+        /*
+        View Config Object
+         */
         view = {
             id: id,
             view: "window",
@@ -25,6 +28,9 @@
             }
         },
 
+        /*
+        Helper Functions
+         */
         doWait = function (loading) {
             var mask = $$(id);
 
@@ -36,47 +42,49 @@
             }
         },
 
-        subscribe = _.once(function (app, debug) {
+        /*
+        View Subscriptions
+         */
+        subscribe = function (app, debug) {
 
-            app.bus.view.subscribe('show_loading_mask', function (data, envelope) {
-                app.debug(id, envelope);
+            app.bus.view.subscribe(debug, 'show_loading_mask', function (data) {
                 doWait(data.loading);
             });
 
+        },
+
+        /*
+        Initialize the View
+         */
+        init = _.once(function (app) {
+            var debug = app.debug("views:windows:loadingMask");
+
+            debug("init");
+
+            // subscribe to loading event
+            subscribe(app, debug);
+
+            // make sure loading mask is not visible
+            if (!$$(id)) {
+                webix.ui(view).hide();
+            }
+
+            // make app loading shortcut
+            app.loading = function (loading) {
+                app.bus.view.publish(debug, 'show_loading_mask', {
+                    loading: loading
+                });
+            };
+
         });
-
-    exports.getView = function (app) {
-        var debug = app.debug("client:windows:loadingMask");
-
-        debug(view);
-
-        return view;
-    };
 
     /**
      * loadingMask: </br>
      * creates a loading mask
      * @param app {app} uses app functionality
-     * @returns {view} a loading mask view
+     * @returns {undefined}
      */
-    exports.init = function (app) {
-        subscribe(app, app.debug("client:" + id + ":init"));
-
-        if (!$$(id)) {
-            webix.ui(view).hide();
-        }
-
-        // Subscribe to loading event
-        // Make app loading shortcut
-        app.loading = function (loading) {
-            app.bus.view.publish('show_loading_mask', {
-                loading: loading
-            });
-        };
-
-        app.debug('client:' + id)('init');
-
-    };
+    exports.init = function (app) { init(app); };
 
 })();
 

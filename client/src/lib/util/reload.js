@@ -1,3 +1,4 @@
+
 /**
 * @module lib/util/reload
 */
@@ -15,12 +16,12 @@
      */
     exports.init = function (app) {
         var URL = '//localhost:1337';
-        var debug = app.debug("client:reload");
+        var debug = app.debug("lib:util:reload");
         var resp = webix.ajax().get('http:' + URL);
 
         resp.then(function () {
             // we are in development
-            app.debug.enable("client:*");
+            app.debug.enable("*");
             debug('development mode started');
 
             // the development watch server is up
@@ -33,11 +34,15 @@
                 window.location.reload();
             };
 
+            // no development watch server
+            // creates an error in the console
+            // ToDo the error cannot be caught??
             app.ws.onerror = function () {
                 debug('no reload');
             };
         // no reaction from the development
         // server, so we are in production
+        // ToDo the error cannot be caught??
       }).fail(function() {
           debug('no development server, no problem!');
       });

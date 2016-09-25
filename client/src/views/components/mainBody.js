@@ -7,30 +7,55 @@
 (function () {
     "use strict";
 
-    var id = 'mainBody';
+    var id = 'mainBody',
+        name = "views:components:mainBody";
 
     var detailBody = require('./detailsBody.js'),
-        treatBody  = require("./treatmentBody.js"),
+        treatBody  = require("./treatmentBody.js");
 
-        subscribe = _.once(function (app, debug) {
-            var bus = app.bus,
-                msg = app.msg,
-                show = {
-                    details: $$(detailBody.getId()),
-                    treatment: $$(treatBody.getId()),
-                };
+    /*
+     Subscribe to Controller
+     */
+    var subscribe = function (app, debug) {
+        var subscribe = _.partial(app.bus.controller.subscribe, debug),
+            msg = app.msg,
+            show = {
+                details: $$(detailBody.getId()),
+                treatment: $$(treatBody.getId()),
+            };
 
-            bus.controller.subscribe(msg.ui.mainBody, function (data, envelope) {
-                debug(envelope.topic, data);
-                show[data.item].show();
-            });
-
+        subscribe(msg.ui.mainBody, function (data) {
+            show[data.item].show();
         });
+    };
 
+    /*
+     Initialize
+     */
+    var init = _.once(function (app) {
+        var debug = app.debug(name);
+
+        debug("init");
+
+        detailBody.init(app);
+        treatBody.init(app);
+
+        subscribe(app, debug);
+    });
+
+    /**
+     * ### Get the view Id
+     * @returns {string} The view Id
+     */
     exports.getId = function () { return id; };
 
+    /**
+     * ### Get the view config object
+     * @param {object} app The application namespace
+     * @returns {object} The view config
+     */
     exports.getView = function (app) {
-        var debug = app.debug('client:' + id + ':getView');
+        var debug = app.debug(name);
 
         var view = {
                     id: id, view: "multiview", cells: [
@@ -44,15 +69,10 @@
         return view;
     };
 
-    exports.init = function (app) {
-        var debug = app.debug('client:' + id + ':init');
-
-        detailBody.init(app);
-        treatBody.init(app);
-
-        subscribe(app, debug);
-
-        debug('init');
-    };
+    /**
+     * ### Initialize the View
+     * @param {obj} app The application namespace
+     */
+    exports.init = function (app) { init(app); };
 
 })();

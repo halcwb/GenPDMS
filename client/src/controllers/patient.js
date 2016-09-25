@@ -1,4 +1,5 @@
 /**
+ * Handles patient logic
  * @module controllers/patient
  */
 
@@ -7,66 +8,85 @@
 (function () {
     "use strict";
 
-    exports.init = function (app, debug) {
-        var bus = app.bus,
-            msg = app.msg,
-            mod = app.models;
+    /*
+     Subscribe View
+     */
+    var subscribeView = function (app, debug, publish) {
+        var subscribe = _.partial(app.bus.view.subscribe, debug),
+            msg = app.msg;
 
-        bus.view.subscribe(msg.patient.edit, function (data, envelope) {
-            debug(envelope.topic, envelope.data);
-
-            bus.controller.publish(msg.patient.edit, data);
+        subscribe(msg.patient.edit, function (data) {
+            publish(msg.patient.edit, data);
         });
 
-        bus.view.subscribe(msg.patient.select, function (data, envelope) {
-            debug(envelope.topic, data);
-            bus.controller.publish(msg.patient.select, {
-                patient: data.item
+        subscribe(msg.patient.select, function (data) {
+            publish(msg.patient.select, {
+                patient: data.patient
             });
         });
 
-        bus.view.subscribe(msg.patient.new, function (data, envelope) {
-            debug(envelope.topic, data);
-
-            bus.controller.publish(msg.patient.new, data);
+        subscribe(msg.patient.new, function (data) {
+            publish(msg.patient.new, data);
         });
 
-        bus.view.subscribe(msg.patient.save, function (data, envelope) {
+        subscribe(msg.patient.save, function (data, envelope) {
             var txt = 'Not implemented yet:</br>' +
-                       envelope.topic + '</br>' +
-                      'will save the patient in the database';
-
-            debug(envelope.topic, data);
+                envelope.topic + '</br>' +
+                'will save the patient in the database';
 
             webix.message(txt);
 
-            bus.controller.publish(msg.patient.save, {
+            publish(msg.patient.save, {
                 patient: data.select
             });
         });
 
-        bus.view.subscribe(msg.patient.get, function (data, envelope) {
-            debug(envelope, data);
-
+        // Get the list of patients
+        subscribe(msg.patient.get, function (data, envelope) {
             var post = _.partial(app.request.post, app.settings.demo),
 
                 succ = function (resp) {
-                    debug(resp);
-                    bus.controller.publish(msg.patient.get, {
-                        pats: resp.result.patients
+                    publish(msg.patient.get, {
+                        patients: resp.result.patients
                     });
                 },
 
                 fail = function (err) {
-                    debug(err);
+                    debug("error", err);
                 };
 
             app.loading(true);
+            // ToDo start using filter object
             post(succ, fail, "patients", {});
             app.loading(false);
 
         });
 
+    };
+
+    /*
+     Subscribe All
+     */
+    var subscribe = _.once(function (app, debug) {
+        var publish = _.partial(app.bus.controller.publish, debug);
+        subscribeView(app, debug, publish);
+    });
+
+    /**
+     * #### Initializes the controller
+     * Will handle:
+     * - Retrieval of patients
+     * - Selection of a single patient
+     * - Updating a patient
+     * - Creating a new patient
+     * - Saving a patient
+     * - Deleting a patient
+     *
+     * @param {object} app application namespace
+     * @param {object} debug provides debugger functions
+     */
+    exports.init = function (app, debug) {
+        subscribe(app, debug);
     };
 
 })();

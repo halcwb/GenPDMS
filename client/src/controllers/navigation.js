@@ -2,26 +2,33 @@
  * controllers/navigation
  */
 
-/*global webix, $$ */
+/*global webix, $$, _ */
 
 (function () {
     "use strict";
 
-    exports.init  = function (app, debug) {
-        var bus = app.bus,
+    /*
+     Subscribe to View
+     */
+    var subscribeView = _.once(function (app, debug, publish) {
+        var subscribe = _.partial(app.bus.view.subscribe, debug),
             msg = app.msg;
 
-        bus.view.subscribe(msg.ui.detailsBody, function (data, envelope) {
-            debug(envelope.topic, data);
-
+        subscribe(msg.ui.detailsBody, function (data) {
             if (data.item === 'protocols') {
-                bus.controller.publish(msg.ui.detailsBody, { item: "protocol" });
+                publish(msg.ui.detailsBody, { item: "protocol" });
 
             } else if (data.item === 'patients') {
-                bus.controller.publish(msg.ui.detailsBody, { item: "patient" });
+                publish(msg.ui.detailsBody, { item: "patient" });
             }
         });
 
+    });
+
+    exports.init  = function (app, debug) {
+        var publish = _.partial(app.bus.controller.publish, debug);
+
+        subscribeView(app, debug, publish);
     };
 
 })();

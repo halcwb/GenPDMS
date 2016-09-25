@@ -7,16 +7,15 @@
 (function () {
     "use strict";
 
-    exports.init = function (app, debug) {
-        var bus = app.bus,
+    var subscribeView = function (app, debug, publish) {
+        var subscribe = _.partial(app.bus.view.subscribe, debug),
             msg = app.msg;
 
-        bus.controller.subscribe(msg.treatment.totals, function (data, envelope) {
+        subscribe(msg.treatment.totals, function (data) {
             var post = _.partial(app.request.post, app.settings.demo),
 
                 succ = function (resp) {
-                    debug(resp);
-                    bus.controller.publish(msg.patient.totals, {
+                    publish(msg.patient.totals, {
                         totals: resp.result.totals
                     });
                 },
@@ -25,14 +24,21 @@
                     debug(err);
                 };
 
-            debug(envelope.topic, data);
 
             app.loading(true);
             post(succ, fail, "totals", { id: data.id });
             app.loading(false);
 
         });
+    };
 
+    var subscribe = _.once(function (app, debug) {
+        var publish = _.partial(app.bus.controller.publish, debug);
+        subscribeView(app, debug, publish);
+    });
+
+    exports.init = function (app, debug) {
+        subscribe(app, debug);
     };
 
 })();

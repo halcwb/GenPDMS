@@ -6,6 +6,7 @@
     "use strict";
 
     var id = 'protocolForm',
+        name = "views:forms:protocol",
         labelWidth = 100,
         view = {
             view: 'form',
@@ -64,17 +65,16 @@
     exports.getId = function () { return id; };
 
     exports.getView = function (app) {
-        app.debug('client:' + id + 'getView')(view);
+        app.debug(name)(view);
         return view;
     };
 
     exports.init = function (app) {
-        var debug = app.debug('client:' + id + ':init');
+        var debug = app.debug(name);
 
         app.util.publishButton({
             id: id,
-            app: app,
-            debug: debug
+            app: app
         });
 
         debug('init');

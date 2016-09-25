@@ -8,6 +8,7 @@
     "use strict";
 
     var id = 'protocolList',
+        name = "views:lists:protocol",
         view =  {
             view: 'datatable',
             id: id,
@@ -23,15 +24,30 @@
             ]
         };
 
+    /**
+     * #### Return the view Id
+     * @returns {string}
+     */
     exports.getId = function () { return id; };
 
+    /**
+     * Return the view config
+     * @param {object} app The application namespace
+     * @returns {object} The view config
+     */
     exports.getView = function (app) {
-        app.debug('client:' + id + ':view')(view);
+        app.debug(name)(view);
 
         return view;
     };
 
+    /**
+     * Initializes the view
+     * @param {object} app The application namespace
+     */
     exports.init = function (app) {
+        app.debug(name)('init');
+
         webix.ui({
             view: 'contextmenu',
             data: [
@@ -40,8 +56,6 @@
             ]
         }).attachTo($$(id));
 
-
-        app.debug('client:' + id + ':init')('init');
     };
 
 })();

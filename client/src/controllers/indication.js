@@ -7,29 +7,28 @@
 (function () {
     "use strict";
 
-
-    exports.init = function (app, debug) {
-        var bus = app.bus,
+    /*
+     Subscribe to View
+     */
+    var subscribeView = function (app, debug, publish) {
+        var subscribe = _.partial(app.bus.view.subscribe, debug),
             msg = app.msg;
 
         // Add an indication to the list of medications
-        bus.view.subscribe(msg.indication.add, function (data, envelope) {
+        subscribe(msg.indication.add, function (data, envelope) {
             var msg = 'Not implemented yet:</br>' +
                 envelope.topic + '</br>' +
                 'will add or indications';
-
-            debug(envelope.topic, data);
 
             webix.message(msg);
         });
 
         // For the selected patient publish the indications
-        bus.view.subscribe(msg.patient.select, function (data, envelope) {
+        subscribe(msg.patient.select, function (data) {
             var post = _.partial(app.request.post, app.settings.demo),
 
                 succ = function (resp) {
-                    debug(resp);
-                    bus.controller.publish(msg.patient.indications, {
+                    publish(msg.patient.indications, {
                         indications: resp.result.indications
                     });
                 },
@@ -38,15 +37,24 @@
                     debug(err);
                 };
 
-            debug(envelope.topic, data);
-
             app.loading(true);
-            post(succ, fail, "indications", { id: data.item.id });
+            post(succ, fail, "indications", { id: data.patient.id });
             app.loading(false);
 
         });
-
     };
 
+    var subscribe = _.once(function (app, debug) {
+        var publish = _.partial(app.bus.controller.publish, debug);
+
+        subscribeView(app, debug, publish);
+    });
+
+    /**
+     * Initialize the controller
+     * @param {object} app The application namespace
+     * @param {Function} debug The controller specific debug function
+     */
+    exports.init = function (app, debug) { subscribe(app, debug); };
 
 })();

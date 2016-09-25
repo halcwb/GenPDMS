@@ -1,5 +1,6 @@
 /**
- * views/forms/patient
+ * ## Display patient details
+ * @module views/forms/patient
  */
 
 /*global webix, $$, _ */
@@ -8,12 +9,17 @@
     "use strict";
 
     var id = "patientForm",
+        name = "views:forms:patient",
+
         newBtn  = id + ".new",
         editBtn = id + ".edit",
         saveBtn = id + ".save";
 
     var labelWidth = 100;
 
+    /*
+     Helper Functions
+     */
     var formReadOnly = function (readOnly) {
         var form = $$(id);
 
@@ -70,25 +76,74 @@
         });
     };
 
-    var subscribe = _.once(function (app, debug) {
-        var bus = app.bus,
+    /*
+     Subscribe to View
+     */
+    var subscribeView = function (app, debug) {
+        var subscribe = _.partial(app.bus.view.subscribe, debug),
             msg = app.msg;
 
-        bus.controller.subscribe(msg.ui.ready, function (data, envelope) {
-            debug(envelope.topic, data);
+        // Gets a new list of patients so no patient is selected
+        subscribe(msg.patient.get, function (data, envelope) {
+            var form = $$(id);
+
+            form.noChange = true;
+            form.clear();
+            form.noChange = false;
+
+            formEnable(false);
+            formReadOnly(true);
+            setButtons(app, envelope.topic);
+        });
+
+    };
+
+
+    /*
+     Subscribe to Model
+     */
+    var subscribeModel = function (app, debug) {
+        var subscribe = _.partial(app.bus.model.subscribe, debug),
+            msg = app.msg;
+
+        // load the patient form with the patient in the message
+        subscribe(msg.patient.select, function (data, envelope) {
+            var form = $$(id);
+
+            // load form with patient data
+            form.noChange = true;
+            form.setValues(data.select);
+            form.noChange = false;
+
+
+            // set form to read only
+            formEnable(true);
+            formReadOnly(true);
+            setButtons(app, envelope.topic);
+        });
+    };
+
+    /*
+     Subscribe to Controller
+     */
+    var subscribeController = function (app, debug) {
+        var subscribe = _.partial(app.bus.controller.subscribe, debug),
+            msg = app.msg;
+
+        subscribe(msg.ui.ready, function (data, envelope) {
             formEnable(false);
             setButtons(app, envelope.topic);
         });
 
         // load the patient form with the patient in the message
-        bus.controller.subscribe(msg.patient.select, function (data, envelope) {
+        subscribe(msg.patient.select, function (data, envelope) {
             var form = $$(id);
-
-            debug(envelope.topic, data);
 
             // load form with patient data
             form.noChange = true;
-            form.setValues(data.select);
+            if (data.patient) {
+                form.setValues(data.patient);
+            }
             form.noChange = false;
 
             // set form to read only
@@ -97,43 +152,71 @@
             setButtons(app, envelope.topic);
         });
 
-        // load the patient form with the patient in the message
-        bus.model.subscribe(msg.patient.select, function (data, envelope) {
-            var form = $$(id);
-
-            debug(envelope.topic, data);
-
-            // load form with patient data
-            form.noChange = true;
-            form.setValues(data.select);
-            form.noChange = false;
-
-
-            // set form to read only
-            formEnable(true);
-            formReadOnly(true);
-            setButtons(app, envelope.topic);
-        });
-
-        bus.controller.subscribe(msg.patient.edit, function (data, envelope) {
-            debug(envelope.topic, data);
+        subscribe(msg.patient.edit, function (data, envelope) {
 
             formReadOnly(false);
             setButtons(app, envelope.topic);
         });
 
-        bus.controller.subscribe(msg.patient.new, function (data, envelope) {
+        subscribe(msg.patient.new, function (data, envelope) {
             var form = $$(id);
-
-            debug(envelope.topic, data);
 
             form.clear();
             formEnable(true);
             formReadOnly(false);
             setButtons(app, envelope.topic);
         });
+    };
 
+    /*
+     Subscribe
+     */
+    var subscribe = _.once(function (app, debug) {
+        subscribeView(app,debug);
+        subscribeController(app, debug);
+        subscribeModel(app, debug);
     });
+
+    /*
+     Initialize
+     */
+    var init = function (app) {
+        var debug = app.debug(name),
+            publish = _.partial(app.bus.view.publish, debug),
+            msg = app.msg;
+
+        debug("init");
+
+        $$(id + ".new").attachEvent("onItemClick", function () {
+            publish(msg.patient.new, {});
+        });
+
+        $$(id + ".edit").attachEvent("onItemClick", function () {
+            publish(msg.patient.edit, {});
+        });
+
+        $$(id + ".save").attachEvent("onItemClick", function () {
+
+            publish(msg.patient.save, {
+                patient: $$(id).getValues()
+            });
+        });
+
+        _.forEach($$(id).elements, function (el) {
+            el.attachEvent("onChange", function () {
+                var form = $$(id);
+
+                if (!form.noChange) {
+                    publish(msg.patient.select, {
+                        patient: form.getValues()
+                    });
+                }
+            });
+        });
+
+        // Subscribe the view to relevant messages
+        subscribe(app, debug);
+    };
 
     var view = {
         view: "form",
@@ -322,49 +405,26 @@
         ]
     };
 
+    /**
+     * #### Get the view id
+     * @returns {string} Id of the view
+     */
     exports.getId = function () { return id; };
 
+    /**
+     * #### Get the view config
+     * @param app
+     * @returns {object} webix view config
+     */
     exports.getView = function (app) {
-        app.debug("client:" + id + ":view")(view);
+        app.debug(name)(view);
         return view;
     };
 
-    exports.init = function (app) {
-        var bus = app.bus,
-            msg = app.msg,
-            debug = app.debug("client:" + id);
-
-        debug("init");
-
-        $$(id + ".new").attachEvent("onItemClick", function () {
-            bus.view.publish(msg.patient.new, {});
-        });
-
-        $$(id + ".edit").attachEvent("onItemClick", function () {
-            bus.view.publish(msg.patient.edit, {});
-        });
-
-        $$(id + ".save").attachEvent("onItemClick", function () {
-            bus.view.publish(msg.patient.save, {
-                patient: $$(id).getValues()
-            });
-        });
-
-        _.forEach($$(id).elements, function (el) {
-            el.attachEvent("onChange", function () {
-                var form = $$(id);
-
-                if (!form.noChange) {
-                    debug("publish", msg.patient.select);
-
-                    bus.view.publish(msg.patient.select, {
-                        patient: form.getValues()
-                    });
-                }
-            });
-        });
-
-        subscribe(app, debug);
-    };
+    /**
+     * #### Initializes the view
+     * @param {object} app application namespace
+     */
+    exports.init = function (app) { init(app); };
 
 })();

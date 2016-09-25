@@ -1,10 +1,15 @@
 /**
- * @module msg
+ * @file
  */
 
 (function () {
     "use strict";
 
+    /**
+     * # Contains application messages
+     * Each message fulfils a use case.
+     * @namespace msg
+     */
     module.exports = {
         alert: {
             // show alert with data: { title, text, type, length }, type can be
@@ -41,25 +46,76 @@
         indication: {
             add: "indication.add"
         },
+        /**
+         * ## Patient messages
+         * Messages that fulfil patient use cases:
+         *
+         * - Get patients
+         * - Select patient
+         * - Update patient
+         * - Create patient
+         * - Save patient
+         *
+         * @memberof msg
+         * @type object
+         */
         patient: {
-            // --- Get patient(-s) ---
-            // - view: { filter: obj }
-            // get patients filtered by filter object
-            // if filter is undefined, all patients are returned
-            // - controller: { patients: array }
-            // an array of patients that are retrieved
-            // update patients list with patients
+            /**
+             * ### Get patient(-s)
+             * The message *patient.get* handles the retrieval and display of patients.
+             *
+             * #### view.bus.view.publish: { filter: obj }
+             * - Ask for patients filtered by filter object.
+             * If filter is undefined, all patients are returned.
+             *
+             * #### controller.bus.view.subscribe
+             * - Retrieve request for patients. Get the patients
+             * filtered by the filter object.
+             *
+             * #### controller.bus.controller.publish: { patients: array }
+             * - Publish the list of retrieved patients.
+             *
+             * #### view.bus.controller.subscribe
+             * - Get the list of patients and display the patient list.
+             * - Make sure that no patient is selected and
+             * - clear the patient details form.
+             *
+             * @alias patient.get
+             * @memberof! msg#
+             * @member patient.get
+             * @type string
+             */
             get: "patient.get",
 
-            // --- Select a patient ---
-            // - view: { patient: obj }
-            // the selected patient
-            // - controller: { patient: obj }
-            // the selected patient
-            // update model with patient
-            // - model: { patient: obj }
-            // the selected patient
-            // updated views with the selected patient
+            /**
+             * ### Select a patient
+             * The message *patient.select* handles selection and display of a single
+             * patient from a list of patients.
+             *
+             * #### view.bus.view.publish: { patient: obj }
+             * - Publish the selected patient
+             *
+             * #### controller.bus.view.subscribe
+             * - Retrieve patient
+             *
+             * #### controller.bus.controller.publish: { patient: obj }
+             * - Publish the selected patient
+             *
+             * #### model.bus.controller.subscribe
+             * - Set the model to the retrieved patient
+             *
+             * #### model.bus.model.publish: { patient: obj }
+             * - Publish the selected patient
+             *
+             * #### view.bus.model.subscribe:
+             * - Load the view with the selected patient
+             * - Make sure that the patient is selected in the view
+             *
+             * @alias patient.select
+             * @memberof! msg#
+             * @member patient.select
+             * @type string
+             */
             select: "patient.select",
 
             // --- Edit a patient ----

@@ -1,5 +1,5 @@
 /**
- * @module modules/patient
+ * @module models/patient
  */
 
 
@@ -29,13 +29,14 @@
     exports.create = function (app, data) {
         var bus = app.bus,
             msg = app.msg,
-            debug = app.debug("client:models:patient"),
+            debug = app.debug("models:patient"),
             model = create(data);
 
         model.emitChange = true;
 
         function publishModel () {
-            bus.model.publish(msg.patient.select, {
+            bus.model.publish(  msg.patient.select, {
+                debug: debug,
                 patient: model.toJSON()
             });
         }
@@ -58,8 +59,6 @@
         });
 
         bus.controller.subscribe(msg.patient.select, function (data, envelope) {
-            debug(envelope.topic, data);
-
             setModel(data.select);
             model.clean();
 

@@ -7,21 +7,23 @@
 (function () {
     "use strict";
 
-    var id = 'ui';
+    var id = 'ui',
+        name = "views:ui";
 
     var header = require('./bars/header.js'),
         main   = require('./components/mainBody.js'),
         editor = require("./components/ruleEditorBody.js"),
         status = require("./templates/statusBar.js");
 
-
-    var subscribe = _.once(function (app, debug) {
-       var bus = app.bus,
+    /*
+     Subscribe to Controller
+     */
+    var subscribe = function (app, debug) {
+       var subscribe = _.partial(app.bus.controller.subscribe, debug),
            msg = app.msg;
 
         // Switch between rule editor and main body
-        bus.controller.subscribe(msg.ui.ruleEditor, function (data, envelope) {
-            debug(envelope.topic, data);
+        subscribe(msg.ui.ruleEditor, function (data) {
 
             if (data.editor) {
                 webix.ui(editor.getView(app), $$(main.getId()));
@@ -34,28 +36,18 @@
             }
 
         });
-    });
+    };
 
-    exports.getId = function () { return id; };
-
-    /**
-     * Initialize ui with app.
-     * app provides: </br>
-     * </br>
-     * - debug function</br>
-     * - bus object</br>
-     * </br>
-     * expects: require function and webix lib
-     * @param app {app} - Provides app functionality
+    /*
+     Initialize
      */
-    exports.init = function (app) {
-
-        var debug = app.debug('client:' + id + ':init'),
+    var init = _.once(function (app) {
+        var debug = app.debug(name),
 
             bus = app.bus,
             msg = app.msg;
 
-        debug('init');
+        debug("init");
 
 
         // **** Create Views ****
@@ -87,8 +79,25 @@
 
         // **** Views Initialized ****
 
-        bus.view.publish(msg.ui.ready, {});
+        bus.view.publish(debug, msg.ui.ready, { });
+    });
 
-    };
+    /**
+     * ### Get View Id
+     * @returns {string}
+     */
+    exports.getId = function () { return id; };
+
+    /**
+     * Initialize ui with app.
+     * app provides: </br>
+     * </br>
+     * - debug function</br>
+     * - bus object</br>
+     * </br>
+     * expects: require function and webix lib
+     * @param app {app} - Provides app functionality
+     */
+    exports.init = function (app) { init(app); };
 
 })();

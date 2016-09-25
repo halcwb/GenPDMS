@@ -1,5 +1,5 @@
 /**
- * Created by halcwb on 05/08/16.
+ * @module views/menus/sideMenu.
  */
 
 /*global webix, $$, window, _ */
@@ -8,34 +8,37 @@
     "use strict";
 
     var id = 'sideMenu',
+        name = "views:menus:sideMenu";
 
-        subscribe = _.once(function (app, debug) {
-            var bus = app.bus.controller,
-                msg = app.msg;
+    var subscribe = _.once(function (app, debug) {
+        var subscribe = _.partial(app.bus.controller.subscribe, debug),
+            msg = app.msg;
 
-            bus.subscribe('set.status', function () {
-                var status = app.settings.demo ? 'demo' : 'online';
+        subscribe('set.status', function () {
+            var status = app.settings.demo ? 'demo' : 'online';
 
-                $$(id).getBody().updateItem('server', { value: status });
-            });
-
-            bus.subscribe(msg.sideMenu.show, function () {
-                var view = $$(id);
-
-                if (view.config.hidden) {
-                    view.show();
-                } else {
-                    view.hide();
-                }
-            });
-
+            $$(id).getBody().updateItem('server', { value: status });
         });
 
-    exports.init = function (app) {
-        var debug = app.debug("client:" + id + ":init"),
+        subscribe(msg.sideMenu.show, function () {
+            var view = $$(id);
+
+            if (view.config.hidden) {
+                view.show();
+            } else {
+                view.hide();
+            }
+        });
+
+    });
+
+    var init = function (app) {
+        var debug = app.debug(name),
             enabled = window.localStorage.debug === '' ? 'disabled' : 'enabled',
-            bus = app.bus.view,
+            publish = _.partial(app.bus.view.publish, debug),
             msg = app.msg;
+
+        debug("init");
 
         webix.ui({
             id: id,
@@ -58,7 +61,7 @@
                 ],
                 on: {
                     'onItemClick': function (id, e, trg) {
-                        bus.publish(msg.sideMenu.item, {
+                        publish(msg.sideMenu.item, {
                             item: id,
                             trg: trg
                         });
@@ -68,8 +71,8 @@
         });
 
         subscribe(app, debug);
-
-        debug("init");
     };
+
+    exports.init = function (app) { init(app); };
 
 })();

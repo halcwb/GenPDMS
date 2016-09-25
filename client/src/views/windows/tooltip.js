@@ -1,5 +1,6 @@
 /**
- * module views/windows/tooltip
+ * ### Tooltip window that shows a tooltip at a calculated location
+ * @module views/windows/tooltip
  */
 
 /* global _, webix, $$, clearTimeout */
@@ -9,7 +10,12 @@
 
     var id = 'tooltip';
 
-    var showTooltip = function (clientX, clientY, text) {
+    /*
+     Helper Functions
+     */
+
+    // Show tooltip at a calculated position
+    function showTooltip (clientX, clientY, text) {
         var // calculate x pos
             uiWidth  = $$('ui').getNode().clientWidth,
             tipWidth = 200,
@@ -21,17 +27,20 @@
             totHeight = clientY + tipHeight,
             y = totHeight > uiHeight ? (clientY - tipHeight) : clientY;
 
-
         $$(id).show({ text: text }, { x: x, y: y });
-    };
+    }
 
-    var subscribe = _.once(function (app, debug) {
-        var bus = app.bus,
+    /*
+     Controller Subscriptions
+     */
+
+    // Create all controller subscriptions
+    var subscribeController = _.once(function (app, debug) {
+        var subscribe = _.partial(app.bus.controller.subscribe, debug),
             msg = app.msg;
 
-        bus.controller.subscribe(msg.ui.tooltip, function (data, envelope) {
+        subscribe(msg.ui.tooltip, function (data) {
             var show = _.partial(showTooltip, data.clientX, data.clientY, data.text);
-            debug(envelope.topic, data);
 
             if (data.tooltip) {
                 app.tooltip = _.delay(show, 1000);
@@ -44,18 +53,12 @@
                 $$(id).hide();
             }
         });
-
     });
 
-    exports.getId = function () { return id; };
+    var createView = _.once(function () {
+        var tip, style;
 
-
-    exports.init = function (app) {
-        var tip, style,
-            debug = app.debug('client:' + id),
-            bus = app.bus,
-            msg = app.msg;
-
+        // create the view
         webix.ui({
             id: id,
             view: 'tooltip',
@@ -70,9 +73,35 @@
         // hack to make onAfterRender work, otherwise the div has no style
         $$(id).show({ text: ''}, { x: 0, y: 0});
         $$(id).hide();
+    });
 
-        subscribe(app, debug);
 
-    };
+    var init = _.once(function (app) {
+        var debug = app.debug("views:windows:tooltip");
+
+        debug("init");
+
+        // create the view
+        createView();
+
+        // create all subscriptions
+        // Note: no publish
+        subscribeController(app, debug);
+    });
+
+    /**
+     * #### Get the id of the view
+     * @type {Function}
+     * @returns {string}
+     */
+    exports.getId = function () { return id; };
+
+    /**
+     * #### Initializes the view
+     * @type {Function}
+     * @param app {Object} The application namespace
+     * @returns {undefined}
+     */
+    exports.init = function (app) { init(app); };
 
 })();

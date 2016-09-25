@@ -8,22 +8,43 @@
     "use strict";
 
     var id = 'treatmentList',
+        name = "views:lists:treatment";
 
-        subscribe = _.once(function (app, debug) {
-            var bus = app.bus.controller,
-                msg = app.msg;
+    /*
+     Subscribe to Controller
+     */
+    var subscribe = _.once(function (app, debug) {
+        var subscribe = _.partial(app.bus.controller.subscribe, debug),
+            msg = app.msg;
 
-            bus.subscribe(msg.patient.treatment, function (data, envelope) {
-                debug(envelope.topic, data);
-
-                $$(id).data.importData(data.treatment);
-            });
+        subscribe(msg.patient.treatment, function (data) {
+            $$(id).data.importData(data.treatment);
         });
+    });
 
+    /*
+     Initialize
+     */
+    var init = function (app) {
+        var debug = app.debug(name);
+
+        debug('init');
+        subscribe(app, debug);
+    };
+
+    /**
+     * #### Get the view id
+     * @returns {string}
+     */
     exports.getId = function () { return id; };
 
+    /**
+     * #### Geth the view config
+     * @param {object} app The application namespace
+     * @returns {object}
+     */
     exports.getView = function (app) {
-        var debug = app.debug("client:" + id),
+        var debug = app.debug(name),
 
             view = {
                 rows: [
@@ -50,12 +71,10 @@
         return view;
     };
 
-    exports.init = function (app) {
-        var debug = app.debug('client:' + id + ':init');
-
-        subscribe(app, debug);
-
-        debug('init');
-    };
+    /**
+     * #### Initialize the view
+     * @param {object} app The application namespace
+     */
+    exports.init = function (app) { init(app); };
 
 })();

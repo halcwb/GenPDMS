@@ -8,28 +8,45 @@
     "use strict";
 
     var id = 'indicationList',
+        name = "views:lists:indication",
         toolbarId = id + '.toolbar',
-        addTip = 'Add an indication',
+        addTip = 'Add an indication';
 
-        subscribe = _.once(function (app, debug) {
-            var bus = app.bus.controller,
+    /*
+     Subscribe to Controller
+     */
+    var subscribe = _.once(function (app, debug) {
+            var subscribe = _.partial(app.bus.controller.subscribe, debug),
                 msg = app.msg;
 
-            bus.subscribe(msg.patient.indications, function (data, envelope) {
-                debug(envelope.topic, data);
-
+            subscribe(msg.patient.indications, function (data) {
                 $$(id).data.importData(data.indications);
             });
         });
 
+    /*
+     Initialize
+     */
+    var init = function (app) {
+        var debug = app.debug(name);
+        subscribe(app, debug);
+    };
+
+    /**
+     * #### Get the view id
+     * @returns {string}
+     */
     exports.getId = function () { return id; };
 
+    /**
+     * #### Get the view config
+     * @param {object} app The application namespace
+     * @returns {object}
+     */
     exports.getView = function (app) {
-        var bus = app.bus.view,
+        var debug = app.debug(name),
+            publish = _.partial(app.bus.view.publish, debug),
             msg = app.msg,
-
-            debug = app.debug("client:views" + id),
-
             view = {
                 rows: [
                     {
@@ -61,7 +78,7 @@
                                 tooltip: addTip,
                                 width: 75,
                                 click: function () {
-                                    bus.publish(msg.indication.add, {});
+                                    publish(msg.indication.add, {});
                                 }
                             }
                         ]
@@ -74,11 +91,10 @@
         return view;
     };
 
-    exports.init = function (app) {
-        var debug = app.debug("client:views" + id);
-
-        subscribe(app, debug);
-    };
-
+    /**
+     * #### Initialize the view
+     * @param app
+     */
+    exports.init = function (app) { init(app); };
 
 })();

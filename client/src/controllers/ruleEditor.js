@@ -1,23 +1,32 @@
 /**
- * controllers/ruleEditor
+ * @module controllers/ruleEditor
  */
 
-/*global window, webix, Blockly, $$, console */
+/*global window, webix, Blockly, $$, _ */
 
 (function () {
     "use strict";
 
-    exports.init = function (app) {
-        var bus = app.bus,
-            msg = app.msg,
-            debug = app.debug('client:controllers:rule');
+    /*
+     Subscribe to View
+     */
+    var subscribeView = function (app, debug, publish) {
+        var subscribe = _.partial(app.bus.view.subscribe, debug),
+            msg = app.msg;
 
-        app.bus.view.subscribe(msg.ui.ruleEditor, function (data, envelope) {
-            debug(envelope.topic, data);
-
-            bus.controller.publish(msg.ui.ruleEditor, data);
+        subscribe(msg.ui.ruleEditor, function (data) {
+            data.debug = debug;
+            publish(msg.ui.ruleEditor, data);
         });
+    };
 
+    var subscribe = _.once(function (app, debug) {
+        var publish = _.partial(app.bus.controller.publish, debug);
+        subscribeView(app, debug, publish);
+    });
+
+    exports.init = function (app, debug) {
+        subscribe(app, debug);
     };
 
 })();

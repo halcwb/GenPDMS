@@ -2,72 +2,87 @@
  * @module controllers/app
  */
 
-/*global _ */
+/*global _, webix, console */
 
 (function () {
     "use strict";
 
-    /**
-     * Initializes the controller
-     * @param app {app} Object with app functionality
-     * uses: </br>
-     * app.debug</br>
-     * app.bus.view.subscribe</br>
-     * app.bus.controller.publish</br>
+    /*
+    Subscriptions
      */
-    exports.init = function (app, debug) {
-        var msg = app.msg,
-            bus = app.bus;
 
-        bus.view.subscribe(msg.ui.ready, function (data, envelope) {
-            debug(envelope.topic, data);
-            bus.controller.publish(msg.ui.ready, data);
+    // create all view subscriptions
+    var subscribeView = function (app, debug, publish) {
+        var subscribe = _.partial(app.bus.view.subscribe, debug),
+            msg = app.msg;
+
+        // Inform that the ui is ready
+        subscribe(msg.ui.ready, function (data) {
+            publish(msg.ui.ready, data);
         });
 
         // Show the status text in an alert
-        bus.view.subscribe(msg.status.text, function (data, envelope) {
-            debug(envelope.topic, data);
+        subscribe(msg.status.text, function (data) {
 
-            bus.controller.publish(msg.alert.show, {
+            publish(msg.alert.show, {
                 title: "Messages",
                 type: "alert-info",
                 text: data.text
             });
         });
 
-        // Invoke the handler for the menu item
-        bus.view.subscribe(msg.sideMenu.item, function (data, envelope) {
+        // Invoke the handler for the side menu item
+        subscribe(msg.sideMenu.item, function (data, envelope) {
             var status,
                 handle = {
                     'server': function () {
                         app.settings.demo = !app.settings.demo;
                         status = app.settings.demo ? 'demo' : 'online';
-                        bus.controller.publish(msg.status.text, { status: status });
+
+                        publish(msg.status.text, { status: status });
                     },
                     'debug': function (data) {
                         var enabled = data.trg.innerText.split(': ')[1];
 
                         if (enabled === 'enabled') {
-                            localStorage.debug = '';
+                            app.util.localStorage.setItem("debug", "*");
                         } else {
-                            localStorage.debug = 'client:*';
+                            app.util.localStorage.setItem("debug", "");
                         }
 
                         window.location.reload();
                     }
                 };
 
-            debug(envelope.topic, data);
             handle[data.item](data, envelope);
         });
 
         // Show the side menu
-        bus.view.subscribe(msg.sideMenu.show, function (data, envelope) {
-            debug(envelope);
-
-            bus.controller.publish(msg.sideMenu.show, {});
+        subscribe(msg.sideMenu.show, function () {
+            publish(msg.sideMenu.show, {} );
         });
+    },
 
-    };
+    /*
+     Initialize
+     */
+    init = _.once(function (app, debug) {
+        var publish = _.partial(app.bus.controller.publish, debug);
+
+        subscribeView(app, debug, publish);
+    });
+
+
+
+    /**
+     * Initializes the controller
+     * @param app {obj} Namespace with app functionality
+     * @param debug {obj} Debugger function
+     * uses: </br>
+     * app.debug</br>
+     * app.bus.view.subscribe</br>
+     * app.bus.controller.publish</br>
+     */
+    exports.init = function (app, debug) { init(app, debug); };
 
 })();
