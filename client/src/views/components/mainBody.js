@@ -16,7 +16,7 @@
     /*
      Subscribe to Controller
      */
-    var subscribe = function (app, debug) {
+    var subscribe = _.once(function (app, debug) {
         var subscribe = _.partial(app.bus.controller.subscribe, debug),
             msg = app.msg,
             show = {
@@ -27,12 +27,12 @@
         subscribe(msg.ui.mainBody, function (data) {
             show[data.item].show();
         });
-    };
+    });
 
     /*
      Initialize
      */
-    var init = _.once(function (app) {
+    var init = function (app) {
         var debug = app.debug(name);
 
         debug("init");
@@ -41,7 +41,7 @@
         treatBody.init(app);
 
         subscribe(app, debug);
-    });
+    };
 
     /**
      * ### Get the view Id

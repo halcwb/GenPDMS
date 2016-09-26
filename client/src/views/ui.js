@@ -18,7 +18,7 @@
     /*
      Subscribe to Controller
      */
-    var subscribe = function (app, debug) {
+    var subscribe = _.once(function (app, debug) {
        var subscribe = _.partial(app.bus.controller.subscribe, debug),
            msg = app.msg;
 
@@ -36,12 +36,12 @@
             }
 
         });
-    };
+    });
 
     /*
      Initialize
      */
-    var init = _.once(function (app) {
+    var init = function (app) {
         var debug = app.debug(name),
 
             bus = app.bus,
@@ -80,7 +80,7 @@
         // **** Views Initialized ****
 
         bus.view.publish(debug, msg.ui.ready, { });
-    });
+    };
 
     /**
      * ### Get View Id

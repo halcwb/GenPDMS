@@ -116,9 +116,9 @@
         // **** Initialize Models ****
 
         _.each([
-            /*require("./models/patient.js") */
+            require("./models/patient.js")
         ], function (model) {
-            app.models[model.getName()] = model;
+            app.models[model.getName()] = model.init(app);
         });
 
         // **** Initialize Views ****

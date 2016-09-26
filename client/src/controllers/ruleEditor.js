@@ -15,7 +15,6 @@
             msg = app.msg;
 
         subscribe(msg.ui.ruleEditor, function (data) {
-            data.debug = debug;
             publish(msg.ui.ruleEditor, data);
         });
     };

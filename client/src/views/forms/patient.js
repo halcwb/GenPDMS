@@ -1,5 +1,10 @@
 /**
- * ## Display patient details
+ * ## Patient Details Form
+ *
+ * - Display patient details
+ * - Update patient details
+ * - Create a new patient with details
+ *
  * @module views/forms/patient
  */
 
@@ -8,215 +13,25 @@
 (function () {
     "use strict";
 
+    //region --- IDENTIFIERS AND NAMES ----
+
     var id = "patientForm",
         name = "views:forms:patient",
 
-        newBtn  = id + ".new",
-        editBtn = id + ".edit",
-        saveBtn = id + ".save";
+        newBtn    = id + ".new",
+        editBtn   = id + ".edit",
+        saveBtn   = id + ".save",
+        cancelBtn = id + ".cancel";
+
+    //endregion
+
+    //region --- ADDITIONAL VARIABLES ---
 
     var labelWidth = 100;
 
-    /*
-     Helper Functions
-     */
-    var formReadOnly = function (readOnly) {
-        var form = $$(id);
+    //endregion
 
-        _.forEach(form.elements, function (el) {
-            el.config.readonly = readOnly;
-            // ToDo solve events memory leak problem
-            el.refresh();
-        });
-    };
-
-    var formEnable = function (enable) {
-        var form = $$(id);
-
-        _.forEach(form.elements, function (el) {
-            if (enable) el.enable();
-            else el.disable();
-        });
-    };
-
-    var setButtons = function (app, state) {
-        var msg = app.msg,
-            scen = {};
-
-        // No patient selected
-        scen[msg.ui.ready] = {};
-        scen[msg.ui.ready][newBtn]  = true;
-        scen[msg.ui.ready][editBtn] = false;
-        scen[msg.ui.ready][saveBtn] = false;
-
-        // New patient
-        scen[msg.patient.new] = {};
-        scen[msg.patient.new][newBtn]  = true;
-        scen[msg.patient.new][editBtn] = false;
-        scen[msg.patient.new][saveBtn] = true;
-
-        // Edit patient
-        scen[msg.patient.edit] = {};
-        scen[msg.patient.edit][newBtn]  = true;
-        scen[msg.patient.edit][editBtn] = false;
-        scen[msg.patient.edit][saveBtn] = true;
-
-        // Patient selected
-        scen[msg.patient.select] = {};
-        scen[msg.patient.select][newBtn]  = true;
-        scen[msg.patient.select][editBtn] = true;
-        scen[msg.patient.select][saveBtn] = false;
-
-        _.forEach([newBtn, editBtn, saveBtn], function (id) {
-            var btn = $$(id);
-            if (!scen[state]) return;
-            
-            if (scen[state][id]) btn.enable();
-            else btn.disable();
-        });
-    };
-
-    /*
-     Subscribe to View
-     */
-    var subscribeView = function (app, debug) {
-        var subscribe = _.partial(app.bus.view.subscribe, debug),
-            msg = app.msg;
-
-        // Gets a new list of patients so no patient is selected
-        subscribe(msg.patient.get, function (data, envelope) {
-            var form = $$(id);
-
-            form.noChange = true;
-            form.clear();
-            form.noChange = false;
-
-            formEnable(false);
-            formReadOnly(true);
-            setButtons(app, envelope.topic);
-        });
-
-    };
-
-
-    /*
-     Subscribe to Model
-     */
-    var subscribeModel = function (app, debug) {
-        var subscribe = _.partial(app.bus.model.subscribe, debug),
-            msg = app.msg;
-
-        // load the patient form with the patient in the message
-        subscribe(msg.patient.select, function (data, envelope) {
-            var form = $$(id);
-
-            // load form with patient data
-            form.noChange = true;
-            form.setValues(data.select);
-            form.noChange = false;
-
-
-            // set form to read only
-            formEnable(true);
-            formReadOnly(true);
-            setButtons(app, envelope.topic);
-        });
-    };
-
-    /*
-     Subscribe to Controller
-     */
-    var subscribeController = function (app, debug) {
-        var subscribe = _.partial(app.bus.controller.subscribe, debug),
-            msg = app.msg;
-
-        subscribe(msg.ui.ready, function (data, envelope) {
-            formEnable(false);
-            setButtons(app, envelope.topic);
-        });
-
-        // load the patient form with the patient in the message
-        subscribe(msg.patient.select, function (data, envelope) {
-            var form = $$(id);
-
-            // load form with patient data
-            form.noChange = true;
-            if (data.patient) {
-                form.setValues(data.patient);
-            }
-            form.noChange = false;
-
-            // set form to read only
-            formEnable(true);
-            formReadOnly(true);
-            setButtons(app, envelope.topic);
-        });
-
-        subscribe(msg.patient.edit, function (data, envelope) {
-
-            formReadOnly(false);
-            setButtons(app, envelope.topic);
-        });
-
-        subscribe(msg.patient.new, function (data, envelope) {
-            var form = $$(id);
-
-            form.clear();
-            formEnable(true);
-            formReadOnly(false);
-            setButtons(app, envelope.topic);
-        });
-    };
-
-    /*
-     Subscribe
-     */
-    var subscribe = _.once(function (app, debug) {
-        subscribeView(app,debug);
-        subscribeController(app, debug);
-        subscribeModel(app, debug);
-    });
-
-    /*
-     Initialize
-     */
-    var init = function (app) {
-        var debug = app.debug(name),
-            publish = _.partial(app.bus.view.publish, debug),
-            msg = app.msg;
-
-        debug("init");
-
-        $$(id + ".new").attachEvent("onItemClick", function () {
-            publish(msg.patient.new, {});
-        });
-
-        $$(id + ".edit").attachEvent("onItemClick", function () {
-            publish(msg.patient.edit, {});
-        });
-
-        $$(id + ".save").attachEvent("onItemClick", function () {
-
-            publish(msg.patient.save, {
-                patient: $$(id).getValues()
-            });
-        });
-
-        _.forEach($$(id).elements, function (el) {
-            el.attachEvent("onChange", function () {
-                var form = $$(id);
-
-                if (!form.noChange) {
-                    publish(msg.patient.select, {
-                        patient: form.getValues()
-                    });
-                }
-            });
-        });
-
-        // Subscribe the view to relevant messages
-        subscribe(app, debug);
-    };
+    //region --- VIEW ---
 
     var view = {
         view: "form",
@@ -372,14 +187,14 @@
                         { template: "" },
                         {
                             view: "button",
-                            id: id + ".new",
+                            id: newBtn,
                             value: "New",
                             tooltip: "Add a new patient",
                             width: 75
                         },
                         {
                             view: "button",
-                            id: id + ".edit",
+                            id: editBtn,
                             value: "Edit",
                             type: "form",
                             tooltip: "Start editing patient details",
@@ -387,14 +202,14 @@
                         },
                         {
                             view: "button",
-                            id: id + ".save",
+                            id: saveBtn,
                             value: "Save",
                             tooltip: "Save patient details",
                             width: 75
                         },
                         {
                             view: "button",
-                            id: id + ".cancel",
+                            id: cancelBtn,
                             value: "Cancel",
                             tooltip: "Cancel actions",
                             width: 75
@@ -405,6 +220,239 @@
         ]
     };
 
+    //endregion
+
+    //region --- HELPER FUNCTIONS ---
+
+    var formReadOnly = function (readOnly) {
+        var form = $$(id);
+
+        _.forEach(form.elements, function (el) {
+            el.config.readonly = readOnly;
+            // ToDo solve events memory leak problem
+            el.refresh();
+        });
+    };
+
+    var formEnable = function (enable) {
+        var form = $$(id);
+
+        _.forEach(form.elements, function (el) {
+            if (enable) el.enable();
+            else el.disable();
+        });
+    };
+
+    var setButtons = function (app, state) {
+        var msg = app.msg,
+            scen = {};
+
+        // No patient selected
+        scen[msg.ui.ready] = {};
+        scen[msg.ui.ready][newBtn]  = true;
+        scen[msg.ui.ready][editBtn] = false;
+        scen[msg.ui.ready][saveBtn] = false;
+
+        // New patient
+        scen[msg.patient.new] = {};
+        scen[msg.patient.new][newBtn]  = true;
+        scen[msg.patient.new][editBtn] = false;
+        scen[msg.patient.new][saveBtn] = true;
+
+        // Edit patient
+        scen[msg.patient.edit] = {};
+        scen[msg.patient.edit][newBtn]  = true;
+        scen[msg.patient.edit][editBtn] = false;
+        scen[msg.patient.edit][saveBtn] = true;
+
+        // Patient selected
+        scen[msg.patient.select] = {};
+        scen[msg.patient.select][newBtn]  = true;
+        scen[msg.patient.select][editBtn] = true;
+        scen[msg.patient.select][saveBtn] = false;
+
+        _.forEach([newBtn, editBtn, saveBtn], function (id) {
+            var btn = $$(id);
+            if (!scen[state]) return;
+
+            if (scen[state][id]) btn.enable();
+            else btn.disable();
+        });
+    };
+
+    //endregion
+
+    //region --- SUBSCRIBE ----
+
+    /*
+    // Subscribe to View
+     */
+    var subscribeView = function (app, debug) {
+        var subscribe = _.partial(app.bus.view.subscribe, debug),
+            msg = app.msg;
+
+        // Gets a new list of patients so no patient is selected
+        subscribe(msg.patient.get, function (data, envelope) {
+            var form = $$(id);
+
+            form.noChange = true;
+            form.clear();
+            form.noChange = false;
+
+            formEnable(false);
+            formReadOnly(true);
+            setButtons(app, envelope.topic);
+        });
+
+    };
+
+
+    /*
+     Subscribe to Model
+     */
+    var subscribeModel = function (app, debug) {
+        var subscribe = _.partial(app.bus.model.subscribe, debug),
+            msg = app.msg;
+
+        // load the patient form with the patient in the message
+        subscribe(msg.patient.select, function (data, envelope) {
+            var form = $$(id);
+
+            // load form with patient data
+            form.noChange = true;
+            form.setValues(data.patient);
+            form.noChange = false;
+
+
+            // set form to read only
+            formEnable(true);
+            formReadOnly(true);
+            setButtons(app, envelope.topic);
+        });
+
+        subscribe(msg.patient.update, function (data) {
+            var form = $$(id);
+
+            // load form with patient data
+            form.noChange = true;
+            form.setValues(data.patient);
+            form.noChange = false;
+        });
+    };
+
+    /*
+     Subscribe to Controller
+     */
+    var subscribeController = function (app, debug) {
+        var subscribe = _.partial(app.bus.controller.subscribe, debug),
+            msg = app.msg;
+
+        subscribe(msg.ui.ready, function (data, envelope) {
+            formEnable(false);
+            setButtons(app, envelope.topic);
+        });
+
+        // load the patient form with the patient in the message
+        subscribe(msg.patient.select, function (data, envelope) {
+            var form = $$(id);
+
+            // load form with patient data
+            form.noChange = true;
+            if (data.patient) {
+                form.setValues(data.patient);
+            }
+            form.noChange = false;
+
+            // set form to read only
+            formEnable(true);
+            formReadOnly(true);
+            setButtons(app, envelope.topic);
+        });
+
+        subscribe(msg.patient.edit, function (data, envelope) {
+
+            formReadOnly(false);
+            setButtons(app, envelope.topic);
+        });
+
+        subscribe(msg.patient.new, function (data, envelope) {
+            var form = $$(id);
+
+            form.noChange = true;
+            form.clear();
+            form.noChange = false;
+
+            formEnable(true);
+            formReadOnly(false);
+            setButtons(app, envelope.topic);
+        });
+    };
+
+    /*
+     Subscribe
+     */
+    var subscribe = _.once(function (app, debug) {
+        subscribeView(app,debug);
+        subscribeController(app, debug);
+        subscribeModel(app, debug);
+    });
+
+    //endregion
+
+    //region --- PUBLISH ----
+
+    var publish = function (app, publish) {
+        var msg = app.msg;
+
+        $$(newBtn).attachEvent("onItemClick", function () {
+            publish(msg.patient.new, {});
+        });
+
+        $$(editBtn).attachEvent("onItemClick", function () {
+            publish(msg.patient.edit, {});
+        });
+
+        $$(saveBtn).attachEvent("onItemClick", function () {
+
+            publish(msg.patient.save, {
+                patient: $$(id).getValues()
+            });
+        });
+
+        _.forEach($$(id).elements, function (el) {
+            el.attachEvent("onChange", function () {
+                var form = $$(id);
+
+                if (!form.noChange) {
+                    publish(msg.patient.update, {
+                        patient: form.getValues()
+                    });
+                }
+            });
+        });
+    };
+
+    //endregion
+
+    //region --- INITIALIZE ---
+
+    var init = function (app) {
+        var deb = app.debug(name),
+            pub = _.partial(app.bus.view.publish, deb);
+
+        deb("init");
+
+        // Publish User Events
+        publish(app, pub);
+
+        // Subscribe the view to relevant messages
+        subscribe(app, deb);
+    };
+
+    //endregion
+
+    //region --- EXPORT ---
+
     /**
      * #### Get the view id
      * @returns {string} Id of the view
@@ -413,7 +461,7 @@
 
     /**
      * #### Get the view config
-     * @param app
+     * @param {object} app The application namespace
      * @returns {object} webix view config
      */
     exports.getView = function (app) {
@@ -423,8 +471,10 @@
 
     /**
      * #### Initializes the view
-     * @param {object} app application namespace
+     * @param {object} app The application namespace
      */
     exports.init = function (app) { init(app); };
+
+    //endregion
 
 })();

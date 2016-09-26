@@ -8,7 +8,8 @@
 (function () {
     "use strict";
 
-    var name = "patient";
+    var name = "patient",
+        model;
 
     var create = require("model-component")(name)
         .attr("id", {type: "string" })
@@ -24,19 +25,17 @@
         .attr("age", {type: "string" })
         .attr("ageUnit", {type: "string" });
 
-    exports.getName = function () { return name; };
+    var init = _.once(function (app) {
+        var debug = app.debug("models:patient"),
+            publish   = _.partial(app.bus.model.publish, debug),
+            subscribe = _.partial(app.bus.controller.subscribe, debug),
+            msg = app.msg;
 
-    exports.create = function (app, data) {
-        var bus = app.bus,
-            msg = app.msg,
-            debug = app.debug("models:patient"),
-            model = create(data);
-
+        model = create({});
         model.emitChange = true;
 
         function publishModel () {
-            bus.model.publish(  msg.patient.select, {
-                debug: debug,
+            publish(msg.patient.update, {
                 patient: model.toJSON()
             });
         }
@@ -58,14 +57,18 @@
             }
         });
 
-        bus.controller.subscribe(msg.patient.select, function (data, envelope) {
-            setModel(data.select);
+        subscribe(msg.patient.select, function (data) {
+            setModel(data.patient);
             model.clean();
 
             publishModel();
         });
 
         return model;
-    };
+    });
+
+    exports.getName = function () { return name; };
+
+    exports.init = function (app) { return init(app); };
 
 })();
