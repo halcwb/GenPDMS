@@ -31,6 +31,10 @@
 
     //endregion
 
+    //region --- CHILD VIEWS ---
+
+    //endregion
+
     //region --- VIEW ---
 
     var view = {

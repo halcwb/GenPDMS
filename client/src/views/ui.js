@@ -1,4 +1,5 @@
 /**
+ * ## Then main view of the application
  * @module views/ui
  */
 
@@ -7,23 +8,66 @@
 (function () {
     "use strict";
 
+    //region --- IDENTIFIERS AND NAMES ---
+
     var id = 'ui',
         name = "views:ui";
+
+    //endregion
+
+    //region --- ADDITIONAL VARIABLES ---
+
+    //endregion
+
+    //region --- CHILD VIEWS ---
 
     var header = require('./bars/header.js'),
         main   = require('./components/mainBody.js'),
         editor = require("./components/ruleEditorBody.js"),
         status = require("./templates/statusBar.js");
 
+    //endregion
+
+    //region --- VIEW ---
+
+    var getView = function (app) {
+        return {
+            id: id,
+            rows: [
+                header.getView(app),
+                main.getView(app),
+                status.getView(app)
+            ]
+        };
+    };
+
+    //endregion
+
+    //region --- HELPER FUNCTIONS ---
+
+    //endregion
+
+    //region --- SUBSCRIBE ---
+
+    /*
+     // Subscribe to View
+     */
+
+    /*
+     Subscribe to Model
+     */
+
     /*
      Subscribe to Controller
      */
-    var subscribe = _.once(function (app, debug) {
-       var subscribe = _.partial(app.bus.controller.subscribe, debug),
-           msg = app.msg;
+    var subscribeController = function (app, debug) {
+        var sub = _.partial(app.bus.controller.subscribe, debug),
+            msg = app.msg;
+
+        debug("subscribe to controller");
 
         // Switch between rule editor and main body
-        subscribe(msg.ui.ruleEditor, function (data) {
+        sub(msg.ui.ruleEditor, function (data) {
 
             if (data.editor) {
                 webix.ui(editor.getView(app), $$(main.getId()));
@@ -34,35 +78,39 @@
                 el.parentNode.removeChild(el);
                 main.init(app);
             }
-
         });
-    });
+    };
 
     /*
-     Initialize
+     Subscribe All
      */
-    var init = function (app) {
-        var debug = app.debug(name),
 
-            bus = app.bus,
+    var subscribe = _.once(subscribeController);
+
+    //endregion
+
+    //region --- PUBLISH ----
+
+    var publish = function (app, debug) {
+        var pub = _.partial(app.bus.view.publish, debug),
             msg = app.msg;
 
-        debug("init");
+        debug("publish");
 
+        pub(msg.ui.ready, {});
+    };
+
+    //endregion
+
+    //region --- INITIALIZE ---
+
+    var init = function (app, debug) {
 
         // **** Create Views ****
 
         webix.ui.fullScreen();
 
-        webix.ui({
-            id: id,
-            rows: [
-                header.getView(app),
-                main.getView(app),
-                status.getView(app)
-            ]
-        });
-
+        webix.ui(getView(app));
 
         // **** Initialize Views ****
 
@@ -79,25 +127,46 @@
 
         // **** Views Initialized ****
 
-        bus.view.publish(debug, msg.ui.ready, { });
+        publish(app, debug);
     };
 
+
+    //endregion
+
+    //region --- EXPORT ---
+
     /**
-     * ### Get View Id
-     * @returns {string}
+     * #### Get the view id
+     * @returns {string} Id of the view
      */
     exports.getId = function () { return id; };
 
     /**
-     * Initialize ui with app.
-     * app provides: </br>
-     * </br>
-     * - debug function</br>
-     * - bus object</br>
-     * </br>
-     * expects: require function and webix lib
-     * @param app {app} - Provides app functionality
+     * #### Get the view config
+     * @param {object} app The application namespace
+     * @returns {object} webix view config
      */
-    exports.init = function (app) { init(app); };
+    exports.getView = function (app) {
+        var view = getView(app);
+        app.debug(name)(view);
+        return view;
+    };
+
+    /**
+     * #### Initializes the view
+     *
+     * - Create subscription handlers for the view
+     * - Add publish handlers to view events
+     * - Initialize child views
+     *
+     * @param {object} app The application namespace
+     */
+    exports.init = function (app) {
+        var deb = app.debug(name);
+        deb("init");
+        init(app, deb);
+    };
+
+    //endregion
 
 })();
