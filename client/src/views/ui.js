@@ -85,7 +85,7 @@
      Subscribe All
      */
 
-    var subscribe = _.once(subscribeController);
+    var subscribeOnce = _.once(subscribeController);
 
     //endregion
 
@@ -122,7 +122,7 @@
 
         // **** Subscribe to Message Bus ****
 
-        subscribe(app, debug);
+        subscribeOnce(app, debug);
 
 
         // **** Views Initialized ****

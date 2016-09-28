@@ -6,13 +6,33 @@
 /* global _, webix, $$, clearTimeout */
 
 (function () {
+
     "use strict";
 
-    var id = 'tooltip';
+    //region --- IDENTIFIERS AND NAMES ---
 
-    /*
-     Helper Functions
-     */
+    var id = 'tooltip',
+        name = "views:windows:tooltip";
+
+    //endregion
+
+    //region --- ADDITIONAL VARIABLES ---
+
+    //endregion
+
+    //region --- CHILD VIEWS ---
+
+    //endregion
+
+    //region --- VIEW ---
+
+    var getView = function () {
+        throw "getView is not supported for " + name;
+    };
+
+    //endregion
+
+    //region --- HELPER FUNCTIONS ---
 
     // Show tooltip at a calculated position
     function showTooltip (clientX, clientY, text) {
@@ -29,31 +49,6 @@
 
         $$(id).show({ text: text }, { x: x, y: y });
     }
-
-    /*
-     Controller Subscriptions
-     */
-
-    // Create all controller subscriptions
-    var subscribeController = _.once(function (app, debug) {
-        var subscribe = _.partial(app.bus.controller.subscribe, debug),
-            msg = app.msg;
-
-        subscribe(msg.ui.tooltip, function (data) {
-            var show = _.partial(showTooltip, data.clientX, data.clientY, data.text);
-
-            if (data.tooltip) {
-                app.tooltip = _.delay(show, 1000);
-                _.delay(function () {
-                    clearTimeout(app.tooltip);
-                    $$(id).hide();
-                }, 5000);
-            } else {
-                clearTimeout(app.tooltip);
-                $$(id).hide();
-            }
-        });
-    });
 
     var createView = _.once(function () {
         var tip, style;
@@ -75,33 +70,102 @@
         $$(id).hide();
     });
 
+    //endregion
 
-    var init = _.once(function (app) {
-        var debug = app.debug("views:windows:tooltip");
+    //region --- SUBSCRIBE ---
 
-        debug("init");
+    /*
+     // Subscribe to View
+     */
+
+    /*
+     Subscribe to Model
+     */
+
+    /*
+     Subscribe to Controller
+     */
+    var subscribeController = function (app, debug) {
+        var sub = _.partial(app.bus.controller.subscribe, debug),
+            msg = app.msg;
+
+        debug("subscribe to controller");
+
+        sub(msg.ui.tooltip, function (data) {
+            var show = _.partial(showTooltip, data.clientX, data.clientY, data.text);
+
+            if (data.tooltip) {
+                app.tooltip = _.delay(show, 1000);
+                _.delay(function () {
+                    clearTimeout(app.tooltip);
+                    $$(id).hide();
+                }, 5000);
+            } else {
+                clearTimeout(app.tooltip);
+                $$(id).hide();
+            }
+        });
+    };
+
+    /*
+     Subscribe All
+     */
+    var subscribeOnce = _.once(subscribeController);
+
+    //endregion
+
+    //region --- PUBLISH ---
+
+
+    //endregion
+
+    //region --- INITIALIZE ---
+
+    var init = function (app, debug) {
 
         // create the view
         createView();
 
         // create all subscriptions
         // Note: no publish
-        subscribeController(app, debug);
-    });
+        subscribeOnce(app, debug);
+    };
+
+    //endregion
+
+    //region --- EXPORT ---
 
     /**
-     * #### Get the id of the view
-     * @type {Function}
-     * @returns {string}
+     * #### Get the view id
+     * @returns {string} Id of the view
      */
     exports.getId = function () { return id; };
 
     /**
-     * #### Initializes the view
-     * @type {Function}
-     * @param app {Object} The application namespace
-     * @returns {undefined}
+     * #### Get the view config
+     * @param {object} app The application namespace
+     * @returns {object} webix view config
      */
-    exports.init = function (app) { init(app); };
+    exports.getView = function (app) {
+        var view = getView();
+        app.debug(name)(view);
+        return view;
+    };
+
+    /**
+     * #### Initializes the view
+     *
+     * - Create subscriptions for the view
+     * - Add publish handlers to view events
+     *
+     * @param {object} app The application namespace
+     */
+    exports.init = function (app) {
+        var deb = app.debug(name);
+        deb("init");
+        init(app, deb);
+    };
+
+    //endregion
 
 })();

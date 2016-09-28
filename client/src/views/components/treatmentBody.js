@@ -1,4 +1,5 @@
 /**
+ * ## Treatment editor view
  * @module views/components/treatmentBody
  */
 
@@ -7,72 +8,29 @@
 (function () {
     "use strict";
 
+    //region --- IDENTIFIERS AND NAMES ---
+
     var id = 'treatmentBody',
         name = "views:components:treatmentBody",
-        toolbarId = id + '.toolbar',
+        toolbarId = id + '.toolbar';
 
-        treatmentDetails = require('./../lists/treatmentDetail.js'),
+    //endregion
+
+    //region --- ADDITIONAL VARIABLES ---
+
+    //endregion
+
+    //region --- CHILD VIEWS ---
+
+    var treatmentDetails = require('./../lists/treatmentDetail.js'),
         totals           = require("./../lists/totals.js");
 
-    /*
-     Subscribe to Controllers
-     */
-    var subscribe = _.once(function (app, debug) {
-        var subscribe = _.partial(app.bus.controller.subscribe, debug),
-            msg = app.msg;
+    //endregion
 
-        debug("subscribe");
+    //region --- VIEW ---
 
-        subscribe(msg.treatment.edit, function (data) {
-            var patient = data.patient;
-
-            $$(id + ".header").setValues({
-                no: patient.no,
-                name: patient.name,
-                dob: webix.Date.dateToStr("%d-%M-%Y")(patient.dob),
-                age: patient.age,
-                ageUnit: patient.ageUnit,
-                weight: patient.weight,
-                weightUnit: patient.weightUnit
-            });
-        });
-    });
-
-    /*
-     Initialize
-     */
-    var init = function (app) {
-        var debug = app.debug(name),
-            publish = _.partial(app.bus.view.publish, debug),
-            msg = app.msg;
-
-        debug('init');
-
-        $$(id + ".back").attachEvent("onItemClick", function () {
-            publish(msg.ui.mainBody, {
-                item: "details"
-            });
-        });
-
-        subscribe(app, debug);
-
-        treatmentDetails.init(app);
-        totals.init(app);
-    };
-
-    /**
-     * #### Get the view id
-     * @returns {string}
-     */
-    exports.getId = function () { return id; };
-
-    /***
-     * #### Get the view config
-     * @param {object} app The application namespace
-     * @returns {object}
-     */
-    exports.getView = function (app) {
-        var view = {
+    var getView = function (app) {
+        return {
             id: id,
             rows: [
                 {
@@ -120,16 +78,119 @@
                 }
             ]
         };
+    };
 
+    //endregion
+
+    //region --- HELPER FUNCTIONS ---
+
+    //endregion
+
+    //region --- SUBSCRIBE ---
+
+    /*
+     // Subscribe to View
+     */
+
+    /*
+     Subscribe to Model
+     */
+
+    /*
+     Subscribe to Controller
+     */
+    var subscribeController = function (app, debug) {
+        var sub = _.partial(app.bus.controller.subscribe, debug),
+            msg = app.msg;
+
+        debug("subscribe to controller");
+
+        sub(msg.treatment.edit, function (data) {
+            var patient = data.patient;
+
+            $$(id + ".header").setValues({
+                no: patient.no,
+                name: patient.name,
+                dob: webix.Date.dateToStr("%d-%M-%Y")(patient.dob),
+                age: patient.age,
+                ageUnit: patient.ageUnit,
+                weight: patient.weight,
+                weightUnit: patient.weightUnit
+            });
+        });
+    };
+
+
+    /*
+     Subscribe All
+     */
+    var subscribeOnce = _.once(subscribeController);
+
+    //endregion
+
+    //region --- PUBLISH ---
+
+    var publish = function (app, debug, publish) {
+        var msg = app.msg;
+
+        debug("publish");
+
+        $$(id + ".back").attachEvent("onItemClick", function () {
+            publish(msg.ui.mainBody, {
+                item: "details"
+            });
+        });
+    };
+
+    //endregion
+
+    //region --- INITIALIZE ---
+
+    var init = function (app, debug) {
+        var pub = _.partial(app.bus.view.publish, debug);
+
+        treatmentDetails.init(app);
+        totals.init(app);
+
+        subscribeOnce(app, debug);
+        publish(app, debug, pub);
+    };
+
+    //endregion
+
+    //region --- EXPORT ---
+
+    /**
+     * #### Get the view id
+     * @returns {string} Id of the view
+     */
+    exports.getId = function () { return id; };
+
+    /**
+     * #### Get the view config
+     * @param {object} app The application namespace
+     * @returns {object} webix view config
+     */
+    exports.getView = function (app) {
+        var view = getView(app);
         app.debug(name)(view);
         return view;
     };
 
     /**
-     * Initialize the application
+     * #### Initializes the view
+     *
+     * - Create subscriptions for the view
+     * - Add publish handlers to view events
+     *
      * @param {object} app The application namespace
      */
-    exports.init = function (app) { init(app); };
+    exports.init = function (app) {
+        var deb = app.debug(name);
+        deb("init");
+        init(app, deb);
+    };
 
+    //endregion
 
 })();

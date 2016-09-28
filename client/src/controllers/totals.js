@@ -1,11 +1,25 @@
 /**
+ * ## Totals Controller
  * @module controllers/totals
  */
 
 /*global _ */
 
 (function () {
+
     "use strict";
+
+    //region --- VARIABLES ---
+
+    var name = "controllers:totals";
+
+    //endregion
+
+    //region --- HELPER FUNCTIONS ---
+
+    //endregion
+
+    //region --- SUBSCRIBE ---
 
     var subscribeView = function (app, debug, publish) {
         var subscribe = _.partial(app.bus.view.subscribe, debug),
@@ -32,13 +46,33 @@
         });
     };
 
-    var subscribe = _.once(function (app, debug) {
+    var subscribeOnce = _.once(subscribeView);
+
+    //endregion
+
+    //region --- INITIALIZE ---
+
+    var init = function (app, debug) {
         var publish = _.partial(app.bus.controller.publish, debug);
         subscribeView(app, debug, publish);
-    });
-
-    exports.init = function (app, debug) {
-        subscribe(app, debug);
     };
+
+    //endregion
+
+    //region --- EXPORT ---
+
+    /**
+     * #### Initializes the controller
+     * Create subscriptions for the controller
+     *
+     * @param {object} app The application namespace
+     */
+    exports.init = function (app) {
+        var deb = app.debug(name);
+        deb("init");
+        init(app, deb);
+    };
+
+    //endregion
 
 })();

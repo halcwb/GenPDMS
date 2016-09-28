@@ -1,78 +1,142 @@
 /**
+ * ## Main body view of the application
+ * Contains two child views:
+ *
+ * - A details body and
+ * - A treatment body
+ *
  * @module views/components/mainBody
  */
 
 /*global $$, _ */
 
 (function () {
+
     "use strict";
+
+    //region --- IDENTIFIERS AND NAMES ---
 
     var id = 'mainBody',
         name = "views:components:mainBody";
 
+    //endregion
+
+    //region --- ADDITIONAL VARIABLES ---
+
+    //endregion
+
+    //region --- CHILD VIEWS ---
+
     var detailBody = require('./detailsBody.js'),
         treatBody  = require("./treatmentBody.js");
+
+    //endregion
+
+    //region --- VIEW ---
+
+    var getView = function (app) {
+        return {
+            id: id,
+            view: "multiview",
+            cells: [
+                detailBody.getView(app),
+                treatBody.getView(app)
+            ]
+        };
+    };
+
+    //endregion
+
+    //region --- HELPER FUNCTIONS ---
+
+    //endregion
+
+    //region --- SUBSCRIBE ---
+
+    /*
+     // Subscribe to View
+     */
+
+    /*
+     Subscribe to Model
+     */
 
     /*
      Subscribe to Controller
      */
-    var subscribe = _.once(function (app, debug) {
-        var subscribe = _.partial(app.bus.controller.subscribe, debug),
+    var subscribeController = function (app, debug) {
+        var sub = _.partial(app.bus.controller.subscribe, debug),
             msg = app.msg,
+
             show = {
-                details: $$(detailBody.getId()),
+                details:   $$(detailBody.getId()),
                 treatment: $$(treatBody.getId()),
             };
 
-        subscribe(msg.ui.mainBody, function (data) {
+        debug("subscribe to controller");
+
+        sub(msg.ui.mainBody, function (data) {
             show[data.item].show();
         });
-    });
+    };
 
     /*
-     Initialize
+     Subscribe All
      */
-    var init = function (app) {
-        var debug = app.debug(name);
+    var subscribeOnce = _.once(subscribeController);
 
-        debug("init");
+    //endregion
+
+    //region --- PUBLISH ---
+
+
+    //endregion
+
+    //region --- INITIALIZE ---
+
+    var init = function (app, debug) {
 
         detailBody.init(app);
         treatBody.init(app);
 
-        subscribe(app, debug);
+        subscribeOnce(app, debug);
     };
 
+    //endregion
+
+    //region --- EXPORT ---
+
     /**
-     * ### Get the view Id
-     * @returns {string} The view Id
+     * #### Get the view id
+     * @returns {string} Id of the view
      */
     exports.getId = function () { return id; };
 
     /**
-     * ### Get the view config object
+     * #### Get the view config
      * @param {object} app The application namespace
-     * @returns {object} The view config
+     * @returns {object} webix view config
      */
     exports.getView = function (app) {
-        var debug = app.debug(name);
-
-        var view = {
-                    id: id, view: "multiview", cells: [
-                    detailBody.getView(app),
-                    treatBody.getView(app)
-                ]
-            };
-
-        debug(view);
-
+        var view = getView(app);
+        app.debug(name)(view);
         return view;
     };
 
     /**
-     * ### Initialize the View
-     * @param {obj} app The application namespace
+     * #### Initializes the view
+     *
+     * - Create subscriptions for the view
+     * - Add publish handlers to view events
+     *
+     * @param {object} app The application namespace
      */
-    exports.init = function (app) { init(app); };
+    exports.init = function (app) {
+        var deb = app.debug(name);
+        deb("init");
+        init(app, deb);
+    };
+
+    //endregion
 
 })();

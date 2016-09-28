@@ -1,21 +1,32 @@
 /**
+ * ## Indicatino Controller
  * @module controllers/indication
  */
 
 /*global webix, _ */
 
 (function () {
+
     "use strict";
 
-    /*
-     Subscribe to View
-     */
+    //region --- VARIABLES ---
+
+    var name = "controllers:indication";
+
+    //endregion
+
+    //region --- HELPER FUNCTIONS ---
+
+    //endregion
+
+    //region --- SUBSCRIBE ---
+
     var subscribeView = function (app, debug, publish) {
-        var subscribe = _.partial(app.bus.view.subscribe, debug),
+        var sub = _.partial(app.bus.view.subscribe, debug),
             msg = app.msg;
 
         // Add an indication to the list of medications
-        subscribe(msg.indication.add, function (data, envelope) {
+        sub(msg.indication.add, function (data, envelope) {
             var msg = 'Not implemented yet:</br>' +
                 envelope.topic + '</br>' +
                 'will add or indications';
@@ -24,7 +35,7 @@
         });
 
         // For the selected patient publish the indications
-        subscribe(msg.patient.select, function (data) {
+        sub(msg.patient.select, function (data) {
             var post = _.partial(app.request.post, app.settings.demo),
 
                 succ = function (resp) {
@@ -44,17 +55,34 @@
         });
     };
 
-    var subscribe = _.once(function (app, debug) {
-        var publish = _.partial(app.bus.controller.publish, debug);
+    var subscribeOnce = _.once(subscribeView);
 
-        subscribeView(app, debug, publish);
-    });
+    //endregion
+
+    //region --- INITIALIZE ---
+
+    var init = function (app, debug) {
+        var pub = _.partial(app.bus.controller.publish, debug);
+
+        subscribeOnce(app, debug, pub);
+    };
+
+    //endregion
+
+    //region --- EXPORT ---
 
     /**
-     * Initialize the controller
+     * #### Initializes the controller
+     * Create subscriptions for the controller
+     *
      * @param {object} app The application namespace
-     * @param {Function} debug The controller specific debug function
      */
-    exports.init = function (app, debug) { subscribe(app, debug); };
+    exports.init = function (app) {
+        var deb = app.debug(name);
+        deb("init");
+        init(app, deb);
+    };
+
+    //endregion
 
 })();

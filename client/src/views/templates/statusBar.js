@@ -1,4 +1,5 @@
 /**
+ * ## The status bar of the application
  * @module views/templates/statusBar
  */
 
@@ -7,25 +8,57 @@
 (function () {
     "use strict";
 
-    var id = 'statusBar',
-        name = "views:templates:statusBar",
+    //region --- IDENTIFIERS AND NAMES ---
 
-        view = {
+    var id = 'statusBar',
+        name = "views:templates:statusBar";
+
+    //endregion
+
+    //region --- ADDITIONAL VARIABLES ---
+
+    //endregion
+
+    //region --- CHILD VIEWS ---
+
+    //endregion
+
+    //region --- VIEW ---
+
+    var getView = function () {
+        return {
             template: 'status: #status# | message: #message#',
             id: id,
             height: 30,
             data: { status: "status", message: "message", title: "info" }
         };
+    };
+
+    //endregion
+
+    //region --- HELPER FUNCTIONS ---
+
+    //endregion
+
+    //region --- SUBSCRIBE ---
 
     /*
-     Controller Subscriptions
+     // Subscribe to View
      */
-    var subscribeController = _.once(function (app, debug) {
-        var subscribe = _.partial(app.bus.controller.subscribe, debug);
 
-        debug("subscribe");
+    /*
+     Subscribe to Model
+     */
 
-        subscribe('set.status', function (data) {
+    /*
+     Subscribe to Controller
+     */
+    var subscribeController = function (app, debug) {
+        var sub = _.partial(app.bus.controller.subscribe, debug);
+
+        debug("subscribe to controller");
+
+        sub('set.status', function (data) {
             var bar  = $$(id),
                 vals = bar.getValues();
 
@@ -33,58 +66,82 @@
             bar.setValues(vals);
         });
 
-        subscribe('*.err', function (data /*, envelope */) {
+        sub('*.err', function (data /*, envelope */) {
             var bar = $$(id),
                 vals = bar.getValues();
 
             vals.message = data.err;
             bar.setValues(vals);
         });
-
-    });
+    };
 
     /*
-     Initialize the view
+     Subscribe All
      */
-    var init = function (app) {
-        var debug = app.debug(name),
+    var subscribeOnce = _.once(subscribeController);
+
+    //endregion
+
+    //region --- PUBLISH ---
+
+    var publish = function (app, debug) {
+        var pub = _.partial(app.bus.view.publish, debug),
             msg = app.msg;
 
-        debug("init");
+        debug("publish");
 
         webix.event($$(id).$view, 'click', function () {
-            app.bus.view.publish(debug, msg.status.text, {
+            pub(msg.status.text, {
                 text: $$(id).getValues().message
             });
         });
-
-        subscribeController(app, debug);
     };
 
+    //endregion
+
+    //region --- INITIALIZE ---
+
+    var init = function (app, debug) {
+        publish(app, debug);
+        subscribeOnce(app, debug);
+    };
+
+    //endregion
+
+    //region --- EXPORT ---
+
+
     /**
-     * ### Get the View Id
-     * @returns {string} The view Id
+     * #### Get the view id
+     * @returns {string} Id of the view
      */
     exports.getId = function () { return id; };
 
     /**
-     * ### Create the view
-     * @param app {app} provides the app functionality
-     * @returns {view} Returns the view
+     * #### Get the view config
+     * @param {object} app The application namespace
+     * @returns {object} webix view config
      */
     exports.getView = function (app) {
+        var view = getView();
         app.debug(name)(view);
-
-        //noinspection JSValidateTypes
         return view;
     };
 
     /**
-     * ### Initializes the view
-     * Uses the webix $$ to get the view
-     * @param app {app} provides the app functionality
+     * #### Initializes the view
+     *
+     * - Create subscriptions for the view
+     * - Add publish handlers to view events
+     *
+     * @param {object} app The application namespace
      */
-    exports.init = function (app) { init(app); };
+    exports.init = function (app) {
+        var deb = app.debug(name);
+        deb("init");
+        init(app, deb);
+    };
 
+    //endregion
 
 })();

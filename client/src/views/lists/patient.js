@@ -8,10 +8,25 @@
 (function () {
     "use strict";
 
-    var id = 'patientList',
-        name = "views:lists:patient",
+    //region --- IDENTIFIERS AND NAMES ---
 
-        view = {
+    var id = 'patientList',
+        name = "views:lists:patient";
+
+    //endregion
+
+    //region --- ADDITIONAL VARIABLES ---
+
+    //endregion
+
+    //region --- CHILD VIEWS ---
+
+    //endregion
+
+    //region --- VIEW ---
+
+    var getView = function () {
+        return {
             view: 'datatable',
             id: id,
             resizeColumn: true,
@@ -22,33 +37,48 @@
             ],
             data: []
         };
+    };
+
+    //endregion
+
+    //region --- HELPER FUNCTIONS ---
+
+    //endregion
+
+    //region --- SUBSCRIBE ---
 
     /*
-     Subscribe to View
+     // Subscribe to View
      */
     var subscribeView = function (app, debug) {
-        var subscribe = _.partial(app.bus.view.subscribe, debug),
+        var sub = _.partial(app.bus.view.subscribe, debug),
             msg = app.msg;
 
+        debug("subscribe to view");
+
         // Make sure patient is selected
-        subscribe(msg.patient.select, function (data) {
+        sub(msg.patient.select, function (data) {
             $$(id).select(data.patient.id);
         });
     };
+
+
+    /*
+     Subscribe to Model
+     */
 
     /*
      Subscribe to Controller
      */
     var subscribeController = function (app, debug) {
-        var subscribe = _.partial(app.bus.controller.subscribe, debug),
-            deb = _.partial(debug, "receive"),
+        var sub = _.partial(app.bus.controller.subscribe, debug),
             msg = app.msg;
 
-        // Display the list of patients
-        subscribe(msg.patient.get, function (data, envelope) {
-            var view = $$(id);
+        debug("subscribe to controller");
 
-            deb(envelope.topic, data);
+        // Display the list of patients
+        sub(msg.patient.get, function (data) {
+            var view = $$(id);
 
             // Clear the list
             view.clearAll();
@@ -60,20 +90,42 @@
         });
     };
 
-    var subscribe = _.once(function (app, debug) {
+    /*
+     Subscribe All
+     */
+    var subscribeOnce = _.once(function (app, debug) {
         subscribeController(app, debug);
         subscribeView(app, debug);
     });
 
-    /*
-     Initialize
-     */
-    var init = function (app) {
-        var debug = app.debug(name),
-            publish = _.partial(app.bus.view.publish, debug),
-            msg = app.msg;
+    //endregion
 
-        debug("init");
+    //region --- PUBLISH ---
+
+    var publish = function (app, debug, publish) {
+        var msg = app.msg;
+
+        debug("publish");
+
+        $$(id).attachEvent('onItemClick', function (item) {
+
+            publish(msg.patient.select, {
+                patient : $$(id).data.getItem(item.row)
+            });
+        });
+
+        // Trigger the retrieval of all patients
+        (function () {
+            publish(msg.patient.get, {});
+        })();
+    };
+
+    //endregion
+
+    //region --- INITIALIZE ---
+
+    var init = function (app, debug) {
+        var pub = _.partial(app.bus.view.publish, debug);
 
         webix.ui({
             view: 'contextmenu',
@@ -83,42 +135,46 @@
             ]
         }).attachTo($$(id));
 
-        $$(id).attachEvent('onItemClick', function (item) {
+        subscribeOnce(app, debug);
 
-            publish(msg.patient.select, {
-                patient : $$(id).data.getItem(item.row)
-            });
-        });
-
-        subscribe(app, debug);
-
-        // Trigger the retrieval of all patients
-        (function () {
-            publish(msg.patient.get, {});
-        })();
+        publish(app, debug, pub);
     };
 
+    //endregion
+
+    //region --- EXPORT ---
+
     /**
-     * ### Get the id of the view
-     * @returns {string}
+     * #### Get the view id
+     * @returns {string} Id of the view
      */
     exports.getId = function () { return id; };
 
     /**
-     * ### Get the view
-     * @param {object} app application namespace
-     * @returns {view}
+     * #### Get the view config
+     * @param {object} app The application namespace
+     * @returns {object} webix view config
      */
     exports.getView = function (app) {
-        app.debug('client:' + id)("getView", view);
+        var view = getView();
+        app.debug(name)(view);
         return view;
     };
 
     /**
-     * ### Initializes the view
+     * #### Initializes the view
+     *
+     * - Create subscriptions for the view
+     * - Add publish handlers to view events
+     *
      * @param {object} app The application namespace
      */
-    exports.init = function (app) { init(app); };
+    exports.init = function (app) {
+        var deb = app.debug(name);
+        deb("init");
+        init(app, deb);
+    };
 
+    //endregion
 
 })();

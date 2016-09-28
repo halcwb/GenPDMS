@@ -1,16 +1,35 @@
 /**
- * Handles patient logic
+ * ## Handles patient logic
+ *
+ * Handles:
+ * - Retrieval of patients
+ * - Selection of a single patient
+ * - Updating a patient
+ * - Creating a new patient
+ * - Saving a patient
+ * - Deleting a patient
+ *
  * @module controllers/patient
  */
 
 /*global window, webix, $$, _ */
 
 (function () {
+
     "use strict";
 
-    /*
-     Subscribe View
-     */
+    //region --- VARIABLES ---
+
+    var name = "controllers:patient";
+
+    //endregion
+
+    //region --- HELPER FUNCTIONS ---
+
+    //endregion
+
+    //region --- SUBSCRIBE ---
+
     var subscribeView = function (app, debug, publish) {
         var subscribe = _.partial(app.bus.view.subscribe, debug),
             msg = app.msg;
@@ -64,29 +83,33 @@
 
     };
 
-    /*
-     Subscribe All
-     */
-    var subscribe = _.once(function (app, debug) {
-        var publish = _.partial(app.bus.controller.publish, debug);
-        subscribeView(app, debug, publish);
-    });
+    var subscribeOnce = _.once(subscribeView);
+
+    //endregion
+
+    //region --- INITIALIZE ---
+
+    var init = function (app, debug) {
+        var pub = _.partial(app.bus.controller.publish, debug);
+        subscribeOnce(app, debug, pub);
+    };
+
+    //endregion
+
+    //region --- EXPORT ---
 
     /**
      * #### Initializes the controller
-     * Will handle:
-     * - Retrieval of patients
-     * - Selection of a single patient
-     * - Updating a patient
-     * - Creating a new patient
-     * - Saving a patient
-     * - Deleting a patient
+     * Create subscriptions for the controller
      *
-     * @param {object} app application namespace
-     * @param {object} debug provides debugger functions
+     * @param {object} app The application namespace
      */
-    exports.init = function (app, debug) {
-        subscribe(app, debug);
+    exports.init = function (app) {
+        var deb = app.debug(name);
+        deb("init");
+        init(app, deb);
     };
+
+    //endregion
 
 })();

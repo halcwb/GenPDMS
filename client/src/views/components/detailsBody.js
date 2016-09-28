@@ -1,5 +1,5 @@
 /**
- * ### The general details body of the application
+ * ## The general details body of the application
  * @module views/components/detailsBody
  */
 
@@ -8,76 +8,138 @@
 (function () {
     "use strict";
 
+    //region --- IDENTIFIERS AND NAMES ---
+
     var id = 'detailsBody',
-        name = "views:components:detailsBody",
+        name = "views:components:detailsBody";
 
-        navigation = require('./navigation.js'),
-        patientDetails = require('./patientDetails.js'),
-        protocolDetails = require("./protocolDetails.js"),
+    //endregion
 
-        goldenRatio = (1 + Math.sqrt(5))/2;
+    //region --- ADDITIONAL VARIABLES ---
+
+    var goldenRatio = (1 + Math.sqrt(5))/2;
+
+    //endregion
+
+    //region --- CHILD VIEWS ---
+
+    var navigation      = require('./navigation.js'),
+        patientDetails  = require('./patientDetails.js'),
+        protocolDetails = require("./protocolDetails.js");
+
+        //endregion
+
+    //region --- VIEW ---
+
+    var getView = function (app) {
+        return {
+            id: id,
+            cols: [
+                _.extend(navigation.getView(app), { gravity: 1/goldenRatio }),
+                { view: 'resizer' },
+                {
+                    view: "multiview", cells: [
+                    patientDetails.getView(app),
+                    protocolDetails.getView(app)
+                ]
+                }
+            ]
+        };
+    };
+
+    //endregion
+
+    //region --- HELPER FUNCTIONS ---
+
+    //endregion
+
+    //region --- SUBSCRIBE ---
+
+    /*
+     // Subscribe to View
+     */
+
+    /*
+     Subscribe to Model
+     */
 
     /*
      Subscribe to Controller
      */
-    var subscribe = _.once(function (app, debug) {
-        var subscribe = _.partial(app.bus.controller.subscribe, debug),
+    var subscribeController = function (app, debug) {
+        var sub = _.partial(app.bus.controller.subscribe, debug),
             msg = app.msg,
             item = {
                 patient: patientDetails.getId(),
                 protocol: protocolDetails.getId()
             };
 
-        subscribe(msg.ui.detailsBody, function (data) {
+        debug("subscribe to controller");
+
+        sub(msg.ui.detailsBody, function (data) {
             $$(item[data.item]).show();
         });
-    });
-
-    /**
-     * ### Get the View Id
-     * @returns {string} The view id
-     */
-    exports.getId = function () { return id; };
-
-    /**
-     * Get the View Config
-     * @param {object} app The application namespace
-     * @returns {object} The view config
-     */
-    exports.getView = function (app) {
-        var view = {
-                id: id,
-                cols: [
-                    _.extend(navigation.getView(app), { gravity: 1/goldenRatio }),
-                    { view: 'resizer' },
-                    {
-                        view: "multiview", cells: [
-                            patientDetails.getView(app),
-                            protocolDetails.getView(app)
-                        ]
-                    }
-                ]
-            };
-
-        app.debug(name)("getView", view);
-
-       return view;
     };
 
-    /**
-     * Initialize the View
-     * @param {object} app The application namespace
+    /*
+     Subscribe All
      */
-    exports.init = function (app) {
-        var debug = app.debug(name);
+    var subscribeOnce = _.once(subscribeController);
 
-        debug("init");
+    //endregion
+
+    //region --- PUBLISH ---
+
+
+    //endregion
+
+    //region --- INITIALIZE ---
+
+    var init = function (app, debug) {
 
         navigation.init(app);
         patientDetails.init(app);
         protocolDetails.init(app);
 
-        subscribe(app, debug);
+        subscribeOnce(app, debug);
     };
+
+    //endregion
+
+    //region --- EXPORT ---
+
+    /**
+     * #### Get the view id
+     * @returns {string} Id of the view
+     */
+    exports.getId = function () { return id; };
+
+    /**
+     * #### Get the view config
+     * @param {object} app The application namespace
+     * @returns {object} webix view config
+     */
+    exports.getView = function (app) {
+        var view = getView(app);
+        app.debug(name)(view);
+        return view;
+    };
+
+    /**
+     * #### Initializes the view
+     *
+     * - Create subscriptions for the view
+     * - Add publish handlers to view events
+     * - Initialize child views
+     *
+     * @param {object} app The application namespace
+     */
+    exports.init = function (app) {
+        var deb = app.debug(name);
+        deb("init");
+        init(app, deb);
+    };
+
+    //endregion
 
 })();

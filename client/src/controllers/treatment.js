@@ -5,17 +5,27 @@
 /*global webix, $$, _ */
 
 (function () {
+
     "use strict";
 
-    /*
-     Subscribe to View
-     */
+    //region --- VARIABLES ---
+
+    var name = "controllers:treatment";
+
+    //endregion
+
+    //region --- HELPER FUNCTIONS ---
+
+    //endregion
+
+    //region --- SUBSCRIBE ---
+
     var subscribeToView = function (app, debug, publish) {
-        var subscribe = _.partial(app.bus.view.subscribe, debug),
+        var sub = _.partial(app.bus.view.subscribe, debug),
             msg = app.msg;
 
         // Review a treatment and update patient treatment with the result
-        subscribe(msg.treatment.review, function (data, envelope) {
+        sub(msg.treatment.review, function (data, envelope) {
             var msg = 'Not implemented yet:</br>' +
                 envelope.topic + '</br>' +
                 'will add or remove orders according to protocols';
@@ -24,7 +34,7 @@
         });
 
         // Edit the treatment in the treatment edit ui
-        subscribe(msg.treatment.edit, function (data) {
+        sub(msg.treatment.edit, function (data) {
             var treatment = data.treatment,
                 patient   = data.patient;
 
@@ -44,13 +54,13 @@
         });
 
         //
-        subscribe(msg.ui.mainBody, function () {
+        sub(msg.ui.mainBody, function () {
             publish(msg.ui.mainBody, { item: "details" });
         });
 
         // If specific patient is selected, get the treatment for that patient and
         // publish the patient treatment.
-        subscribe(msg.patient.select, function (data) {
+        sub(msg.patient.select, function (data) {
             var post = _.partial(app.request.post, app.settings.demo),
 
                 succ = function (resp) {
@@ -74,13 +84,33 @@
     /*
      Subscribe All
      */
-    var subscribe = _.once(function (app, debug) {
-        var publish = _.partial(app.bus.controller.publish, debug);
-        subscribeToView(app, debug, publish);
-    });
+    var subscribeOnce = _.once(subscribeToView);
 
-    exports.init = function (app, debug) {
-        subscribe(app, debug);
+    //endregion
+
+    //region --- INITIALIZE ---
+
+    var init = function (app, debug) {
+        var pub = _.partial(app.bus.controller.publish, debug);
+        subscribeOnce(app, debug, pub);
     };
+
+    //endregion
+
+    //region --- EXPORT ---
+
+    /**
+     * #### Initializes the controller
+     * Create subscriptions for the controller
+     *
+     * @param {object} app The application namespace
+     */
+    exports.init = function (app) {
+        var deb = app.debug(name);
+        deb("init");
+        init(app, deb);
+    };
+
+    //endregion
 
 })();

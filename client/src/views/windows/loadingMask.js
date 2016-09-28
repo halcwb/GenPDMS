@@ -1,18 +1,33 @@
 /**
+ * ## Loading mask view
  * @module views/windows/loadingMask
  */
 
 /*global webix, $$, _ */
 
 (function () {
+
     "use strict";
 
-    var id = 'loadingMask',
+    //region --- IDENTIFIERS AND NAMES ---
 
-        /*
-        View Config Object
-         */
-        view = {
+    var id = 'loadingMask',
+        name = "views:windows:loadingMask";
+
+    //endregion
+
+    //region --- ADDITIONAL VARIABLES ---
+
+    //endregion
+
+    //region --- CHILD VIEWS ---
+
+    //endregion
+
+    //region --- VIEW ---
+
+    var getView = function () {
+        return {
             id: id,
             view: "window",
             width: 100,
@@ -26,65 +41,100 @@
                 css: "wait"
 
             }
-        },
+        };
+    };
 
-        /*
-        Helper Functions
-         */
-        doWait = function (loading) {
-            var mask = $$(id);
+    //endregion
 
-            if (loading) {
-                mask.show();
-            }
-            else {
-                mask.hide();
-            }
-        },
+    //region --- HELPER FUNCTIONS ---
 
-        /*
-        View Subscriptions
-         */
-        subscribe = function (app, debug) {
+    var doWait = function (loading) {
+        var mask = $$(id);
 
-            app.bus.view.subscribe(debug, 'show_loading_mask', function (data) {
-                doWait(data.loading);
-            });
+        if (loading) {
+            mask.show();
+        }
+        else {
+            mask.hide();
+        }
+    };
 
-        },
+    //endregion
 
-        /*
-        Initialize the View
-         */
-        init = _.once(function (app) {
-            var debug = app.debug("views:windows:loadingMask");
+    //region --- SUBSCRIBE ---
 
-            debug("init");
+    /*
+     // Subscribe to View
+     */
 
-            // subscribe to loading event
-            subscribe(app, debug);
+    /*
+     Subscribe to Model
+     */
 
-            // make sure loading mask is not visible
-            if (!$$(id)) {
-                webix.ui(view).hide();
-            }
+    /*
+     Subscribe to Controller
+     */
 
-            // make app loading shortcut
-            app.loading = function (loading) {
-                app.bus.view.publish(debug, 'show_loading_mask', {
-                    loading: loading
-                });
-            };
+    /*
+     Subscribe All
+     */
 
-        });
+    //endregion
+
+    //region --- PUBLISH ---
+
+
+    //endregion
+
+    //region --- INITIALIZE ---
+
+    var init = _.once(function (app) {
+
+        // make sure loading mask is not visible
+        if (!$$(id)) {
+            webix.ui(getView()).hide();
+        }
+
+        // make app loading shortcut
+        app.loading = doWait;
+    });
+
+    //endregion
+
+    //region --- EXPORT ---
 
     /**
-     * loadingMask: </br>
-     * creates a loading mask
-     * @param app {app} uses app functionality
-     * @returns {undefined}
+     * #### Get the view id
+     * @returns {string} Id of the view
      */
-    exports.init = function (app) { init(app); };
+    exports.getId = function () { return id; };
+
+    /**
+     * #### Get the view config
+     * @param {object} app The application namespace
+     * @returns {object} webix view config
+     */
+    exports.getView = function (app) {
+        var view = getView();
+        app.debug(name)(view);
+        return view;
+    };
+
+    /**
+     * #### Initializes the view
+     *
+     * - Create subscriptions for the view
+     * - Add publish handlers to view events
+     *
+     * @param {object} app The application namespace
+     */
+    exports.init = function (app) {
+        var deb = app.debug(name);
+        deb("init");
+        init(app, deb);
+    };
+
+    //endregion
 
 })();
 

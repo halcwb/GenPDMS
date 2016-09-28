@@ -19,8 +19,8 @@
 /*global webix, _, $$, console, app, debug */
 
 (function () {
-    "use strict";
 
+    "use strict";
 
     // Make underscore globally available
     window._ = require('underscore');
@@ -97,20 +97,17 @@
 
         // **** Initialize Controllers ****
 
-        _.chain({
-            "app":        require('./controllers/app.js'),
-            "navigation": require('./controllers/navigation.js'),
-            "ruleEditor": require('./controllers/ruleEditor.js'),
-            "tooltip":    require('./controllers/tooltip.js'),
-            "patient":    require('./controllers/patient.js'),
-            "treatment":  require('./controllers/treatment.js'),
-            "indication": require('./controllers/indication.js'),
-            "totals":     require('./controllers/totals.js')
-        }).mapObject(function (c, id) {
-            var debug = app.debug("controllers:" + id);
-
-            debug("init");
-            c.init(app, debug);
+        _.each([
+            require('./controllers/app.js'),
+            require('./controllers/navigation.js'),
+            require('./controllers/ruleEditor.js'),
+            require('./controllers/tooltip.js'),
+            require('./controllers/patient.js'),
+            require('./controllers/treatment.js'),
+            require('./controllers/indication.js'),
+            require('./controllers/totals.js')
+        ], function (c) {
+            c.init(app);
         });
 
         // **** Initialize Models ****

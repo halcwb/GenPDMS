@@ -1,46 +1,35 @@
 /**
+ * ## Side Menu View
  * @module views/menus/sideMenu.
  */
 
 /*global webix, $$, window, _ */
 
 (function () {
+
     "use strict";
 
+    //region --- IDENTIFIERS AND NAMES ---
+
     var id = 'sideMenu',
+        listId = id + ".list",
+
         name = "views:menus:sideMenu";
 
-    var subscribe = _.once(function (app, debug) {
-        var subscribe = _.partial(app.bus.controller.subscribe, debug),
-            msg = app.msg;
+    //endregion
 
-        subscribe('set.status', function () {
-            var status = app.settings.demo ? 'demo' : 'online';
+    //region --- ADDITIONAL VARIABLES ---
 
-            $$(id).getBody().updateItem('server', { value: status });
-        });
+    //endregion
 
-        subscribe(msg.sideMenu.show, function () {
-            var view = $$(id);
+    //region --- CHILD VIEWS ---
 
-            if (view.config.hidden) {
-                view.show();
-            } else {
-                view.hide();
-            }
-        });
+    //endregion
 
-    });
+    //region --- VIEW ---
 
-    var init = function (app) {
-        var debug = app.debug(name),
-            enabled = window.localStorage.debug === '' ? 'disabled' : 'enabled',
-            publish = _.partial(app.bus.view.publish, debug),
-            msg = app.msg;
-
-        debug("init");
-
-        webix.ui({
+    var getView = function (enabled) {
+        return {
             id: id,
             view: 'sidemenu',
             width: 200,
@@ -51,6 +40,7 @@
                 state.height -= headerHeight;
             },
             body: {
+                id: listId,
                 view: 'list',
                 borderless: true,
                 scroll: false,
@@ -58,21 +48,125 @@
                 data: [
                     { id: 'server', icon: 'cog', setting: 'server', value: '' },
                     { id: 'debug', icon: 'code', setting: 'debug',  value: enabled }
-                ],
-                on: {
-                    'onItemClick': function (id, e, trg) {
-                        publish(msg.sideMenu.item, {
-                            item: id,
-                            trg: trg
-                        });
-                    }
-                }
+                ]
             }
-        });
-
-        subscribe(app, debug);
+        };
     };
 
-    exports.init = function (app) { init(app); };
+    //endregion
+
+    //region --- HELPER FUNCTIONS ---
+
+    //endregion
+
+    //region --- SUBSCRIBE ---
+
+    /*
+     // Subscribe to View
+     */
+
+    /*
+     Subscribe to Model
+     */
+
+    /*
+     Subscribe to Controller
+     */
+    var subscribeController = function (app, debug) {
+        var sub = _.partial(app.bus.controller.subscribe, debug),
+            msg = app.msg;
+
+        sub('set.status', function () {
+            var status = app.settings.demo ? 'demo' : 'online';
+
+            $$(id).getBody().updateItem('server', { value: status });
+        });
+
+        sub(msg.sideMenu.show, function () {
+            var view = $$(id);
+
+            if (view.config.hidden) {
+                view.show();
+            } else {
+                view.hide();
+            }
+        });
+    };
+
+    /*
+     Subscribe All
+     */
+    var subscribeOnce = _.once(subscribeController);
+
+    //endregion
+
+    //region --- PUBLISH ---
+
+    var publish = function (app, debug, publish) {
+        var msg = app.msg;
+
+        debug("publish");
+
+        $$(listId).attachEvent('onItemClick', function (id, e, trg) {
+            publish(msg.sideMenu.item, {
+                item: id,
+                trg: trg
+            });
+        });
+    };
+
+    //endregion
+
+    //region --- INITIALIZE ---
+
+    var init = function (app, debug) {
+        var enabled = window.localStorage.debug === '' ? 'disabled' : 'enabled',
+            pub = _.partial(app.bus.view.publish, debug);
+
+        debug("init");
+
+        webix.ui(getView(enabled));
+
+        publish(app, debug, pub);
+        subscribeOnce(app, debug);
+    };
+
+    //endregion
+
+    //region --- EXPORT ---
+
+
+    /**
+     * #### Get the view id
+     * @returns {string} Id of the view
+     */
+    exports.getId = function () { return id; };
+
+    /**
+     * #### Get the view config
+     * @param {object} app The application namespace
+     * @returns {object} webix view config
+     */
+    exports.getView = function (app) {
+        var view = getView();
+        app.debug(name)(view);
+        return view;
+    };
+
+    /**
+     * #### Initializes the view
+     *
+     * - Create subscriptions for the view
+     * - Add publish handlers to view events
+     *
+     * @param {object} app The application namespace
+     */
+    exports.init = function (app) {
+        var deb = app.debug(name);
+        deb("init");
+        init(app, deb);
+    };
+
+    //endregion
 
 })();

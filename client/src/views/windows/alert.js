@@ -1,22 +1,55 @@
 /**
+ * ## Alert window
  * @module views/windows/alert
  */
 
 /*global webix, _ */
 
 (function () {
+
     "use strict";
 
-    var id = 'alert';
+    //region --- IDENTIFIERS AND NAMES ---
+
+    var id = 'alert',
+        name = "views:windows:alert";
+
+    //endregion
+
+    //region --- ADDITIONAL VARIABLES ---
+
+    //endregion
+
+    //region --- CHILD VIEWS ---
+
+    //endregion
+
+    //region --- VIEW ---
+
+    //endregion
+
+    //region --- HELPER FUNCTIONS ---
+
+    //endregion
+
+    //region --- SUBSCRIBE ---
 
     /*
-     Controller Subscriptions
+     // Subscribe to View
      */
-    var subscribeController = _.once(function (app, debug, publish) {
-        var subscribe = _.partial(app.bus.controller.subscribe, debug),
+
+    /*
+     Subscribe to Model
+     */
+
+    /*
+     Subscribe to Controller
+     */
+    var subscribeController = function (app, debug, publish) {
+        var sub = _.partial(app.bus.controller.subscribe, debug),
             msg = app.msg;
 
-        subscribe(msg.alert.show, function (data) {
+        sub(msg.alert.show, function (data) {
             var text = '';
 
             if (data.text) {
@@ -37,26 +70,63 @@
 
             }
         });
-    });
+    };
 
     /*
-     Initialize
+     Subscribe All
      */
-    var init = _.once(function (app) {
-        var debug = app.debug("views:windows:alert"),
-            publish = _.partial(app.bus.view.publish, debug);
+    var subscribeOnce = _.once(subscribeController);
 
-        debug('init');
+    //endregion
 
-        subscribeController(app, debug, publish);
+    //region --- PUBLISH ---
 
-    });
+
+    //endregion
+
+    //region --- INITIALIZE ---
+
+    var init = function (app, debug) {
+        var pub = _.partial(app.bus.view.publish, debug);
+
+        subscribeOnce(app, debug, pub);
+    };
+
+    //endregion
+
+    //region --- EXPORT ---
 
     /**
-     * Initializes the view
-     * Uses the webix $$ to get the view
-     * @param app {app} provides the app functionality
+     * #### Get the view id
+     * @returns {string} Id of the view
      */
-    exports.init = function (app) { init(app); };
+    exports.getId = function () { return id; };
+
+    /**
+     * #### Get the view config
+     * @param {object} app The application namespace
+     * @returns {object} webix view config
+     */
+    exports.getView = function (app) {
+        var view = {};
+        app.debug(name)(view);
+        return view;
+    };
+
+    /**
+     * #### Initializes the view
+     *
+     * - Create subscriptions for the view
+     * - Add publish handlers to view events
+     *
+     * @param {object} app The application namespace
+     */
+    exports.init = function (app) {
+        var deb = app.debug(name);
+        deb("init");
+        init(app, deb);
+    };
+
+    //endregion
 
 })();

@@ -1,4 +1,6 @@
 /**
+ * ## Navigation view
+ * Navigate between patients and protocols
  * @module views/components/navigation
  */
 
@@ -7,26 +9,28 @@
 (function () {
     "use strict";
 
-    var id = 'navigation',
-        name = "views:components:navigation",
+    //region --- IDENTIFIERS AND NAMES ---
 
-        patientList = require('./../lists/patient'),
+    var id = 'navigation',
+        name = "views:components:navigation";
+
+    //endregion
+
+    //region --- ADDITIONAL VARIABLES ---
+
+    //endregion
+
+    //region --- CHILD VIEWS ---
+
+    var patientList  = require('./../lists/patient'),
         protocolList = require('./../lists/protocol');
 
-    /**
-     * ### Get the view id
-     * @returns {string} the view id
-     */
-    exports.getId = function () { return id; };
+    //endregion
 
-    /**
-     * ### Get the view config
-     * @param app
-     * @returns {object} The view config
-     */
-    exports.getView = function (app) {
-        var debug = app.debug(name),
-            view = {
+    //region --- VIEW ---
+
+    var getView = function (app) {
+        return {
             view: 'tabview',
             id: id,
             cells: [{
@@ -36,39 +40,57 @@
                     rows: [patientList.getView(app)]
                 }
             },
-            {
-                header: 'Protocols',
-                body: {
-                    id: 'tab.' + protocolList.getId(),
-                    rows: [ protocolList.getView(app) ]
+                {
+                    header: 'Protocols',
+                    body: {
+                        id: 'tab.' + protocolList.getId(),
+                        rows: [ protocolList.getView(app) ]
+                    }
                 }
-            }
-        ]};
-
-        debug(view);
-        return view;
+            ]
+        };
     };
 
-    /**
-     * ### Initializes the view
-     * @param {object} app The application namespace
+    //endregion
+
+    //region --- HELPER FUNCTIONS ---
+
+    //endregion
+
+    //region --- SUBSCRIBE ---
+
+    /*
+     // Subscribe to View
      */
-    exports.init = function (app) {
-        var debug = app.debug(name),
-            publish = _.partial(app.bus.view.publish, debug),
+
+    /*
+     Subscribe to Model
+     */
+
+    /*
+     Subscribe to Controller
+     */
+
+    /*
+     Subscribe All
+     */
+
+    //endregion
+
+    //region --- PUBLISH ---
+
+    var publish = function (app, debug) {
+        var pub = _.partial(app.bus.view.publish, debug),
             msg = app.msg,
             tabs = {};
 
-        debug('init');
+        debug("publish");
 
         tabs['tab.' + patientList.getId()] = 'patients';
         tabs['tab.' + protocolList.getId()] = 'protocols';
 
-        patientList.init(app);
-        protocolList.init(app);
-
         $$(id).getTabbar().attachEvent('onBeforeTabClick', function (tabId) {
-            publish(msg.ui.detailsBody, {
+            pub(msg.ui.detailsBody, {
                 item: tabs[tabId]
             });
 
@@ -86,5 +108,56 @@
             debug: debug
         });
     };
+
+    //endregion
+
+    //region --- INITIALIZE ---
+
+    var init = function (app, debug) {
+
+        patientList.init(app);
+        protocolList.init(app);
+
+        publish(app, debug);
+    };
+
+    //endregion
+
+    //region --- EXPORT ---
+
+
+    /**
+     * #### Get the view id
+     * @returns {string} Id of the view
+     */
+    exports.getId = function () { return id; };
+
+    /**
+     * #### Get the view config
+     * @param {object} app The application namespace
+     * @returns {object} webix view config
+     */
+    exports.getView = function (app) {
+        var view = getView(app);
+        app.debug(name)(view);
+        return view;
+    };
+
+    /**
+     * #### Initializes the view
+     *
+     * - Create subscriptions for the view
+     * - Add publish handlers to view events
+     * - Initialize child views
+     *
+     * @param {object} app The application namespace
+     */
+    exports.init = function (app) {
+        var deb = app.debug(name);
+        deb("init");
+        init(app, deb);
+    };
+
+    //endregion
 
 })();

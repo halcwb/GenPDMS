@@ -8,77 +8,161 @@
 (function () {
     "use strict";
 
+
+    //region --- IDENTIFIERS AND NAMES ---
+
+    var id = 'patientDetails',
+        editBtn = id + ".edit",
+        reviewBtn = id + ".review",
+        tabViewId = id + '.tabs',
+
+        name = "views:components:patientDetails";
+
+    //endregion
+
+    //region --- ADDITIONAL VARIABLES ---
+
+    var reviewTip = 'Add or remove treatment according to patient signs and available protocols';
+
+    //endregion
+
+    //region --- CHILD VIEWS ---
+
     var form        = require('./../forms/patient.js'),
         indications = require('./../lists/indication.js'),
         treatment   = require('./../lists/treatment.js');
 
-    var id = 'patientDetails',
-        name = "views:components:patientDetails",
-        tabViewId = id + 'tabs';
+    //endregion
 
-    var reviewTip = 'Add or remove treatment according to patient signs and available protocols';
+    //region --- VIEW ---
 
-    /*
-     Helper Functions
-     */
+    var getView = function (app) {
+
+        return { id: id, rows: [
+            _.extend(form.getView(app), { type: 'space' }),
+            {
+                view: 'tabview',
+                id: tabViewId,
+                cells: [{
+                    header: 'Indications',
+                    body: {
+                        id: 'tab.' + indications.getId(),
+                        rows: [
+                            indications.getView(app)
+                        ]
+                    }
+                },
+                    {
+                        header: 'Treatment',
+                        body: {
+                            id: 'tab.' + treatment.getId(),
+                            rows: [
+                                treatment.getView(app),
+                                {
+                                    view: 'toolbar',
+                                    id: treatment.getId() + ".toolbar",
+                                    height: 40,
+                                    cols: [
+                                        { template: '' },
+                                        {
+                                            view: 'button',
+                                            id: editBtn,
+                                            value: 'Edit',
+                                            tooltip: 'Edit orders',
+                                            width: 75
+                                        },
+                                        {
+                                            view: 'button',
+                                            id: reviewBtn,
+                                            value: 'Review',
+                                            tooltip: reviewTip,
+                                            width: 75
+                                        }
+                                    ]
+                                }                            ]
+                        }
+                    }
+                ]
+            }
+        ]};
+    };
+
+    //endregion
+
+    //region --- HELPER FUNCTIONS ---
+
     var enableToolbars = function (id, enable) {
-        _.forEach($$(id).getChildViews(), function (el) {
-            if (el.name !== "button") return;
+            _.forEach($$(id).getChildViews(), function (el) {
+                if (el.name !== "button") return;
 
-            if (enable) el.enable();
-            else el.disable();
-        });
-    },
+                if (enable) el.enable();
+                else el.disable();
+            });
+        },
         enableTreatmentBar   = _.partial(enableToolbars, treatment.getId() + ".toolbar"),
         enableIndicationsBar = _.partial(enableToolbars, indications.getId() + ".toolbar");
+
+    //endregion
+
+    //region --- SUBSCRIBE ---
+
+    /*
+     // Subscribe to View
+     */
+
+    /*
+     Subscribe to Model
+     */
 
     /*
      Subscribe to Controller
      */
-    var subscribe = _.once(function (app, debug) {
-        var subscribe = _.partial(app.bus.controller.subscribe, debug),
+    var subscribeController = function (app, debug) {
+        var sub = _.partial(app.bus.controller.subscribe, debug),
             msg = app.msg;
 
-        subscribe(msg.ui.ready, function () {
+        debug("subscribe to controller");
+
+        sub(msg.ui.ready, function () {
             // no patient is selected so treatment buttons don't work
             enableTreatmentBar(false);
             // no patient is selected so indication buttons don't work
             enableIndicationsBar(false);
         });
 
-        subscribe(msg.patient.select, function () {
+        sub(msg.patient.select, function () {
             // patient is selected so treatment buttons work
             enableTreatmentBar(true);
             // patient is selected so indication buttons work
             enableIndicationsBar(true);
         });
 
-        subscribe(msg.patient.new, function () {
+        sub(msg.patient.new, function () {
             // patient is selected so treatment buttons work
             enableTreatmentBar(true);
             // patient is selected so indication buttons work
             enableIndicationsBar(true);
 
         });
-
-    });
+    };
 
     /*
-     Initialize
+     Subscribe All
      */
-    var init = function (app) {
-        var debug = app.debug(name),
-            publish = _.partial(app.bus.view.publish, debug),
+    var subscribeOnce = _.once(subscribeController);
+
+    //endregion
+
+    //region --- PUBLISH ---
+
+    var publish = function (app, debug, publish) {
+        var msg = app.msg,
             tabs = {};
 
-        debug('init');
+        debug("publish");
 
         tabs['tab.' + indications.getId()] = 'indications';
         tabs['tab.' + treatment.getId()] = 'treatment';
-
-        form.init(app);
-        indications.init(app);
-        treatment.init(app);
 
         $$(tabViewId).getTabbar().attachEvent('onBeforeTabClick', function (tabId) {
             publish(id + '.tabclick', {
@@ -100,94 +184,73 @@
             debug: debug
         });
 
-        subscribe(app, debug);
+        $$(editBtn).attachEvent("onItemClick", function () {
+            var treatData = $$(treatment.getId()).data.getRange(),
+                patData   = $$(form.getId()).getValues();
+
+                publish(msg.treatment.edit, {
+                patient: patData,
+                treatment: treatData
+            });
+        });
+
+        $$(reviewBtn).attachEvent("onItemClick", function () {
+            publish(msg.treatment.review, {});
+        });
+
     };
+
+    //endregion
+
+    //region --- INITIALIZE ---
+
+    var init = function (app, debug) {
+        var pub  = _.partial(app.bus.view.publish, debug);
+
+        form.init(app);
+        indications.init(app);
+        treatment.init(app);
+
+        publish(app, debug, pub);
+        subscribeOnce(app, debug);
+    };
+
+    //endregion
+
+    //region --- EXPORT ---
 
     /**
      * #### Get the view id
-     * @returns {string}
+     * @returns {string} Id of the view
      */
     exports.getId = function () { return id; };
 
     /**
      * #### Get the view config
      * @param {object} app The application namespace
-     * @returns {object}
+     * @returns {object} webix view config
      */
     exports.getView = function (app) {
-        var debug = app.debug(name),
-            publish = _.partial(app.bus.view.publish, debug),
-            msg = app.msg,
-
-            view = { id: id, rows: [
-            _.extend(form.getView(app), { type: 'space' }),
-            {
-                view: 'tabview',
-                id: tabViewId,
-                cells: [{
-                    header: 'Indications',
-                    body: {
-                        id: 'tab.' + indications.getId(),
-                        rows: [
-                            indications.getView(app)
-                        ]
-                    }
-                },
-                {
-                    header: 'Treatment',
-                    body: {
-                        id: 'tab.' + treatment.getId(),
-                        rows: [
-                            treatment.getView(app),
-                            {
-                                view: 'toolbar',
-                                id: treatment.getId() + ".toolbar",
-                                height: 40,
-                                cols: [
-                                    { template: '' },
-                                    {
-                                        view: 'button',
-                                        id: id + "." + msg.treatment.edit,
-                                        value: 'Edit',
-                                        tooltip: 'Edit orders',
-                                        width: 75,
-                                        click: function () {
-                                            var treatData = $$(treatment.getId()).data.getRange(),
-                                                patData   = $$(form.getId()).getValues();
-
-                                            publish(msg.treatment.edit, {
-                                                patient: patData,
-                                                treatment: treatData
-                                            });
-                                        }
-                                    },
-                                    {
-                                        view: 'button',
-                                        id: id + "." + msg.treatment.review,
-                                        value: 'Review',
-                                        tooltip: reviewTip,
-                                        width: 75,
-                                        click: function () {
-                                            publish(msg.treatment.review, {});
-                                        }
-                                    }
-                                ]
-                            }                            ]
-                        }
-                    }
-                ]
-            }
-        ]};
-
-        debug(view);
+        var view = getView(app);
+        app.debug(name)(view);
         return view;
     };
 
     /**
-     * #### Initialize the view
+     * #### Initializes the view
+     *
+     * - Create subscriptions for the view
+     * - Add publish handlers to view events
+     *
      * @param {object} app The application namespace
      */
-    exports.init = function (app) { init(app); };
+    exports.init = function (app) {
+        var deb = app.debug(name);
+        deb("init");
+        init(app, deb);
+    };
+
+    //endregion
 
 
 })();

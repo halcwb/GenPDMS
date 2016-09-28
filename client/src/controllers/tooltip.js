@@ -1,5 +1,6 @@
 /**
- * module controllers/tooltip
+ * ## Tooltip Controller
+ * @module controllers/tooltip
  */
 
 /* global webix, $$, _, clearTimeout */
@@ -7,6 +8,10 @@
 (function () {
 
     "use strict";
+
+    //region --- VARIABLES ---
+
+    var name = "controllers:tooltip";
 
     var tooltips = {
         'header.icon': '<b>GenPDMS side menu</b></br>Show or hide the GenPDMS side menu',
@@ -16,9 +21,14 @@
         'tab.treatmentList': '<b>Running ordes</b> </br>Orders and indications are evaluated according to protocols'
     };
 
-    /*
-     Subscribe to View
-     */
+    //endregion
+
+    //region --- HELPER FUNCTIONS ---
+
+    //endregion
+
+    //region --- SUBSCRIBE ---
+
     var subscribeView = function (app, debug, publish) {
         var subscribe = _.partial(app.bus.view.subscribe, debug),
             msg = app.msg;
@@ -38,17 +48,33 @@
 
     };
 
-    /*
-     Subscribe
-     */
-    var subscribe = _.once(function (app, debug) {
-        var publish = _.partial(app.bus.controller.publish, debug);
+    var subscribeOnce = _.once(subscribeView);
 
-        subscribeView(app, debug, publish);
-    });
+    //endregion
 
-    exports.init = function (app, debug) {
-        subscribe(app, debug);
+    //region --- INITIALIZE ---
+
+    var init = function (app, debug) {
+        var pub = _.partial(app.bus.controller.publish, debug);
+        subscribeOnce(app, debug, pub);
     };
+
+    //endregion
+
+    //region --- EXPORT ---
+
+    /**
+     * #### Initializes the controller
+     * Create subscriptions for the controller
+     *
+     * @param {object} app The application namespace
+     */
+    exports.init = function (app) {
+        var deb = app.debug(name);
+        deb("init");
+        init(app, deb);
+    };
+
+    //endregion
 
 })();

@@ -1,16 +1,27 @@
 /**
- * controllers/navigation
+ * ## Navigation Controller
+ * @module controllers/navigation
  */
 
 /*global webix, $$, _ */
 
 (function () {
+
     "use strict";
 
-    /*
-     Subscribe to View
-     */
-    var subscribeView = _.once(function (app, debug, publish) {
+    //region --- VARIABLES ---
+
+    var name = "controllers:navigation";
+
+    //endregion
+
+    //region --- HELPER FUNCTIONS ---
+
+    //endregion
+
+    //region --- SUBSCRIBE ---
+
+    var subscribeView = function (app, debug, publish) {
         var subscribe = _.partial(app.bus.view.subscribe, debug),
             msg = app.msg;
 
@@ -22,13 +33,36 @@
                 publish(msg.ui.detailsBody, { item: "patient" });
             }
         });
-
-    });
-
-    exports.init  = function (app, debug) {
-        var publish = _.partial(app.bus.controller.publish, debug);
-
-        subscribeView(app, debug, publish);
     };
+
+    var subscribeOnce = _.once(subscribeView);
+
+    //endregion
+
+    //region --- INITIALIZE ---
+
+    var init  = function (app, debug) {
+        var pub = _.partial(app.bus.controller.publish, debug);
+
+        subscribeOnce(app, debug, pub);
+    };
+
+    //endregion
+
+    //region --- EXPORT ---
+
+    /**
+     * #### Initializes the controller
+     * Create subscriptions for the controller
+     *
+     * @param {object} app The application namespace
+     */
+    exports.init = function (app) {
+        var deb = app.debug(name);
+        deb("init");
+        init(app, deb);
+    };
+
+    //endregion
 
 })();

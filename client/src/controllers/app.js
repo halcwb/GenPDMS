@@ -1,17 +1,28 @@
 /**
+ * # Application Controller
  * @module controllers/app
  */
 
 /*global _, webix, console */
 
 (function () {
+
     "use strict";
 
-    /*
-    Subscriptions
-     */
+    //region --- VARIABLES ---
+    var name = "controllers:app";
 
-    // create all view subscriptions
+    //endregion
+
+    //region --- HELPER FUNCTIONS ---
+
+    //endregion
+
+    //region --- SUBSCRIBE ---
+
+    /*
+     // Subscribe to View
+     */
     var subscribeView = function (app, debug, publish) {
         var subscribe = _.partial(app.bus.view.subscribe, debug),
             msg = app.msg;
@@ -61,28 +72,47 @@
         subscribe(msg.sideMenu.show, function () {
             publish(msg.sideMenu.show, {} );
         });
-    },
+    };
 
     /*
-     Initialize
+     Subscribe to Model
      */
-    init = _.once(function (app, debug) {
+
+    /*
+     Subscribe to Controller
+     */
+
+    /*
+     Subscribe All
+     */
+    var subscribeOnce = _.once(subscribeView);
+
+    //endregion
+
+    //region --- INITIALIZE ---
+
+    var init = function (app, debug) {
         var publish = _.partial(app.bus.controller.publish, debug);
 
-        subscribeView(app, debug, publish);
-    });
+        subscribeOnce(app, debug, publish);
+    };
 
+    //endregion
 
+    //region --- EXPORT ---
 
     /**
-     * Initializes the controller
-     * @param app {obj} Namespace with app functionality
-     * @param debug {obj} Debugger function
-     * uses: </br>
-     * app.debug</br>
-     * app.bus.view.subscribe</br>
-     * app.bus.controller.publish</br>
+     * #### Initializes the controller
+     * Create subscriptions for the controller
+     *
+     * @param {object} app The application namespace
      */
-    exports.init = function (app, debug) { init(app, debug); };
+    exports.init = function (app) {
+        var deb = app.debug(name);
+        deb("init");
+        init(app, deb);
+    };
+
+    //endregion
 
 })();
