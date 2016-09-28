@@ -81,5 +81,26 @@
         else return exports.dataPost(succ, fail, act, qry);
     };
 
+    exports.init = function (app) {
+        var deb = app.debug("server"),
+            pub = _.partial(app.bus.server.publish, deb),
+            sub = _.partial(app.bus.controller.subscribe, deb),
+            msg = app.msg,
+            succ = function (act, resp) {
+                app.loading(false);
+                pub(msg.server.success + "." + act, resp);
+            },
+            fail = function (err) {
+                app.loading(false);
+                pub(msg.server.fail, err);
+            };
+
+        deb("init");
+
+        sub(msg.server.request, function (data) {
+            app.loading(true);
+            exports.post(data.demo, _.partial(succ, data.act), fail, data.act, data.qry);
+        });
+    };
 
 })();

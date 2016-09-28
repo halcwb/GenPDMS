@@ -17,7 +17,7 @@
         warn = postal.channel("warn"),
         errs = postal.channel("errs"),
 
-        reqs = postal.channel("reqs"),
+        server = postal.channel("server"),
 
         log = postal.channel("log");
 
@@ -112,7 +112,7 @@
     /**
      * requests channel
      */
-    exports.reqs = channel(reqs);
+    exports.server = channel(server);
 
     /**
      * postal object

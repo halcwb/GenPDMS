@@ -11,6 +11,11 @@
      * @namespace msg
      */
     module.exports = {
+        server: {
+            request: "server.request",
+            success: "server.success",
+            fail: "server.fail"
+        },
         alert: {
             // show alert with data: { title, text, type, length }, type can be
             // alert-error, alert-warning or alert-info

@@ -30,25 +30,36 @@
 
     //region --- SUBSCRIBE ---
 
-    var subscribeView = function (app, debug, publish) {
-        var subscribe = _.partial(app.bus.view.subscribe, debug),
+    var subscribeServer = function (app, debug, publish) {
+        var sub = _.partial(app.bus.server.subscribe, debug),
             msg = app.msg;
 
-        subscribe(msg.patient.edit, function (data) {
+        sub(msg.server.success + ".patients", function (resp) {
+           publish(msg.patient.get, {
+               patients: resp.result.patients
+           });
+        });
+    };
+
+    var subscribeView = function (app, debug, publish) {
+        var sub = _.partial(app.bus.view.subscribe, debug),
+            msg = app.msg;
+
+        sub(msg.patient.edit, function (data) {
             publish(msg.patient.edit, data);
         });
 
-        subscribe(msg.patient.select, function (data) {
+        sub(msg.patient.select, function (data) {
             publish(msg.patient.select, {
                 patient: data.patient
             });
         });
 
-        subscribe(msg.patient.new, function (data) {
+        sub(msg.patient.new, function (data) {
             publish(msg.patient.new, data);
         });
 
-        subscribe(msg.patient.save, function (data, envelope) {
+        sub(msg.patient.save, function (data, envelope) {
             var txt = 'Not implemented yet:</br>' +
                 envelope.topic + '</br>' +
                 'will save the patient in the database';
@@ -61,29 +72,22 @@
         });
 
         // Get the list of patients
-        subscribe(msg.patient.get, function (data, envelope) {
-            var post = _.partial(app.request.post, app.settings.demo),
+        sub(msg.patient.get, function (data, envelope) {
 
-                succ = function (resp) {
-                    publish(msg.patient.get, {
-                        patients: resp.result.patients
-                    });
-                },
-
-                fail = function (err) {
-                    debug("error", err);
-                };
-
-            app.loading(true);
-            // ToDo start using filter object
-            post(succ, fail, "patients", {});
-            app.loading(false);
+            publish(msg.server.request, {
+                demo: app.settings.demo,
+                act: "patients",
+                qry: {}
+            });
 
         });
 
     };
 
-    var subscribeOnce = _.once(subscribeView);
+    var subscribeOnce = _.once(function (app, debug, publish) {
+        subscribeView(app, debug, publish);
+        subscribeServer(app, debug, publish);
+    });
 
     //endregion
 

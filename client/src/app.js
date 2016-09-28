@@ -94,6 +94,9 @@
 
         require("./lib/util/reload.js").init(app);
 
+        // **** Initialize Request ****
+
+        app.request.init(app);
 
         // **** Initialize Controllers ****
 
@@ -128,6 +131,8 @@
         ], function (v) {
             v.init(app);
         });
+
+        // **** App is ready ****
 
         app.debug("app")("*** starting the app! ***");
 
