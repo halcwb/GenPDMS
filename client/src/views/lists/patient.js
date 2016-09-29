@@ -50,7 +50,7 @@
     /*
      // Subscribe to View
      */
-    var subscribeView = function (app, debug) {
+    var subscribeToView = function (app, debug) {
         var sub = _.partial(app.bus.view.subscribe, debug),
             msg = app.msg;
 
@@ -70,7 +70,7 @@
     /*
      Subscribe to Controller
      */
-    var subscribeController = function (app, debug) {
+    var subscribeToController = function (app, debug) {
         var sub = _.partial(app.bus.controller.subscribe, debug),
             msg = app.msg;
 
@@ -94,8 +94,8 @@
      Subscribe All
      */
     var subscribeOnce = _.once(function (app, debug) {
-        subscribeController(app, debug);
-        subscribeView(app, debug);
+        subscribeToController(app, debug);
+        subscribeToView(app, debug);
     });
 
     //endregion

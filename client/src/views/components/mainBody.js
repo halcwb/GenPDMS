@@ -64,7 +64,7 @@
     /*
      Subscribe to Controller
      */
-    var subscribeController = function (app, debug) {
+    var subscribeToController = function (app, debug) {
         var sub = _.partial(app.bus.controller.subscribe, debug),
             msg = app.msg,
 
@@ -83,7 +83,7 @@
     /*
      Subscribe All
      */
-    var subscribeOnce = _.once(subscribeController);
+    var subscribeOnce = _.once(subscribeToController);
 
     //endregion
 

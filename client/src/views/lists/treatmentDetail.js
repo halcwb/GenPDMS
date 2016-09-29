@@ -198,7 +198,7 @@
     /*
      Subscribe to Controller
      */
-    var subscribeController = function (app, debug) {
+    var subscribeToController = function (app, debug) {
         var msg = app.msg;
 
         debug("subscribe to controller");
@@ -217,7 +217,7 @@
     /*
      Subscribe All
      */
-    var subscribeOnce = _.once(subscribeController);
+    var subscribeOnce = _.once(subscribeToController);
 
     //endregion
 

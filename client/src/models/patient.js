@@ -54,7 +54,7 @@
 
     //region --- SUBSCRIBE ---
 
-    var subscribeController = function (app, debug, publish) {
+    var subscribeToController = function (app, debug, publish) {
         var msg = app.msg,
             sub = _.partial(app.bus.controller.subscribe, debug),
             pub = _.partial(publishModel, publish);
@@ -78,7 +78,7 @@
         });
     };
 
-    var subscribeOnce = _.once(subscribeController);
+    var subscribeOnce = _.once(subscribeToController);
 
     //endregion
 

@@ -11,7 +11,27 @@
      * @namespace msg
      */
     module.exports = {
+        /**
+         * ## Server messages
+         *
+         * - Accept a request to get something from the server
+         * - Return the server result either as a success or a failure
+         *
+         * @memberof msg
+         * @type object
+         */
         server: {
+            /**
+             * ### Request something from the server
+             * Typically issued from a controller
+             *
+             * #### controller.publish
+             *
+             * @alias server.request
+             * @memberof! msg#
+             * @member server.request
+             * @type string 
+             */
             request: "server.request",
             success: "server.success",
             fail: "server.fail"
@@ -69,18 +89,18 @@
              * ### Get patient(-s)
              * The message *patient.get* handles the retrieval and display of patients.
              *
-             * #### view.bus.view.publish: { filter: obj }
+             * #### view.publish: { filter: obj }
              * - Ask for patients filtered by filter object.
              * If filter is undefined, all patients are returned.
              *
-             * #### controller.bus.view.subscribe
-             * - Retrieve request for patients. Get the patients
-             * filtered by the filter object.
+             * #### controller.subscribeToView
+             * - Retrieve request for patients. Send a request
+             * to the server to get the patients.
              *
-             * #### controller.bus.controller.publish: { patients: array }
+             * #### controller.publish: { patients: array }
              * - Publish the list of retrieved patients.
              *
-             * #### view.bus.controller.subscribe
+             * #### view.subscribeToController
              * - Get the list of patients and display the patient list.
              * - Make sure that no patient is selected and
              * - clear the patient details form.

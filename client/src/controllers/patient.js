@@ -30,7 +30,7 @@
 
     //region --- SUBSCRIBE ---
 
-    var subscribeServer = function (app, debug, publish) {
+    var subscribeToServer = function (app, debug, publish) {
         var sub = _.partial(app.bus.server.subscribe, debug),
             msg = app.msg;
 
@@ -44,7 +44,7 @@
         });
     };
 
-    var subscribeView = function (app, debug, publish) {
+    var subscribeToView = function (app, debug, publish) {
         var sub = _.partial(app.bus.view.subscribe, debug),
             msg = app.msg;
 
@@ -93,8 +93,8 @@
     };
 
     var subscribeOnce = _.once(function (app, debug, publish) {
-        subscribeView(app, debug, publish);
-        subscribeServer(app, debug, publish);
+        subscribeToView(app, debug, publish);
+        subscribeToServer(app, debug, publish);
     });
 
     //endregion

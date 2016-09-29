@@ -291,7 +291,7 @@
     /*
     // Subscribe to View
      */
-    var subscribeView = function (app, debug) {
+    var subscribeToView = function (app, debug) {
         var subscribe = _.partial(app.bus.view.subscribe, debug),
             msg = app.msg;
 
@@ -314,7 +314,7 @@
     /*
      Subscribe to Model
      */
-    var subscribeModel = function (app, debug) {
+    var subscribeToModel = function (app, debug) {
         var subscribe = _.partial(app.bus.model.subscribe, debug),
             msg = app.msg;
 
@@ -347,7 +347,7 @@
     /*
      Subscribe to Controller
      */
-    var subscribeController = function (app, debug) {
+    var subscribeToController = function (app, debug) {
         var subscribe = _.partial(app.bus.controller.subscribe, debug),
             msg = app.msg;
 
@@ -396,9 +396,9 @@
      Subscribe
      */
     var subscribe = _.once(function (app, debug) {
-        subscribeView(app,debug);
-        subscribeController(app, debug);
-        subscribeModel(app, debug);
+        subscribeToView(app,debug);
+        subscribeToController(app, debug);
+        subscribeToModel(app, debug);
     });
 
     //endregion

@@ -21,7 +21,7 @@
 
     //region --- SUBSCRIBE ---
 
-    var subscribeView = function (app, debug, publish) {
+    var subscribeToView = function (app, debug, publish) {
         var subscribe = _.partial(app.bus.view.subscribe, debug),
             msg = app.msg;
 
@@ -35,7 +35,7 @@
         });
     };
 
-    var subscribeOnce = _.once(subscribeView);
+    var subscribeOnce = _.once(subscribeToView);
 
     //endregion
 

@@ -20,17 +20,17 @@
 
     //region --- SUBSCRIBE ---
 
-    var subscribeView = function (app, debug, publish) {
-        var subscribe = _.partial(app.bus.view.subscribe, debug),
+    var subscribeToView = function (app, debug, publish) {
+        var sub = _.partial(app.bus.view.subscribe, debug),
             msg = app.msg;
 
         // Inform that the ui is ready
-        subscribe(msg.ui.ready, function (data) {
+        sub(msg.ui.ready, function (data) {
             publish(msg.ui.ready, data);
         });
 
         // Show the status text in an alert
-        subscribe(msg.status.text, function (data) {
+        sub(msg.status.text, function (data) {
 
             publish(msg.alert.show, {
                 title: "Messages",
@@ -40,7 +40,7 @@
         });
 
         // Invoke the handler for the side menu item
-        subscribe(msg.sideMenu.item, function (data, envelope) {
+        sub(msg.sideMenu.item, function (data, envelope) {
             var status,
                 handle = {
                     'server': function () {
@@ -66,12 +66,12 @@
         });
 
         // Show the side menu
-        subscribe(msg.sideMenu.show, function () {
+        sub(msg.sideMenu.show, function () {
             publish(msg.sideMenu.show, {} );
         });
     };
 
-    var subscribeOnce = _.once(subscribeView);
+    var subscribeOnce = _.once(subscribeToView);
 
     //endregion
 
