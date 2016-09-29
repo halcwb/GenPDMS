@@ -86,6 +86,30 @@
     webix.i18n.dateFormat  = '%d-%M-%y';
     webix.i18n.setLocale();
 
+    var initRequest = function (app, req) {
+        var deb = app.debug("server"),
+            pub = _.partial(app.bus.server.publish, deb),
+            sub = _.partial(app.bus.controller.subscribe, deb),
+            msg = app.msg,
+            succ = function (act, resp) {
+                app.loading(false);
+                pub(msg.server.success + "." + act, resp);
+            },
+            fail = function (act, err) {
+                app.loading(false);
+                pub(msg.server.fail + "." + act, err);
+            };
+
+        deb("init");
+
+        sub(msg.server.request, function (data) {
+            var _succ = _.partial(succ, data.act),
+                _fail = _.partial(fail, data.act);
+
+            app.loading(true);
+            req.post(app.settings.demo, _succ, _fail, data.act, data.qry);
+        });
+    };
 
     webix.ready(function () {
         var path = require("path");
@@ -96,7 +120,7 @@
 
         // **** Initialize Request ****
 
-        app.request.init(app);
+        initRequest(app, app.request);
 
         // **** Initialize Controllers ****
 

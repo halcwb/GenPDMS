@@ -21,32 +21,41 @@
 
     //region --- SUBSCRIBE ---
 
-    var subscribeView = function (app, debug, publish) {
-        var subscribe = _.partial(app.bus.view.subscribe, debug),
+    var subscribeServer = function (app, debug, publish) {
+        var sub = _.partial(app.bus.server.subscribe, debug),
             msg = app.msg;
 
-        subscribe(msg.treatment.totals, function (data) {
-            var post = _.partial(app.request.post, app.settings.demo),
+        debug("subscribe to server");
 
-                succ = function (resp) {
-                    publish(msg.patient.totals, {
-                        totals: resp.result.totals
-                    });
-                },
+        sub(msg.server.success + ".totals", function (resp) {
+            publish(msg.patient.totals, {
+                totals: resp.result.totals
+            });
+        });
+    };
 
-                fail = function (err) {
-                    debug(err);
-                };
+    var subscribeController = function (app, debug, publish) {
+        var sub = _.partial(app.bus.controller.subscribe, debug),
+            msg = app.msg;
 
+        debug("subscribe to controller");
 
-            app.loading(true);
-            post(succ, fail, "totals", { id: data.id });
-            app.loading(false);
+        sub(msg.treatment.totals, function (data) {
+
+            publish(msg.server.request, {
+                act: "totals",
+                qry: {
+                    id: data.id
+                }
+            });
 
         });
     };
 
-    var subscribeOnce = _.once(subscribeView);
+    var subscribeOnce = _.once(function (app, debug, publish) {
+        subscribeServer(app, debug, publish);
+        subscribeController(app, debug, publish);
+    });
 
     //endregion
 
@@ -54,7 +63,7 @@
 
     var init = function (app, debug) {
         var publish = _.partial(app.bus.controller.publish, debug);
-        subscribeView(app, debug, publish);
+        subscribeOnce(app, debug, publish);
     };
 
     //endregion

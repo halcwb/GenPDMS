@@ -34,6 +34,9 @@
         var sub = _.partial(app.bus.server.subscribe, debug),
             msg = app.msg;
 
+        debug("subscribe to server");
+
+        // Handle the 'get patients' response
         sub(msg.server.success + ".patients", function (resp) {
            publish(msg.patient.get, {
                patients: resp.result.patients
@@ -45,20 +48,26 @@
         var sub = _.partial(app.bus.view.subscribe, debug),
             msg = app.msg;
 
+        debug("subscribe to view");
+
+        // Patient can be edited
         sub(msg.patient.edit, function (data) {
             publish(msg.patient.edit, data);
         });
 
+        // Patient is selected
         sub(msg.patient.select, function (data) {
             publish(msg.patient.select, {
                 patient: data.patient
             });
         });
 
+        // New patient
         sub(msg.patient.new, function (data) {
             publish(msg.patient.new, data);
         });
 
+        // Save patient
         sub(msg.patient.save, function (data, envelope) {
             var txt = 'Not implemented yet:</br>' +
                 envelope.topic + '</br>' +
@@ -75,7 +84,6 @@
         sub(msg.patient.get, function (data, envelope) {
 
             publish(msg.server.request, {
-                demo: app.settings.demo,
                 act: "patients",
                 qry: {}
             });

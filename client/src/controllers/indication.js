@@ -21,9 +21,24 @@
 
     //region --- SUBSCRIBE ---
 
+    var subscribeServer = function (app, debug, publish) {
+        var sub = _.partial(app.bus.server.subscribe, debug),
+            msg = app.msg;
+
+        debug("subscribe to server");
+
+        sub(msg.server.success + ".indications", function (resp) {
+            publish(msg.patient.indications, {
+                indications: resp.result.indications
+            });
+        });
+    };
+
     var subscribeView = function (app, debug, publish) {
         var sub = _.partial(app.bus.view.subscribe, debug),
             msg = app.msg;
+
+        debug("subscribe to view");
 
         // Add an indication to the list of medications
         sub(msg.indication.add, function (data, envelope) {
@@ -52,10 +67,20 @@
             post(succ, fail, "indications", { id: data.patient.id });
             app.loading(false);
 
+            publish(msg.server.request, {
+                act: "indications",
+                qry: {
+                    id: data.patient.id
+                }
+            });
+
         });
     };
 
-    var subscribeOnce = _.once(subscribeView);
+    var subscribeOnce = _.once(function (app, debug, publish) {
+        subscribeServer(app, debug, publish);
+        subscribeView(app, debug, publish);
+    });
 
     //endregion
 

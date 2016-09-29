@@ -1,4 +1,5 @@
 /**
+ * ## Treatment Controller
  * @module controllers/treatment
  */
 
@@ -19,6 +20,18 @@
     //endregion
 
     //region --- SUBSCRIBE ---
+
+    var subscribeServer = function (app, debug, publish) {
+        var sub = _.partial(app.bus.server.subscribe, debug),
+            msg = app.msg;
+
+        // Receive the patient treatment
+        sub(msg.server.success + ".treatment", function (resp) {
+            publish(msg.patient.treatment, {
+                treatment: resp.result.orders
+            });
+        });
+    };
 
     var subscribeToView = function (app, debug, publish) {
         var sub = _.partial(app.bus.view.subscribe, debug),
@@ -61,30 +74,22 @@
         // If specific patient is selected, get the treatment for that patient and
         // publish the patient treatment.
         sub(msg.patient.select, function (data) {
-            var post = _.partial(app.request.post, app.settings.demo),
 
-                succ = function (resp) {
-                    publish(msg.patient.treatment, {
-                        treatment: resp.result.orders
-                    });
-                },
-
-                fail = function (err) {
-                    debug(err);
-                };
-
-            app.loading(true);
-            post(succ, fail, "treatment", { id: data.patient.id });
-            app.loading(false);
+            publish(msg.server.request, {
+                act: "treatment",
+                qry: {
+                    id: data.patient.id
+                }
+            });
 
         });
 
     };
 
-    /*
-     Subscribe All
-     */
-    var subscribeOnce = _.once(subscribeToView);
+    var subscribeOnce = _.once(function (app, debug, publish) {
+        subscribeServer(app, debug, publish);
+        subscribeToView(app, debug, publish);
+    });
 
     //endregion
 
