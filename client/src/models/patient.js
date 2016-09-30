@@ -75,7 +75,7 @@
         });
 
         sub(msg.patient.cancel, function () {
-            model.set(model.orrigAttrs);
+            model.set(model.origAttrs);
             pub(msg.patient.cancel);
         });
 

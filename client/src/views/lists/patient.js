@@ -88,6 +88,10 @@
                 pat.name = pat.lname + ", " + pat.fname;
             }));
         });
+
+        sub(msg.patient.new, function () {
+            $$(id).unselectAll();
+        });
     };
 
     /*

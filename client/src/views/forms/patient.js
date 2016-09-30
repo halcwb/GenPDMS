@@ -206,16 +206,16 @@
                         },
                         {
                             view: "button",
-                            id: saveBtn,
-                            value: "Save",
-                            tooltip: "Save patient details",
+                            id: cancelBtn,
+                            value: "Cancel",
+                            tooltip: "Cancel actions",
                             width: 75
                         },
                         {
                             view: "button",
-                            id: cancelBtn,
-                            value: "Cancel",
-                            tooltip: "Cancel actions",
+                            id: saveBtn,
+                            value: "Save",
+                            tooltip: "Save patient details",
                             width: 75
                         }
                     ]
@@ -265,16 +265,24 @@
         scen[msg.ui.ready][saveBtn]   = false;
         scen[msg.ui.ready][cancelBtn] = false;
 
+
+        // No patient selected
+        scen[msg.patient.get] = {};
+        scen[msg.patient.get][newBtn]    = true;
+        scen[msg.patient.get][editBtn]   = false;
+        scen[msg.patient.get][saveBtn]   = false;
+        scen[msg.patient.get][cancelBtn] = false;
+
         // New patient
         scen[msg.patient.new] = {};
-        scen[msg.patient.new][newBtn]    = true;
+        scen[msg.patient.new][newBtn]    = false;
         scen[msg.patient.new][editBtn]   = false;
-        scen[msg.patient.new][saveBtn]   = true;
+        scen[msg.patient.new][saveBtn]   = false;
         scen[msg.patient.new][cancelBtn] = true;
 
         // Edit patient
         scen[msg.patient.edit] = {};
-        scen[msg.patient.edit][newBtn]    = true;
+        scen[msg.patient.edit][newBtn]    = false;
         scen[msg.patient.edit][editBtn]   = false;
         scen[msg.patient.edit][saveBtn]   = true;
         scen[msg.patient.edit][cancelBtn] = true;
@@ -349,7 +357,7 @@
             loadForm(form, data.patient);
 
             formEnable(true);
-            formReadOnly(false);
+            formReadOnly(true);
             setButtons(app, envelope.topic);
         });
 
@@ -417,7 +425,9 @@
         });
 
         $$(editBtn).attachEvent("onItemClick", function () {
-            publish(msg.patient.edit, {});
+            publish(msg.patient.edit, {
+                patient: $$(id).getValues()
+            });
         });
 
         $$(cancelBtn).attachEvent("onItemClick", function () {

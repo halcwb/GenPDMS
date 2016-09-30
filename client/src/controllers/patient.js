@@ -65,6 +65,11 @@
             publish(msg.patient.new, data);
         });
 
+        // Update patient
+        sub(msg.patient.update, function (data) {
+            publish(msg.patient.update, data);
+        });
+
         // Save patient
         sub(msg.patient.save, function (data, envelope) {
             var txt = 'Not implemented yet:</br>' +
@@ -86,6 +91,10 @@
                 qry: {}
             });
 
+        });
+
+        sub(msg.patient.cancel, function (data) {
+            publish(msg.patient.cancel, data);
         });
 
     };

@@ -156,6 +156,9 @@
             v.init(app);
         });
 
+        // **** Add a test publish ****
+        app.bus.testPublish = _.partial(app.bus.view.publish, app.debug("test"));
+
         // **** App is ready ****
 
         app.debug("app")("*** starting the app! ***");

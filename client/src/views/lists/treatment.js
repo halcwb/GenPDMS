@@ -69,6 +69,10 @@
         sub(msg.patient.get, function () {
             $$(id).clearAll();
         });
+
+        sub(msg.patient.new, function () {
+            $$(id).clearAll();
+        });
     };
 
     var subscribeOnce = _.once(subscribeToController);

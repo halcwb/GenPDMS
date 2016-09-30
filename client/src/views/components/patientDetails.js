@@ -119,6 +119,13 @@
             enableIndicationsBar(false);
         });
 
+        sub(msg.patient.get, function () {
+            // no patient is selected so treatment buttons don't work
+            enableTreatmentBar(false);
+            // no patient is selected so indication buttons don't work
+            enableIndicationsBar(false);
+        });
+
         sub(msg.patient.select, function () {
             // patient is selected so treatment buttons work
             enableTreatmentBar(true);
@@ -126,11 +133,26 @@
             enableIndicationsBar(true);
         });
 
-        sub(msg.patient.new, function () {
-            // patient is selected so treatment buttons work
+        sub(msg.patient.cancel, function () {
+            // patient edit is canceled so treatment buttons work
             enableTreatmentBar(true);
-            // patient is selected so indication buttons work
+            // patient edit is canceled so indication buttons work
             enableIndicationsBar(true);
+        });
+
+        sub(msg.patient.new, function () {
+            // patient is new so treatment buttons don't work
+            enableTreatmentBar(false);
+            // patient is new so indication buttons don't work
+            enableIndicationsBar(false);
+
+        });
+
+        sub(msg.patient.edit, function () {
+            // patient is edited so treatment buttons don't work
+            enableTreatmentBar(false);
+            // patient is edited so indication buttons don't work
+            enableIndicationsBar(false);
 
         });
     };

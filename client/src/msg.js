@@ -7,12 +7,12 @@
 
     /**
      * # Contains application messages
-     * Each message fulfils a use case.
+     * ### Each message fulfils a use case.
      * @namespace msg
      */
     module.exports = {
         /**
-         * ## Server messages
+         * # Server messages
          *
          * - Accept a request to get something from the server
          * - Return the server result either as a success or a failure
@@ -107,7 +107,7 @@
             add: "indication.add"
         },
         /**
-         * ## Patient messages
+         * # Patient messages
          * Messages that fulfil patient use cases:
          *
          * - Get patients
@@ -139,8 +139,12 @@
              * - Get the list of patients and display the patient list.
              * - Make sure that no patient is selected
              * 
-             * #### patient details view *receive*: { patients: array }
+             * #### patient details form *receive*: { patients: array }
              * - clear the patient details form.
+             * - Disable edit, savw and cancel buttons
+             *
+             * #### patient details component *receive* : { patients: array }
+             * - Disable treatment and indication toolbar
              *
              * #### patient treatment list *receive*: { patients: array }
              * - clear the treatment list
@@ -212,29 +216,142 @@
              */
             select: "patient.select",
 
-            // --- Edit a patient ----
-            // - view: {}
-            // Start editing a patient
-            // update view to start editing
+            /**
+             * ### Start editing a patient
+             *
+             * #### patient view *send* : { patient: object }
+             * - Send the patient that will be edited
+             *
+             * #### patient controller *receive* : { patient: object }
+             * - Get the patient that will be edited
+             *
+             * #### patient controller *send* : { patient: object }
+             *
+             * #### patient form *receive* : { patient: object }
+             * - Enable form for editing
+             * - Enable save and cancel buttons
+             * - Disable new button
+             *
+             * #### patient details component *receive* : { patient: object }
+             * - Disable indications and treatment bars
+             *
+             * @alias patient.edit
+             * @memberof! msg#
+             * @member patient.edit
+             * @type string
+             */
             edit: "patient.edit",
 
+            /**
+             * ### Cancel editing a patient
+             * ToDo Fix cancel of new patient
+             *
+             * #### patient view *send* : { }
+             * - Send cancel patient edit
+             *
+             * #### patient controller *receive* : { }
+             * - Cancel patient edit
+             *
+             * #### patient controller *send* : { }
+             * - Send cancel patient edit
+             *
+             * #### patient model *receive* : {}
+             * - Restore patient original data
+             *
+             * #### patient model *send* : { patient: object }
+             * - Send original patient data
+             *
+             * #### patient form *receive* : { patient: object }
+             * - Load patient with original patient data
+             * - Disable form for editing
+             * - Disable save and cancel buttons
+             * - Enable new button
+             *
+             * #### patient details component *receive* : { patient: object }
+             * - Enbable indications and treatment bars
+             *
+             * @alias patient.cancel
+             * @memberof! msg#
+             * @member patient.cancel
+             * @type string
+             */
             cancel: "patient.cancel",
 
-            // --- Update a patient ---
-            // - view: { patient: obj }
-            // the updated patient
-            // - controller: { patient: obj }
-            // the updated patient
-            // - model: { patient: obj }
-            // update views with patient with the updated patient
+            /**
+             * ### Update patient
+             * ToDo Validate and enable/disable save button
+             *
+             * #### patient view *send* : { patient: object }
+             * - Updated patient data
+             *
+             * #### patient controller *receive* : { patient: object }
+             * - Receive updated patient data
+             *
+             * #### patient model *receive* : { patient: object }
+             * - Update model with patient data
+             *
+             * #### patient model *send* : { patient: object }
+             * - Updated patient data
+             *
+             * #### patient form *receive* : { patient: object }
+             * - Updated patient data
+             *
+             * @alias patient.update
+             * @memberof! msg#
+             * @member patient.update
+             * @type string
+             */
             update: "patient.update",
 
-
-            // start with a new patient, data: {}
+            /**
+             * ### Create a new patient
+             *
+             * #### patient form view *send*: { patient: object }
+             * - Publish a new patient (all values empty or null)
+             *
+             * #### patient controller *receive*: { patient: object }
+             * - Retrieve the new patient
+             *
+             * #### patient controller *send*: { patient: obj }
+             * - Publish the new patient
+             *
+             * #### patient model *receive*: { patient: object }
+             * - Set the model to the new patient
+             * - Clear the original patient values
+             *
+             * #### patient model *send*: { patient: object }
+             * - Publish the new patient
+             *
+             * #### patient details view *receive*: { patient: object }
+             * - Enable form editing
+             * - Disable save, edit and new buttons
+             * - Enable cancel button
+             *
+             * #### patient list view *receive*: { patient: object }
+             * - Make sure that no patient is selected in the patient list view
+             *
+             * #### patient details component *receive*: { patient: object }
+             * - Disable the component treatment and indication bar
+             *
+             * #### treatment list view *receive*: { patient: object }
+             * - Clear the list
+             *
+             * #### indication list view *receive*: { patient: object }
+             * - Clear the list
+             *
+             * @alias patient.new
+             * @memberof! msg#
+             * @member patient.new
+             * @type string
+             */
             new: "patient.new",
+
             save: "patient.save",
+
             indications: "patient.indications",
+
             treatment: "patient.treatment",
+
             totals: "patient.totals"
         },
         treatment: {
