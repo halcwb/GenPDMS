@@ -76,17 +76,6 @@
 
     //region --- SUBSCRIBE ---
 
-    /*
-     // Subscribe to View
-     */
-
-    /*
-     Subscribe to Model
-     */
-
-    /*
-     Subscribe to Controller
-     */
     var subscribeToController = function (app, debug) {
         var sub = _.partial(app.bus.controller.subscribe, debug),
             msg = app.msg;
@@ -96,11 +85,13 @@
         sub(msg.patient.indications, function (data) {
             $$(id).data.importData(data.indications);
         });
+
+        sub(msg.patient.get, function () {
+            $$(id).clearAll();
+        });
+
     };
 
-    /*
-     Subscribe All
-     */
     var subscribeOnce = _.once(subscribeToController);
 
     //endregion

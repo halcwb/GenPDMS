@@ -106,17 +106,6 @@
 
     //region --- SUBSCRIBE ---
 
-    /*
-     // Subscribe to View
-     */
-
-    /*
-     Subscribe to Model
-     */
-
-    /*
-     Subscribe to Controller
-     */
     var subscribeToController = function (app, debug) {
         var sub = _.partial(app.bus.controller.subscribe, debug),
             msg = app.msg;
@@ -146,9 +135,6 @@
         });
     };
 
-    /*
-     Subscribe All
-     */
     var subscribeOnce = _.once(subscribeToController);
 
     //endregion

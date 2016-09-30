@@ -142,6 +142,12 @@
              * #### patient details view *receive*: { patients: array }
              * - clear the patient details form.
              *
+             * #### patient treatment list *receive*: { patients: array }
+             * - clear the treatment list
+             *
+             * #### patient indication list *receive*: { patients: array }
+             * - clear the indication list
+             *
              * @alias patient.get
              * @memberof! msg#
              * @member patient.get
@@ -175,6 +181,29 @@
              * 
              * #### patient list view *receive*: { patient: object }
              * - Make sure that the patient is selected in the patient list view
+             *
+             * #### patient details component *receive*: { patient: object }
+             * - Enable the component treatment and indication bar
+             *
+             * #### treatment controller *receive*: { patient: object }
+             * - Get the selected patient
+             * - Retrieve a list of orders for that patient from the server
+             *
+             * #### treatment controller *send*: { treatment: array }
+             * - Send a list of orders for that patient
+             *
+             * #### treatment list view *receive*: { treatment: array }
+             * - Load the list with the patient treatment
+             *
+             * #### indication controller *receive*: { patient: object }
+             * - Get the selected patient
+             * - Retrieve a list of orders for that patient from the server
+             *
+             * #### indication controller *send*: { indication: array }
+             * - Send a list of orders for that patient
+             *
+             * #### indication list view *receive*: { indication: array }
+             * - Load the list with the patient indications
              *
              * @alias patient.select
              * @memberof! msg#

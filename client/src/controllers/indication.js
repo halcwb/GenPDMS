@@ -51,21 +51,6 @@
 
         // For the selected patient publish the indications
         sub(msg.patient.select, function (data) {
-            var post = _.partial(app.request.post, app.settings.demo),
-
-                succ = function (resp) {
-                    publish(msg.patient.indications, {
-                        indications: resp.result.indications
-                    });
-                },
-
-                fail = function (err) {
-                    debug(err);
-                };
-
-            app.loading(true);
-            post(succ, fail, "indications", { id: data.patient.id });
-            app.loading(false);
 
             publish(msg.server.request, {
                 act: "indications",
