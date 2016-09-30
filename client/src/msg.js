@@ -25,15 +25,50 @@
              * ### Request something from the server
              * Typically issued from a controller
              *
-             * #### controller.publish
+             * #### controller *send*: { act: string, qry: object }
+             * - act: the server side action to take to fulfill the request
+             * - qry: the query object to use with the action
+             *
+             * #### server *receive*: { act: string, qry: object }
+             * The server propagates the request to the real server
              *
              * @alias server.request
              * @memberof! msg#
              * @member server.request
-             * @type string 
+             * @type string
              */
             request: "server.request",
+
+            /**
+             * ### Return a success message if server succeeded
+             *
+             * #### server *send*: { succ: bool, inf: array, warn: array, errs: array, result: object }
+             * Sends a message with the action string appended to "server.success"
+             * with the response object.
+             * 
+             * Note that if the server runs into errors it can still send a valid
+             * response back if those errors where caught. The result will be null or 
+             * an empty object the succ bool will be false. 
+             *
+             * @alias server.request
+             * @memberof! msg#
+             * @member server.request
+             * @type string
+             */
             success: "server.success",
+            
+            /**
+             * ### Return a failure message if server ran into an error
+             *
+             * #### server *send*: { err }
+             * Sends a message with the action string appended to "server.fail"
+             * with the error object
+             *
+             * @alias server.request
+             * @memberof! msg#
+             * @member server.request
+             * @type string
+             */
             fail: "server.fail"
         },
         alert: {
@@ -89,20 +124,22 @@
              * ### Get patient(-s)
              * The message *patient.get* handles the retrieval and display of patients.
              *
-             * #### view.publish: { filter: obj }
+             * #### patient list view *send*: { filter: object }
              * - Ask for patients filtered by filter object.
              * If filter is undefined, all patients are returned.
              *
-             * #### controller.subscribeToView
+             * #### patient controller *receive*: {filter: object }
              * - Retrieve request for patients. Send a request
              * to the server to get the patients.
              *
-             * #### controller.publish: { patients: array }
+             * #### patient controller *send*: { patients: array }
              * - Publish the list of retrieved patients.
              *
-             * #### view.subscribeToController
+             * #### patient list view receive { patients: array }
              * - Get the list of patients and display the patient list.
-             * - Make sure that no patient is selected and
+             * - Make sure that no patient is selected
+             * 
+             * #### patient details view *receive*: { patients: array }
              * - clear the patient details form.
              *
              * @alias patient.get
@@ -117,24 +154,27 @@
              * The message *patient.select* handles selection and display of a single
              * patient from a list of patients.
              *
-             * #### view.bus.view.publish: { patient: obj }
+             * #### patient list view *send*: { patient: object }
              * - Publish the selected patient
              *
-             * #### controller.bus.view.subscribe
-             * - Retrieve patient
+             * #### patient controller *receive*: { patient: object }
+             * - Retrieve the selected patient
              *
-             * #### controller.bus.controller.publish: { patient: obj }
+             * #### patient controller *send*: { patient: obj }
              * - Publish the selected patient
              *
-             * #### model.bus.controller.subscribe
+             * #### patient model *receive*: { patient: object }
              * - Set the model to the retrieved patient
              *
-             * #### model.bus.model.publish: { patient: obj }
+             * #### patient model *send*: { patient: object }
              * - Publish the selected patient
              *
-             * #### view.bus.model.subscribe:
+             * #### patient details view *receive*: { patient: object }
              * - Load the view with the selected patient
-             * - Make sure that the patient is selected in the view
+             * - Make form readonly and disable save and cancel buttons
+             * 
+             * #### patient list view *receive*: { patient: object }
+             * - Make sure that the patient is selected in the patient list view
              *
              * @alias patient.select
              * @memberof! msg#
@@ -148,6 +188,8 @@
             // Start editing a patient
             // update view to start editing
             edit: "patient.edit",
+
+            cancel: "patient.cancel",
 
             // --- Update a patient ---
             // - view: { patient: obj }

@@ -57,9 +57,7 @@
 
         // Patient is selected
         sub(msg.patient.select, function (data) {
-            publish(msg.patient.select, {
-                patient: data.patient
-            });
+            publish(msg.patient.select, data);
         });
 
         // New patient
@@ -76,7 +74,7 @@
             webix.message(txt);
 
             publish(msg.patient.save, {
-                patient: data.select
+                patient: data.patient
             });
         });
 

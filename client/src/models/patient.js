@@ -46,10 +46,6 @@
         });
     }
 
-    function cancelModel() {
-        model.set(model.origAttrs);
-    }
-
     //endregion
 
     //region --- SUBSCRIBE ---
@@ -60,6 +56,12 @@
             pub = _.partial(publishModel, publish);
 
         debug("subscribe to controller");
+
+        sub(msg.patient.new, function (data) {
+            model.set(data.patient);
+            model.clean();
+            pub(msg.patient.new);
+        });
 
         sub(msg.patient.select, function (data) {
             model.set(data.patient);
@@ -72,9 +74,14 @@
             pub(msg.patient.update);
         });
 
-        sub("patient.cancel", function () {
-            cancelModel();
-            pub(msg.patient.update);
+        sub(msg.patient.cancel, function () {
+            model.set(model.orrigAttrs);
+            pub(msg.patient.cancel);
+        });
+
+        sub(msg.patient.save, function (data) {
+            model.set(data.patient);
+            pub(msg.patient.save);
         });
     };
 

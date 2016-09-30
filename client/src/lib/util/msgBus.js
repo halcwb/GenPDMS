@@ -22,7 +22,7 @@
         log = postal.channel("log");
 
     function publishLog (debug, channel, topic, data) {
-        if (app.debug.enabled()) {
+        if (app.debug.storage.debug !== "") {
             debug(topic, data);
         }
 
