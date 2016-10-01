@@ -18,7 +18,8 @@
          * - Return the server result either as a success or a failure
          *
          * @memberof msg
-         * @type object
+         * @type {object}
+         * @namespace msg.server
          */
         server: {
             /**
@@ -32,9 +33,8 @@
              * #### server *receive*: { act: string, qry: object }
              * The server propagates the request to the real server
              *
-             * @alias server.request
-             * @memberof! msg#
-             * @member server.request
+             * @memberof msg.server
+             * @member request
              * @type string
              */
             request: "server.request",
@@ -50,9 +50,8 @@
              * response back if those errors where caught. The result will be null or 
              * an empty object the succ bool will be false. 
              *
-             * @alias server.request
-             * @memberof! msg#
-             * @member server.request
+             * @memberof msg.server
+             * @member success
              * @type string
              */
             success: "server.success",
@@ -64,9 +63,8 @@
              * Sends a message with the action string appended to "server.fail"
              * with the error object
              *
-             * @alias server.request
-             * @memberof! msg#
-             * @member server.request
+             * @memberof msg.server
+             * @member fail
              * @type string
              */
             fail: "server.fail"
@@ -117,6 +115,7 @@
          * - Save patient
          *
          * @memberof msg
+         * @namespace msg.patient
          * @type object
          */
         patient: {
@@ -152,9 +151,8 @@
              * #### patient indication list *receive*: { patients: array }
              * - clear the indication list
              *
-             * @alias patient.get
-             * @memberof! msg#
-             * @member patient.get
+             * @memberof msg.patient
+             * @member get
              * @type string
              */
             get: "patient.get",
@@ -191,33 +189,23 @@
              *
              * #### treatment controller *receive*: { patient: object }
              * - Get the selected patient
-             * - Retrieve a list of orders for that patient from the server
-             *
-             * #### treatment controller *send*: { treatment: array }
-             * - Send a list of orders for that patient
-             *
-             * #### treatment list view *receive*: { treatment: array }
-             * - Load the list with the patient treatment
+             * - Request a list of orders for that patient from the server
+             * - See patient.treatment
              *
              * #### indication controller *receive*: { patient: object }
              * - Get the selected patient
-             * - Retrieve a list of orders for that patient from the server
+             * - Request a list of indications for that patient from the server
+             * - See patient.indications
              *
-             * #### indication controller *send*: { indication: array }
-             * - Send a list of orders for that patient
-             *
-             * #### indication list view *receive*: { indication: array }
-             * - Load the list with the patient indications
-             *
-             * @alias patient.select
-             * @memberof! msg#
-             * @member patient.select
+             * @memberof msg.patient
+             * @member select
              * @type string
              */
             select: "patient.select",
 
             /**
              * ### Start editing a patient
+             * Enable editing of patient details
              *
              * #### patient view *send* : { patient: object }
              * - Send the patient that will be edited
@@ -235,15 +223,17 @@
              * #### patient details component *receive* : { patient: object }
              * - Disable indications and treatment bars
              *
-             * @alias patient.edit
-             * @memberof! msg#
-             * @member patient.edit
+             * @memberof msg.patient
+             * @member edit
              * @type string
              */
             edit: "patient.edit",
 
             /**
              * ### Cancel editing a patient
+             * Stop editing or creating a new patient and reset patient
+             * details to original data
+             * 
              * ToDo Fix cancel of new patient
              *
              * #### patient view *send* : { }
@@ -270,15 +260,16 @@
              * #### patient details component *receive* : { patient: object }
              * - Enbable indications and treatment bars
              *
-             * @alias patient.cancel
-             * @memberof! msg#
-             * @member patient.cancel
+             * @memberof msg.patient
+             * @member cancel
              * @type string
              */
             cancel: "patient.cancel",
 
             /**
              * ### Update patient
+             * Update patient details
+             *
              * ToDo Validate and enable/disable save button
              *
              * #### patient view *send* : { patient: object }
@@ -296,15 +287,15 @@
              * #### patient form *receive* : { patient: object }
              * - Updated patient data
              *
-             * @alias patient.update
-             * @memberof! msg#
-             * @member patient.update
+             * @memberof msg.patient
+             * @member update
              * @type string
              */
             update: "patient.update",
 
             /**
              * ### Create a new patient
+             * Create a new patient with patient details
              *
              * #### patient form view *send*: { patient: object }
              * - Publish a new patient (all values empty or null)
@@ -339,19 +330,88 @@
              * #### indication list view *receive*: { patient: object }
              * - Clear the list
              *
-             * @alias patient.new
-             * @memberof! msg#
-             * @member patient.new
+             * @memberof msg.patient
+             * @member new
              * @type string
              */
             new: "patient.new",
 
+            /**
+             * ### Save a patient
+             * Saves new/updated patient details to the database
+             *
+             * ToDo: Handle failure case
+             *
+             * #### patient form view *send* : { patient: object }
+             * - Send the patient to be saved
+             *
+             * #### patient controller *receive* : { patient : object }
+             * - Receive the patient to be saved and send it to the server
+             *
+             * #### patient controller *send* : { patient: object }
+             * - Send the saved patient
+             *
+             * #### patient model *receive* : { patient : object }
+             * - Set the data model to the saved patient
+             * - Set the original values to the saved patient
+             *
+             * #### patient model *send* : { patient: object }
+             * - Send the saved patient
+             *
+             * #### patient form view *receive* : { patient: object }
+             * - Set the form with the patient values
+             * - Disable form editing
+             * - Enable edit and new buttons
+             * - Disable save and cancel buttons
+             *
+             * #### patient details component *receive* : { patient: object }
+             * - Enable indication and treatment toolbars
+             *
+             * @memberof msg.patient
+             * @member save
+             * @type string
+             */
             save: "patient.save",
 
+            /**
+             * ### Get patient indications
+             * Handles retrieval of patient indications from the server
+             *
+             * #### indication controller *send*: { indication: array }
+             * - Send a list of indications for that patient
+             *
+             * #### indication list view *receive*: { indication: array }
+             * - Load the list with the patient indications
+             *
+             * @memberof msg.patient
+             * @member indications
+             * @type string
+             */
             indications: "patient.indications",
 
+            /**
+             * ### Get patient treatment
+             * Handles server return of patient treatment
+             *
+             * #### treatment controller *send*: { treatment: array }
+             * - Send a list of orders for that patient
+             *
+             * #### treatment list view *receive*: { treatment: array }
+             * - Load the list with the patient treatment
+             *
+             * @memberof msg.patient
+             * @member treatment
+             * @type string
+             */
             treatment: "patient.treatment",
 
+            /**
+             * ### Get patient totals
+             *
+             * @memberof msg.patient
+             * @member totals
+             * @type string
+             */
             totals: "patient.totals"
         },
         treatment: {

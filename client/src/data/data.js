@@ -1,6 +1,6 @@
 /**
+ * ## Demo and test data
  * @module data/data
- * Contains demo/test data
  */
 
 
@@ -28,7 +28,7 @@
 
     /**
      * Demo/test data
-     * @type {data}
+     * @type {object}
      */
     exports.data =  {
         'action': {
