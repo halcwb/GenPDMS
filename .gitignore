@@ -111,6 +111,7 @@ publishnuget.cmd
 # Add test files
 !/tests/
 !/tests/GenPDMS.Tests/
+!/tests/GenPDMS.Tests/Scripts
 
 # Ignore generated documentation files
 /docs/content/**/*.md

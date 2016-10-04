@@ -62,14 +62,13 @@
       <Paket>True</Paket>
     </Content>
     <Compile Include="BuildTest.fs" />
-    <None Include="Scripts\load-references-release.fsx" />
-    <None Include="Scripts\load-project-release.fsx" />
-    <None Include="Scripts\Script.fsx" />
-    <None Include="Scripts\Json.fsx" />
-    <None Include="Scripts\Newtonsoft.fsx" />
-    <None Include="data\index.html" />
+    <None Include="Script.fsx" />
     <None Include="App.config" />
     <None Include="paket.references" />
+    <None Include="Scripts\load-references-debug.fsx" />
+    <None Include="Scripts\load-project-debug.fsx" />
+    <None Include="Scripts\load-references-release.fsx" />
+    <None Include="Scripts\load-project-release.fsx" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
