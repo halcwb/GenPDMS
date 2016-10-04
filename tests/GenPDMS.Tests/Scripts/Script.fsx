@@ -5,38 +5,43 @@
 
 #time
 
-open System
-open System.Text
-open System.Net.Http
+module ServerTests =
 
-open NUnit.Framework
-open FsUnit
+    open System
+    open System.Text
+    open System.Net.Http
 
-open Suave
-open Suave.Http
-open Suave.Testing
+    open NUnit.Framework
+    open FsUnit
 
-open Newtonsoft.Json
+    open Suave
+    open Suave.Http
+    open Suave.Testing
 
-open GenPDMS
-open GenPDMS.Utils
+    open Newtonsoft.Json
 
-Environment.CurrentDirectory <- __SOURCE_DIRECTORY__
-printfn "Current Directory: %s" Environment.CurrentDirectory 
+    open GenPDMS
+    open GenPDMS.Utils
 
-let homeDir = 
-    Environment.CurrentDirectory // Project Scripts dir
-    |> Path.parentDirectory // Project Tests dir
-    |> Path.parentDirectory // Source Tests dir
-    |> Path.parentDirectory // Base dir
-    |> Path.combineWith "client" // Base Client dir
-    |> Path.combineWith "generated" // Base Client Generated dir
-    |> Path.combineWith "dist" // Base Client Generated Dist dir
-printfn "Home Directory: %s" homeDir
+    Environment.CurrentDirectory <- __SOURCE_DIRECTORY__
+    printfn "Current Directory: %s" Environment.CurrentDirectory 
 
-let testConfig = 
-    { defaultConfig with homeFolder = Some(homeDir) } 
+    let homeDir = 
+        Environment.CurrentDirectory // Project Scripts dir
+        |> Path.parentDirectory // Project Tests dir
+        |> Path.parentDirectory // Source Tests dir
+        |> Path.parentDirectory // Base dir
+        |> Path.combineWith "client" // Base Client dir
+        |> Path.combineWith "generated" // Base Client Generated dir
+        |> Path.combineWith "dist" // Base Client Generated Dist dir
+    printfn "Home Directory: %s" homeDir
 
+    let testConfig = 
+        { defaultConfig with homeFolder = Some(homeDir) } 
 
-runWith testConfig (Server.app (fun _ -> ()))
-|> req HttpMethod.GET "/hello" None
+    [<Test>]
+    let ``server should response wiht GenPDMS to GET hello`` () =
+        let resp =
+            runWith testConfig (Server.app (fun _ -> ()))
+            |> req HttpMethod.GET "/hello" None
+        resp |> should equal "GenPDMS"
