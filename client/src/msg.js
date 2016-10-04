@@ -233,7 +233,7 @@
              * ### Cancel editing a patient
              * Stop editing or creating a new patient and reset patient
              * details to original data
-             * 
+             *
              * ToDo Fix cancel of new patient
              *
              * #### patient view *send* : { }

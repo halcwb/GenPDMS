@@ -43,6 +43,16 @@
 
     //region --- HELPER FUNCTIONS ---
 
+    function createName (pat) {
+        return pat.lname + ", " + pat.fname;
+    }
+
+    function updatePatient(data) {
+        var pat = data.patient;
+        pat.name = createName(pat);
+        $$(id).data.updateItem(pat.id, pat);
+    }
+
     //endregion
 
     //region --- SUBSCRIBE ---
@@ -62,14 +72,19 @@
         });
     };
 
+    var subscribeModel = function (app, debug) {
+        var sub = _.partial(app.bus.model.subscribe, debug),
+            msg = app.msg;
 
-    /*
-     Subscribe to Model
-     */
+        debug("subscribe to model");
 
-    /*
-     Subscribe to Controller
-     */
+        sub(msg.patient.update, updatePatient);
+
+        sub(msg.patient.cancel, updatePatient);
+
+    };
+
+
     var subscribeToController = function (app, debug) {
         var sub = _.partial(app.bus.controller.subscribe, debug),
             msg = app.msg;
@@ -85,7 +100,7 @@
             // Add the new list of patients
             // and calculate full name for each patient
             view.data.importData(_.each(data.patients, function (pat) {
-                pat.name = pat.lname + ", " + pat.fname;
+                pat.name = createName(pat);
             }));
         });
 
@@ -94,11 +109,14 @@
         });
     };
 
+
+
     /*
      Subscribe All
      */
     var subscribeOnce = _.once(function (app, debug) {
         subscribeToController(app, debug);
+        subscribeModel(app, debug);
         subscribeToView(app, debug);
     });
 

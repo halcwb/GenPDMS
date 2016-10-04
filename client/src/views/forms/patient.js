@@ -59,7 +59,7 @@
                     name: "fname",
                     readonly: true,
                     labelAlign: "right",
-                    labelWidth: labelWidth
+                    labelWidth: labelWidth,
                 },
                 {
                     view: "text",
@@ -221,7 +221,10 @@
                     ]
                 }
             ]}
-        ]
+        ],
+        rules: {
+            fname: webix.rules.isNotEmpty
+        }
     };
 
     //endregion
@@ -443,6 +446,8 @@
         _.forEach($$(id).elements, function (el) {
             el.attachEvent("onChange", function () {
                 var form = $$(id);
+
+                form.validate();
 
                 if (!form.noChange) {
                     publish(msg.patient.update, {
