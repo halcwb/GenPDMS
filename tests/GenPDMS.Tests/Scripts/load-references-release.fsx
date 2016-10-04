@@ -7,7 +7,6 @@
 #r "../../../packages/FSPowerPack.Parallel.Seq.Community/Lib/Net40/FSharp.PowerPack.Parallel.Seq.dll"
 #r "../../../packages/FsUnit/lib/net45/FsUnit.NUnit.dll"
 #r "../../../packages/Fuchu/lib/Fuchu.dll"
-#r "../../../src/GenPDMS/bin/Release/GenPDMS.exe"
 #r "../../../packages/Newtonsoft.Json/lib/net45/Newtonsoft.Json.dll"
 #r "../../../packages/FsUnit/lib/net45/NHamcrest.dll"
 #r "../../../packages/NUnit/lib/net45/nunit.framework.dll"
@@ -20,3 +19,4 @@
 #r "System.Runtime.Serialization.dll"
 #r "System.Xml.dll"
 #r "../../../packages/Unquote/lib/net45/Unquote.dll"
+#r "../../../src/GenPDMS/bin/Release/GenPDMS.exe"
