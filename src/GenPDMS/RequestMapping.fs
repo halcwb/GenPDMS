@@ -3,6 +3,7 @@
 
 /// Define actions that can be mapped to
 /// the creation of a response
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module Actions =
 
     [<Literal>]
@@ -13,11 +14,13 @@ module Actions =
 
 
 
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module Query =
 
     open Newtonsoft.Json
 
 
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module Result =
 
     open Newtonsoft.Json
@@ -25,14 +28,16 @@ module Result =
 
 
 /// Mapping a request to a response
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module RequestMapping =
 
-    open RequestResponse
+    type Request = GenPDMS.Request.Request
+    type Response = GenPDMS.Response.Response
 
-    let map (r : Request) : Response =
+    let map (r: Request) : Response  =
         printfn "mapping request: %A" r
 
-        let toResponse succ = createResponse succ [||] [||] [||] [||]
+        let toResponse succ = Response.create succ [||] [||] [||] [||]
 
         match r.Action with
         | Actions.ECHO     ->
@@ -40,5 +45,5 @@ module RequestMapping =
 
         | _ ->
             let resp =
-                createResponse false [||] [||] [|Actions.NOACTION|] [||] (new obj())
+                Response.create false [||] [||] [|Actions.NOACTION|] [||] (new obj())
             resp

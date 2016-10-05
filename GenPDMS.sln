@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "GenPDMS", "src\GenPDMS\GenPDMS.fsproj", "{9550937D-3FE4-4CDC-99C5-3806C96157FB}"
 EndProject
@@ -9,6 +9,7 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "GenPDMS.Tests", "tests\GenP
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{94A519B9-F2F5-47AF-BB5E-0F990B451EC0}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		paket.dependencies = paket.dependencies
 	EndProjectSection
 EndProject

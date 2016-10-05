@@ -22,8 +22,6 @@ module Server =
 
     open Informedica.GenUtils.Lib.BCL
 
-    open RequestResponse
-
     /// Utility to get the last element
     /// in a list
     let rec listLast (list: 'T list) =

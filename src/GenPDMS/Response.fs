@@ -1,30 +1,14 @@
 ﻿namespace GenPDMS
 
-/// Request Response abstraction.
-module RequestResponse =
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
+module Response =
 
     open System
     open System.IO
     open System.Text
     open Newtonsoft.Json
 
-    open Suave
-    open Suave.Operators
-
-
-    /// Represents a `Request` with
-    [<CLIMutable>]
-    type Request =
-        {
-            /// Action that uses the query
-            [<JsonProperty("act")>]
-            Action: string
-            /// Query string that is the json
-            /// representation of a query object
-            [<JsonProperty("qry")>]
-            Query: string
-        }
-
+    type Request = GenPDMS.Request.Request
 
     /// Represents a `Response`
     [<CLIMutable>]
@@ -45,7 +29,7 @@ module RequestResponse =
         }
 
 
-    let createResponse succ info warn errs reqs res =
+    let create succ info warn errs reqs res =
         {
             Success = succ
             Info = info
@@ -54,3 +38,4 @@ module RequestResponse =
             Requests = reqs
             Result = res
         }
+

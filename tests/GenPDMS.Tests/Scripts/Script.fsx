@@ -23,6 +23,9 @@ module ServerTests =
     open GenPDMS
     open GenPDMS.Utils
 
+    type Request  = Request.Request
+    type Response = Response.Response
+
     Environment.CurrentDirectory <- __SOURCE_DIRECTORY__
     printfn "Current Directory: %s" Environment.CurrentDirectory 
 
@@ -39,9 +42,46 @@ module ServerTests =
     let testConfig = 
         { defaultConfig with homeFolder = Some(homeDir) } 
 
+    let getResp n =
+            runWith testConfig (Server.app (fun _ -> ()))
+            |> req HttpMethod.GET n None
+
+    let toByteArrayContent x = new ByteArrayContent(x)
+
+    let postResp procReq r =
+        let r' = 
+            Json.serialize r 
+            |> Encoding.UTF8.GetBytes 
+            |> toByteArrayContent
+            |> Some
+        runWith testConfig (Server.app procReq)
+        |> req HttpMethod.POST "/request" r'
+
+    let emptyObj = new obj()
+
+    type Test = { name: string; number: int }
+
     [<Test>]
     let ``server should response wiht GenPDMS to GET hello`` () =
+        getResp "/hello"
+        |> should equal "GenPDMS"
+
+    [<Test>]
+    let ``server should respond nothing there to GET foo`` () =
+        getResp "/foo"
+        |> should equal Server.NOT_FOUND_RESPONSE
+
+    [<Test>]
+    let ``server should be able to echo a request`` () =
+        let test = new Object() |> Json.serialize
+        postResp (fun x -> x |> Json.deSerialize) test
+        |> should equal test
+
+    [<Test>]
+    let ``server should be able to map echo request`` () =
+        let req = Reqeuest.create "echo" ([||])
         let resp =
-            runWith testConfig (Server.app (fun _ -> ()))
-            |> req HttpMethod.GET "/hello" None
-        resp |> should equal "GenPDMS"
+            req
+            |> postResp RequestMapping.map 
+            |> Json.deSerialize<Response>
+        ()
