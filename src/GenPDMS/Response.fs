@@ -39,3 +39,6 @@ module Response =
             Result = res
         }
 
+    let createSucc info warn errs reqs res = create true  info warn errs reqs res 
+    let createFail info warn errs reqs res = create false info warn errs reqs res 
+

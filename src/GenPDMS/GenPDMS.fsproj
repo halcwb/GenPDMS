@@ -67,8 +67,9 @@
     <Compile Include="Utils.fs" />
     <Compile Include="Json.fs" />
     <Compile Include="Request.fs" />
+    <Compile Include="Capability.fs" />
     <Compile Include="Response.fs" />
-    <Compile Include="RequestMapping.fs" />
+    <Compile Include="Mapping.fs" />
     <Compile Include="Server.fs" />
     <Compile Include="Program.fs" />
     <None Include="paket.references" />
