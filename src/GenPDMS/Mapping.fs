@@ -24,7 +24,10 @@ module RequestMapping =
     /// the `tokens` dictionary.
     ///
     /// This function uses the `Capabilities` module to get the followup 
-    /// actions according to the roles the user has and the current action
+    /// actions according to the roles the user has and the current action.
+    /// 
+    /// The concept of checking and returning actions is inspired by
+    /// the excellent talk of [Scott Wlaschin](https://fsharpforfunandprofit.com/cap/).
     let map (tokens: Dictionary<_, _>) 
             (r: Request) : Response =
 
