@@ -8,18 +8,33 @@ module RequestMapping =
     open System.Collections.Generic
 
     type Request = GenPDMS.Request.Request
-    type Response = GenPDMS.Response.Response
+    type Response = GenPDMS.Response.Response<obj>
 
+    /// `map` uses a `tokens` `Dictionary<Token,(string * string list)` to
+    /// check whether the `Request.Action` is allowed. It looks whether there
+    /// is a `Token` in the dictionary and also whether the `Request.Action` 
+    /// is in the `string list`. The first `string` in the tuple `(string * string list)`
+    /// is the user that requests the action. This user string is used to look 
+    /// whether according the the roles the user has and the current action 
+    /// what are the next actions that the user can request.
+    /// 
+    /// If there is a valid action for the token, the action is processed
+    /// and a new token is generated for a list of next actions. The old
+    /// token is removed and the new token with list of actions is added to
+    /// the `tokens` dictionary.
+    ///
+    /// This function uses the `Capabilities` module to get the followup 
+    /// actions according to the roles the user has and the current action
     let map (tokens: Dictionary<_, _>) 
             (r: Request) : Response =
 
-        // Get the user for that token
+        // Get the current user for that token
         let getUser token = 
             if tokens.ContainsKey(token) then
                 tokens.Item(token) |> fst
             else User.anonym.UserName
 
-        // Get all actions for that token
+        // Get all allowed actions for that token
         let getActions token = 
             if tokens.ContainsKey(token) then
                 tokens.Item(token) |> snd
@@ -30,18 +45,22 @@ module RequestMapping =
             tokens.ContainsKey(token) &&
             token |> getActions |> List.exists ((=) action)
 
+        // Remove old token and create a new token
         let newToken user acts =
             let token = Token.generate()
             tokens.Remove(r.Token) |> ignore
             tokens.Add(token, (user, acts))
             token
 
+        let createSuccNoInfo token acts res = 
+            Response.createSuccNoInfo token acts (res :> obj) 
+
         printfn "mapping request: %A" r
 
         match (r.Action, checkActionToken r.Token r.Action) with
 
         | Capability.ECHO, _     ->
-            Response.createSuccNoInfo Token.emptyToken [||] r
+            createSuccNoInfo Token.emptyToken [||] r
 
         | Capability.CURRENT_USER, _     ->
             let user = 
@@ -50,7 +69,7 @@ module RequestMapping =
             let acts = r.Token |> getActions
             let token = r.Token
 
-            Response.createSuccNoInfo token acts user
+            createSuccNoInfo token acts user
 
         | Capability.PDMS_LOGIN, true  ->
             let user = User.admin

@@ -26,7 +26,7 @@ module ServerTests =
 
     type Token = Token.Token
     type Request  = Request.Request
-    type Response = Response.Response
+    type Response = Response.Response<obj>
 
     Environment.CurrentDirectory <- __SOURCE_DIRECTORY__
     printfn "Current Directory: %s" Environment.CurrentDirectory 
@@ -93,24 +93,28 @@ module ServerTests =
              if kv.Value |> snd |> List.exists ((=) a) then yield kv.Key ]
         |> List.head
 
-    let token = Token.generate()
+    [<Test>]
+    let ``server should be able to get and set current user`` () =
+        let tokens = new Dictionary<Token, string * string list>()
+        let map = RequestMapping.map tokens
 
-    Request.create Capability.CURRENT_USER token emptyObj
-    |> postResp map
-    |> ignore
+        let token = Token.generate()
+        Request.create Capability.CURRENT_USER token emptyObj
+        |> postResp map
+        |> Json.deSerialize<Response.Response<User.User>>
 
-    Request.create "" token emptyObj
-    |> postResp map
-    |> ignore
+        Request.create "" token emptyObj
+        |> postResp map
+        |> ignore
 
-    Request.create Capability.CURRENT_USER token emptyObj
-    |> postResp map
-    |> ignore
+        Request.create Capability.CURRENT_USER token emptyObj
+        |> postResp map
+        |> ignore
     
-    Request.create Capability.PDMS_LOGIN (Capability.PDMS_LOGIN |> getToken) emptyObj
-    |> postResp map
+        Request.create Capability.PDMS_LOGIN (Capability.PDMS_LOGIN |> getToken) emptyObj
+        |> postResp map
 
-    Request.create Capability.CURRENT_USER ("pdms.logout" |> getToken) emptyObj
-    |> postResp map
-    |> ignore
+        Request.create Capability.CURRENT_USER ("pdms.logout" |> getToken) emptyObj
+        |> postResp map
+        |> ignore
 

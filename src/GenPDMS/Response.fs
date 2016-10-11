@@ -27,7 +27,7 @@ module Response =
 
     /// Represents a `Response`
     [<CLIMutable>]
-    type Response =
+    type Response<'T> =
         {
             [<JsonProperty("succ")>]
             Success : bool
@@ -40,7 +40,7 @@ module Response =
             [<JsonProperty("acts")>]
             Actions : Actions.Actions
             [<JsonProperty("result")>]
-            Result : obj
+            Result : 'T
         }
 
 
