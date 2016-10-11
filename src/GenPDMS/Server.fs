@@ -5,6 +5,7 @@ module Server =
     open System
     open System.IO
     open System.Net
+    open System.Collections.Generic
 
     open Suave // always open suave
     open Suave.Http
@@ -21,6 +22,8 @@ module Server =
     open Suave.Utils
 
     open Informedica.GenUtils.Lib.BCL
+
+    type Token = Token.Token
 
     /// Utility to get the last element
     /// in a list
@@ -87,6 +90,9 @@ module Server =
             |> String.replace "\\" (string Path.DirectorySeparatorChar)
 
         let home = Path.Combine(home, clientDir)
+
+        let map = 
+            RequestMapping.map (new Dictionary<Token, string * string list>())
 
         printfn "Starting server on: %s with home: %s" port home
         startWebServer (getConfig home port) (app RequestMapping.map)

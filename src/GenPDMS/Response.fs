@@ -3,12 +3,27 @@
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module Response =
 
-    open System
-    open System.IO
-    open System.Text
-    open Newtonsoft.Json
+    [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
+    module Actions = 
 
-    type Request = GenPDMS.Request.Request
+        open Newtonsoft.Json
+
+        type Token = GenPDMS.Token.Token
+
+        type Actions = 
+            {
+                [<JsonProperty("token")>]
+                Token: Token
+                [<JsonProperty("Actions")>]
+                Actions: string[]            
+            }
+
+        let create token acts = { Token = token; Actions = acts |> Array.ofSeq }
+
+        let noActions = create Token.emptyToken []
+
+    open System
+    open Newtonsoft.Json
 
     /// Represents a `Response`
     [<CLIMutable>]
@@ -22,23 +37,30 @@ module Response =
             Warning : string[]
             [<JsonProperty("errs")>]
             Errors : string[]
-            [<JsonProperty("reqs")>]
-            Requests : Request[]
+            [<JsonProperty("acts")>]
+            Actions : Actions.Actions
             [<JsonProperty("result")>]
             Result : obj
         }
 
 
-    let create succ info warn errs reqs res =
+    let create succ info warn errs token acts res =
         {
-            Success = succ
-            Info = info
-            Warning = warn
-            Errors = errs
-            Requests = reqs
-            Result = res
+            Success = succ 
+            Info =    info |> Array.ofSeq
+            Warning = warn |> Array.ofSeq
+            Errors =  errs |> Array.ofSeq
+            Actions = Actions.create token (acts |> Array.ofSeq)
+            Result =  res
         }
 
-    let createSucc info warn errs reqs res = create true  info warn errs reqs res 
-    let createFail info warn errs reqs res = create false info warn errs reqs res 
+    let createSucc info warn errs token acts res = create true  info warn errs token acts res 
+    let createFail info warn errs token acts res = create false info warn errs token acts res 
+
+    let createSuccNoInfo token acts res = createSucc [] [] [] token acts res
+    let createFailNoInfo token acts res = createFail [] [] [] token acts res
+
+    let createSuccResp res = createSuccNoInfo Token.emptyToken [] res
+    let createFailResp res = createFailNoInfo Token.emptyToken [] res
+
 
