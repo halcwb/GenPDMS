@@ -95,6 +95,6 @@ module Server =
             RequestMapping.map (new Dictionary<Token, string * string list>())
 
         printfn "Starting server on: %s with home: %s" port home
-        startWebServer (getConfig home port) (app RequestMapping.map)
+        startWebServer (getConfig home port) (app map)
 
     

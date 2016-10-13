@@ -6,8 +6,9 @@ module RequestMapping =
     
     open System
     open System.Collections.Generic
+    open System.Text
 
-    type Request = GenPDMS.Request.Request
+    type HttpRequest = Suave.Http.HttpRequest
     type Response = GenPDMS.Response.Response<obj>
 
     /// `map` uses a `tokens` `Dictionary<Token,(string * string list)` to
@@ -29,7 +30,9 @@ module RequestMapping =
     /// The concept of checking and returning actions is inspired by
     /// the excellent talk of [Scott Wlaschin](https://fsharpforfunandprofit.com/cap/).
     let map (tokens: Dictionary<_, _>) 
-            (r: Request) : Response =
+            (http: HttpRequest) : Response =
+
+        let r = http |> Request.getRequest
 
         // Get the current user for that token
         let getUser token = 
@@ -58,7 +61,7 @@ module RequestMapping =
         let createSuccNoInfo token acts res = 
             Response.createSuccNoInfo token acts (res :> obj) 
 
-        printfn "mapping request: %A" r
+        printfn "mapping request: %A" r.Action
 
         match (r.Action, checkActionToken r.Token r.Action) with
 
@@ -75,15 +78,24 @@ module RequestMapping =
             createSuccNoInfo token acts user
 
         | Capability.PDMS_LOGIN, true  ->
-            let user = User.admin
+            let qry = http |> Request.getQuery<Request.Login.Login>
+            let user = 
+                User.users 
+                |> List.tryFind(fun u' -> u'.UserName = qry.User && u'.Password = qry.Password)
             let act = r.Action
             
-            let acts = user |> Capability.nextUserActions act
+            match user with
+            | Some user ->
+                let acts = user |> Capability.nextUserActions act
 
-            let token = newToken user.UserName acts
-            
-            Response.createSuccNoInfo token acts (new obj())
+                let token = newToken user.UserName acts
+                
+                // Return success with new token/actions and user
+                Response.createSuccNoInfo token acts user
 
+            | None -> 
+                // Return failure response with the last token/actions
+                Response.createFailNoInfo r.Token (r.Token |> getActions) (new obj())
         | _, _ ->
             let user = User.anonym
             let act = Capability.NO_ACTION

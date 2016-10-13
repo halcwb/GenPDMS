@@ -51,7 +51,7 @@ module Response =
             Warning = warn |> Array.ofSeq
             Errors =  errs |> Array.ofSeq
             Actions = Actions.create token (acts |> Array.ofSeq)
-            Result =  res
+            Result =  res :> obj
         }
 
     let createSucc info warn errs token acts res = create true  info warn errs token acts res 

@@ -3,7 +3,20 @@
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module User =
 
-    type User = { UserName: string; Password: string; Roles: string list }
+    open Newtonsoft.Json
+
+    type User = 
+        { 
+            /// The user name (must be unique)
+            [<JsonProperty("user")>]
+            UserName: string 
+            /// User password 
+            [<JsonProperty("password")>]
+            Password: string
+            // List with user roles
+            [<JsonProperty("roles")>]
+            Roles: string list 
+        }
 
     let create un pw rs = { UserName = un; Password = pw; Roles = rs }
 

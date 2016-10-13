@@ -3,25 +3,41 @@
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module Request = 
 
+    open Newtonsoft.Json
+
     [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
     module Login =
         
-        type Login = { user: string; password: string; role: string }
+        type Login = 
+            { 
+                /// The user name (must be unique)
+                [<JsonProperty("user")>]
+                User: string
+                /// User password 
+                [<JsonProperty("password")>]
+                Password: string
+                /// The role wich the user logs in
+                [<JsonProperty("role")>]
+                Role: string 
+            }
 
-        let create u p r = { user = u; password = p; role = r }
+        let create u p r = { User = u; Password = p; Role = r }
 
         let empty = create "" "" ""
 
     open System
     open System.IO
     open System.Text
+
     open Newtonsoft.Json
+
+    open Suave.Http
 
     type Token = GenPDMS.Token.Token
 
     /// Represents a `Request` with
     [<CLIMutable>]
-    type Request =
+    type Request<'T> =
         {
             /// Action that uses the query
             [<JsonProperty("act")>]
@@ -32,12 +48,19 @@ module Request =
             /// Query string that is the json
             /// representation of a query object
             [<JsonProperty("qry")>]
-            Query: string
+            Query: 'T
         }
 
     let create act token qry =
         {   
             Action = act
             Token = token
-            Query = qry |> Json.serialize
+            Query = qry
         }
+
+    let getRequest (req: HttpRequest) =
+        (Encoding.UTF8.GetString(req.rawForm) |> Json.deSerialize<Request<obj>>)
+
+
+    let inline getQuery<'T> (req: HttpRequest) = 
+        (Encoding.UTF8.GetString(req.rawForm) |> Json.deSerialize<Request<'T>>).Query

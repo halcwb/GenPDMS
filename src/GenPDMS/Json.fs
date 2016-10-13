@@ -23,10 +23,9 @@ module Json =
     let mapJson f =
         request(fun r ->
             printfn "Processing request:\n%A" (Encoding.UTF8.GetString(r.rawForm))
-            let resp =
-                f (Encoding.UTF8.GetString(r.rawForm) |> deSerialize)
-            printfn "Returning response:\n%A" (resp |> serialize)
-            resp
+            r
+            |> f
             |> serialize
+            |> (fun x -> printfn "Returning response:\n%A" x; x)
             |> Successful.OK
             >=> Writers.setMimeType "application/json")

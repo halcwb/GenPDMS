@@ -1,5 +1,6 @@
 // Warning: generated file; your changes could be lost when a new file is generated.
 #I __SOURCE_DIRECTORY__
+#r "C:/Program Files (x86)/Reference Assemblies/Microsoft/FSharp/.NETFramework/v4.0/4.3.0.0/Type Providers/FSharp.Data.TypeProviders.dll"
 #r "../../../packages/FSPowerPack.Core.Community/Lib/Net40/FSharp.PowerPack.dll"
 #r "../../../packages/FSPowerPack.Linq.Community/Lib/Net40/FSharp.PowerPack.Linq.dll"
 #r "../../../packages/FSPowerPack.Metadata.Community/Lib/Net40/FSharp.PowerPack.Metadata.dll"
@@ -8,9 +9,8 @@
 #r "../../../packages/Newtonsoft.Json/lib/net45/Newtonsoft.Json.dll"
 #r "../../../packages/Suave/lib/net40/Suave.dll"
 #r "System.Core.dll"
-#r "System.dll"
-#r "System.Numerics.dll"
-#r "System.Net.Http.dll"
 #r "System.Data.dll"
 #r "System.Data.Linq.dll"
-#r "C:/Program Files (x86)/Reference Assemblies/Microsoft/FSharp/.NETFramework/v4.0/4.3.0.0/Type Providers/FSharp.Data.TypeProviders.dll"
+#r "System.dll"
+#r "System.Net.Http.dll"
+#r "System.Numerics.dll"

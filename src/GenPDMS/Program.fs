@@ -1,41 +1,43 @@
-﻿module Program
+﻿namespace GenPDMS
 
-open System
-open System.IO
+module Program =
 
-open Suave // always open suave
-open Suave.Successful
-open Suave.Http
-open Suave.Web // for config
+    open System
+    open System.IO
 
-open Informedica.GenUtils.Lib.BCL
-open GenPDMS
-open GenPDMS.Utils.Path
+    open Suave // always open suave
+    open Suave.Successful
+    open Suave.Http
+    open Suave.Web // for config
 
-let iif x1 x2 = if x1 |> String.IsNullOrEmpty |> not then x1 else x2
+    open Informedica.GenUtils.Lib.BCL
+    open GenPDMS
+    open GenPDMS.Utils.Path
+
+    let iif x1 x2 = if x1 |> String.IsNullOrEmpty |> not then x1 else x2
 
 
-/// Main entry point of the GenPDMS
-/// takes as argument the port on which
-/// the app will listen. If no port is provided
-/// the default will be 3000.
-[<EntryPoint>]
-let main argv =
+    /// Main entry point of the GenPDMS
+    /// takes as argument the port on which
+    /// the app will listen. If no port is provided
+    /// the default will be 3000.
+    [<EntryPoint>]
+    let main argv =
 
-    printfn "initializing script..."
+        printfn "initializing script..."
 
-    // ToDo: Not sure if not just Environment.CurrentDirectory
-    let home =
-        if AppDomain.CurrentDomain.BaseDirectory |> combineWith "client" |> dirExists then
-            AppDomain.CurrentDomain.BaseDirectory
-        else
-        Environment.CurrentDirectory
-        |> parentDirectory
+        // ToDo: Not sure if not just Environment.CurrentDirectory
+        let home =
+            if AppDomain.CurrentDomain.BaseDirectory |> combineWith "client" |> dirExists then
+                AppDomain.CurrentDomain.BaseDirectory
+            else
+            Environment.CurrentDirectory
+            |> parentDirectory
 
-    match argv |> List.ofArray with
-    | p::_ -> Server.start home p
-    |  _   -> Server.start home ""
+        match argv |> List.ofArray with
+        | p::_ -> Server.start home p
+        |  _   -> Server.start home ""
 
-    printfn "starting webserver ..."
+        printfn "starting webserver ..."
 
-    0
+        0

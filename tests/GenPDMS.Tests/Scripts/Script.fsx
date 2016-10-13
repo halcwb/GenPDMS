@@ -1,7 +1,7 @@
 ﻿// Learn more about F# at http://fsharp.net. See the 'F# Tutorial' project
 // for more guidance on F# programming.
 
-#load "load-references-release.fsx"
+#load "load-genpdms-project.fsx"
 
 #time
 
@@ -25,7 +25,7 @@ module ServerTests =
     open GenPDMS.Utils
 
     type Token = Token.Token
-    type Request  = Request.Request
+    type Request  = Request.Request<obj>
     type Response = Response.Response<obj>
 
     Environment.CurrentDirectory <- __SOURCE_DIRECTORY__
@@ -78,7 +78,7 @@ module ServerTests =
 
     [<Test>]
     let ``server should be able to map echo a test request`` () =
-        let req = Request.create "echo" (Token.generate()) ([||])
+        let req = Request.create "echo" (Token.generate()) (new obj())
         let resp = 
             req
             |> Response.createSuccResp 
@@ -88,7 +88,7 @@ module ServerTests =
         |> postResp map 
         |> should equal resp
 
-    let getToken a =
+    let getToken (tokens: Dictionary<Token, string * string list>) a =
         [ for kv in tokens do
              if kv.Value |> snd |> List.exists ((=) a) then yield kv.Key ]
         |> List.head
@@ -96,25 +96,32 @@ module ServerTests =
     [<Test>]
     let ``server should be able to get and set current user`` () =
         let tokens = new Dictionary<Token, string * string list>()
+        let getToken = getToken tokens
         let map = RequestMapping.map tokens
 
         let token = Token.generate()
         Request.create Capability.CURRENT_USER token emptyObj
         |> postResp map
         |> Json.deSerialize<Response.Response<User.User>>
+        |> printfn "%A" // User is anonymous
 
         Request.create "" token emptyObj
         |> postResp map
-        |> ignore
+        |> printfn "%A" // Get only login task
 
         Request.create Capability.CURRENT_USER token emptyObj
         |> postResp map
-        |> ignore
+        |> Json.deSerialize<Response.Response<User.User>>
+        |> printfn "%A" // User is still anonymous
     
-        Request.create Capability.PDMS_LOGIN (Capability.PDMS_LOGIN |> getToken) emptyObj
+        let login = Request.Login.create "admin" "admin" "admin"
+        Request.create Capability.PDMS_LOGIN (Capability.PDMS_LOGIN |> getToken) login
         |> postResp map
+        |> Json.deSerialize<Response.Response<User.User>>
+        |> printfn "%A" // User is logged in as admin and has list of actions
 
         Request.create Capability.CURRENT_USER ("pdms.logout" |> getToken) emptyObj
         |> postResp map
-        |> ignore
+        |> Json.deSerialize<Response.Response<User.User>>
+        |> printfn "%A" // Get admin user
 
